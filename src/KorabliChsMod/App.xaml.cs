@@ -9,6 +9,23 @@ namespace KorabliChsMod
     /// </summary>
     public partial class App : Application
     {
+        private readonly MainWindow _mainWindow;
+
+        public App()
+        {
+            
+        }
+        
+        public App(MainWindow mainWindow)
+        {
+            this._mainWindow = mainWindow;
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            this._mainWindow.Show();
+            base.OnStartup(e);
+        }
     }
 
 }
