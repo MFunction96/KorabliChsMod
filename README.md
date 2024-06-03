@@ -17,15 +17,18 @@
 ### 阶段一
 
 - [x] 建立Azure DevOps全自动工作流
-- [ ] Github, Gitee镜像仓库与自动发布
-- [ ] 更新程序与更新程序自更新功能
-- [ ] 主汉化更新程序，仅支持Gitee源的正式服汉化，包括汉化下载与更新、版本识别等核心功能
+- [x] Github, Gitee镜像仓库同步
+- [x] Github镜像仓库自动发布
+- [ ] 主汉化程序自更新功能
+- [ ] 主汉化更新程序核心功能，仅支持Github源的正式服汉化，包括汉化下载与更新、版本识别等核心功能
+- [ ] 网络代理选项
 
 ### 阶段二
 
 - [ ] 界面美化
 - [ ] 支持自动定位莱服客户端安装位置
 - [ ] 支持测试服汉化
+- [ ] Gitee镜像仓库自动发布
 - [ ] 支持多镜像选择
 - [ ] 傻瓜安装包
 - [ ] 降低殉爆频度
@@ -43,11 +46,15 @@
 
 ## 链接
 
-主仓库
+### 汉化包源
+
+- https://github.com/DDFantasyV/Korabli_localization_chs
+
+### 主仓库
 
 - https://dev.azure.com/XanaCN/Lyoko/_git/KorabliChsMod
 
-镜像仓库
+### 镜像仓库
 
 - 国内：https://gitee.com/MFunction96/KorabliChsMod
 - 全球：https://github.com/MFunction96/KorabliChsMod

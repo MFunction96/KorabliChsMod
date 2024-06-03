@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Windows;
 using System.Xml;
+using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 using Path = System.IO.Path;
 
-namespace KorabliChsMod
+namespace Xanadu.KorabliChsMod
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

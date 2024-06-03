@@ -1,0 +1,6 @@
+steps:
+- task: PowerShell@2
+  inputs:
+    filePath: '.azurepipelines/mirror/mirror.ps1'
+    arguments: '-Source $(Source) -Site $(Site) -Username $(Username) -Repository $(Repository)'
+    pwsh: true
