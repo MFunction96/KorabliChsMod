@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
+		<IsPublishable>false</IsPublishable>
 		<RootNamespace>Xanadu.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<AssemblyName>$(MSBuildProjectName.Replace(" ", "_"))</AssemblyName>
 	</PropertyGroup>
