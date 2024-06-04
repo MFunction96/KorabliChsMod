@@ -1,5 +1,8 @@
 <Project>
 	<PropertyGroup>
+		<RootNamespace>Xanadu.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		<AssemblyName>Xanadu.$(MSBuildProjectName)</AssemblyName>
+		<TargetFramework>net8.0-windows</TargetFramework>
 		<Authors>MFunction</Authors>
 		<Company>Xanadu</Company>
 		<Product>KorabliChsMod</Product>

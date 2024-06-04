@@ -1,3 +1,7 @@
 <Project>
 	<Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+	<PropertyGroup>
+		<RootNamespace>Xanadu.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		<AssemblyName>$(MSBuildProjectName.Replace(" ", "_"))</AssemblyName>
+	</PropertyGroup>
 </Project>
