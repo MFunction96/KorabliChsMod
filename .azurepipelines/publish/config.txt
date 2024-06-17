@@ -1,5 +1,0 @@
-;!@Install@!UTF-8!
-Title="考拉比汉社厂"
-BeginPrompt="是否安装考拉比汉社厂"
-RunProgram="KorabliChsMod.exe"
-;!@InstallEnd@!
