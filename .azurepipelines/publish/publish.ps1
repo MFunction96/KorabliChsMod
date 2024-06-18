@@ -6,6 +6,7 @@ param(
 $workFolder = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [Guid]::NewGuid().ToString())
 $publishFolder = [System.IO.Path]::Combine($workFolder, 'publish')
 dotnet publish --output $publishFolder
+New-Item -Path $OutputFolder -ItemType Directory -Force
 Compress-Archive -Path "$publishFolder/*" -DestinationPath "$outputFolder/KorabliChsMod.zip" -CompressionLevel Optimal -Force
 Copy-Item -Path "$publishFolder/*" -Destination $outputFolder -Recurse -Force
 try {
