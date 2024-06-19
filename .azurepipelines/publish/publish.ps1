@@ -16,7 +16,7 @@ New-Item -Path $OutputFolder -ItemType Directory -Force
 Compress-Archive -Path "$publishFolder/*" -DestinationPath "$outputFolder/KorabliChsMod.zip" -CompressionLevel Optimal -Force
 $hash = Get-FileHash -Path "$outputFolder/KorabliChsMod.zip" -Algorithm SHA256
 Copy-Item -Path "$publishFolder/*" -Destination $outputFolder -Recurse -Force
-$hash.Hash | Out-File "$outputFolder/KorabliChsMod.zip.sig"
+$hash.Hash | Out-File "$outputFolder/KorabliChsMod.zip.sig" -Encoding utf8 -Force
 try {
   Remove-Item -Path $workFolder -Force -Recurse
 } catch {
