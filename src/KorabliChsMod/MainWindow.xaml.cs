@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Documents;
 using System.Xml;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
@@ -71,7 +74,7 @@ namespace Xanadu.KorabliChsMod
                 _ = MessageBox.Show("该文件夹路径不合法！", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 this._logger.LogError(exception, "选择游戏路径异常");
             }
-            
+
         }
 
         private void BtnInstall_Click(object sender, RoutedEventArgs e)
@@ -86,37 +89,45 @@ namespace Xanadu.KorabliChsMod
 
         private void HlDdf_Click(object sender, RoutedEventArgs e)
         {
-
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
         }
 
         private void HlMf_Click(object sender, RoutedEventArgs e)
         {
-
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
         }
 
         private void HlNg_Click(object sender, RoutedEventArgs e)
         {
-
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
         }
 
         private void HlWalks_Click(object sender, RoutedEventArgs e)
         {
-
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
         }
 
         private void HlMod_Click(object sender, RoutedEventArgs e)
         {
-
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
         }
 
         private void HlProject_Click(object sender, RoutedEventArgs e)
         {
-
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
         }
 
         private void Window_Initialized(object sender, EventArgs e)
         {
-
+            var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
+            this.LbVersion.Content = fullVersion.Split('+')[0];
+            this.TbStatus.Text = $"考拉比汉社厂 v{fullVersion}";
         }
     }
 }
