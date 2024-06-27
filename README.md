@@ -24,7 +24,7 @@
 
 前往官方网站：https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0 ，在页面右侧找到`.NET 桌面运行时`，选择合适的版本下载并安装。
 
-<img src="./doc/README/.NETDesktopRuntime.png" alt="红框框" width="640" height="auto">
+<img src="https://dev.azure.com/XanaCN/f06af8ee-5084-455c-ac24-8fc4f735382c/_apis/git/repositories/d36405a6-bc74-45e3-b720-3a2c79f5c30e/items?path=/doc/README/.NETDesktopRuntime.png" alt="红框框" width="640" height="auto">
 
 #### 下载考拉比汉社厂最新版本
 
