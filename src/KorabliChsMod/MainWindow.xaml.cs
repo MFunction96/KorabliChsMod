@@ -73,5 +73,50 @@ namespace Xanadu.KorabliChsMod
             }
             
         }
+
+        private void BtnInstall_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnUninstall_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void HlDdf_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void HlMf_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void HlNg_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void HlWalks_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void HlMod_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void HlProject_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Window_Initialized(object sender, EventArgs e)
+        {
+
+        }
     }
 }
