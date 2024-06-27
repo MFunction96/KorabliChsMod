@@ -1,11 +1,14 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
+using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Windows;
 using System.Windows.Documents;
 using System.Xml;
-using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
+using Newtonsoft.Json;
 using Path = System.IO.Path;
 
 namespace Xanadu.KorabliChsMod
@@ -23,10 +26,17 @@ namespace Xanadu.KorabliChsMod
         /// <summary>
         /// 
         /// </summary>
+        private KorabliConfig Config { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="logger"></param>
         public MainWindow(ILogger<MainWindow> logger)
         {
             this._logger = logger;
+            this.Config = new KorabliConfig();
+            this.Config.Read();
             InitializeComponent();
         }
 
@@ -68,6 +78,9 @@ namespace Xanadu.KorabliChsMod
                 var language = localeXml["locale_config"]?["lang_mapping"]?["lang"]?.Attributes["full"]?.Value ?? string.Empty;
                 var chsModStatus = string.Compare(language, "schinese", StringComparison.OrdinalIgnoreCase) == 0;
                 this.LbGameChsVersionDetail.Content = chsModStatus ? "已安装" : "未安装";
+                this.Config.GameFolder = gameFolder;
+                this.Config.Save();
+                this.TbGameFolder.Text = this.Config.GameFolder;
             }
             catch (Exception exception)
             {
@@ -127,7 +140,20 @@ namespace Xanadu.KorabliChsMod
         {
             var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
             this.LbVersion.Content = fullVersion.Split('+')[0];
+            this.TbGameFolder.Text = this.Config.GameFolder;
             this.TbStatus.Text = $"考拉比汉社厂 v{fullVersion}";
+        }
+
+        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        {
+            this.Config.Proxy = new ProxyConfig
+            {
+                Address = this.TbProxyAddress.Text,
+                Username = this.TbProxyUsername.Text,
+                Password = this.TbProxyPassword.Text
+            };
+
+            this.Config.Save();
         }
     }
 }
