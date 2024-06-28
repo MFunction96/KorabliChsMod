@@ -43,7 +43,7 @@
                     </Label>
                     <Label Content="软件版本" Height="32" Margin="10,29,358,0" VerticalAlignment="Top" FontSize="16" Width="83"/>
                     <Label x:Name="LbVersion" Content="v1.0" Height="32" Margin="98,29,84,0" VerticalAlignment="Top" FontSize="16"/>
-                    <Button x:Name="BtnUpdate" Content="更新" HorizontalAlignment="Left" Height="32" Margin="372,27,0,0" VerticalAlignment="Top" Width="54"/>
+                    <Button x:Name="BtnUpdate" Content="更新" HorizontalAlignment="Left" Height="32" Margin="372,27,0,0" VerticalAlignment="Top" Width="54" Click="BtnUpdate_Click"/>
                     <Label Content="汉化包许可：Apache License 2.0" Height="32" Margin="106,138,104,0" VerticalAlignment="Top" FontSize="16" d:LayoutOverrides="HorizontalAlignment"/>
                     <Label Content="项目地址" Margin="178,175,177,0" FontSize="16" Height="32" VerticalAlignment="Top"/>
                     <Label VerticalAlignment="Top" FontSize="16" Margin="40,213,31,0" Padding="0,0,0,0" Foreground="#FF0027FF" d:LayoutOverrides="Width">

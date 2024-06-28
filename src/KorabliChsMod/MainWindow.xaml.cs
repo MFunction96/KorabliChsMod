@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Serilog;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -29,7 +30,17 @@ namespace Xanadu.KorabliChsMod
         /// <summary>
         /// 
         /// </summary>
+        private readonly BackgroundWorker _worker;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private KorabliConfig Config { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private string AppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "KorabliChsMod");
 
         /// <summary>
         /// 
@@ -43,6 +54,7 @@ namespace Xanadu.KorabliChsMod
             this.Config = new KorabliConfig();
             this.Config.Read();
             InitializeComponent();
+            this._worker = new BackgroundWorker();
         }
 
         /// <summary>
@@ -134,6 +146,11 @@ namespace Xanadu.KorabliChsMod
         {
             var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
             this.LbVersion.Content = fullVersion.Split('+')[0];
+            if (!Directory.Exists(this.AppDataPath))
+            {
+                Directory.CreateDirectory(AppDataPath);
+            }
+
             if (Directory.Exists(this.Config.GameFolder))
             {
                 try
@@ -166,6 +183,21 @@ namespace Xanadu.KorabliChsMod
             };
 
             await this.Config.SaveAsync();
+        }
+
+        private void BtnUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            var downloadFile = @"";
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+                Arguments =
+                    $"-ExecutionPolicy Unrestricted -File {Environment.CurrentDirectory}\\Update.ps1 -Id {Process.GetCurrentProcess().Id} -ZipPath {downloadFile} -InstallPath {Environment.CurrentDirectory}",
+                WorkingDirectory = Environment.CurrentDirectory,
+                CreateNoWindow = true
+            };
+
+            Process.Start(processInfo);
         }
     }
 }
