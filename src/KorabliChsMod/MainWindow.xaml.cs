@@ -1,15 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
+using Serilog;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Windows;
 using System.Windows.Documents;
-using System.Xml;
-using Newtonsoft.Json;
-using Path = System.IO.Path;
+using Xanadu.KorabliChsMod.Config;
+using Xanadu.KorabliChsMod.Core;
 
 namespace Xanadu.KorabliChsMod
 {
@@ -21,7 +19,12 @@ namespace Xanadu.KorabliChsMod
         /// <summary>
         /// 
         /// </summary>
-        private readonly ILogger<MainWindow> _logger;
+        private readonly ILogger _logger;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly IGameDetector _gameDetector;
 
         /// <summary>
         /// 
@@ -32,9 +35,11 @@ namespace Xanadu.KorabliChsMod
         /// 
         /// </summary>
         /// <param name="logger"></param>
-        public MainWindow(ILogger<MainWindow> logger)
+        /// <param name="gameDetector"></param>
+        public MainWindow(ILogger logger, IGameDetector gameDetector)
         {
             this._logger = logger;
+            this._gameDetector = gameDetector;
             this.Config = new KorabliConfig();
             this.Config.Read();
             InitializeComponent();
@@ -45,7 +50,7 @@ namespace Xanadu.KorabliChsMod
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnGameLocation_Click(object sender, RoutedEventArgs e)
+        private async void BtnGameFolder_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFolderDialog()
             {
@@ -61,31 +66,20 @@ namespace Xanadu.KorabliChsMod
             }
 
             var gameFolder = dialog.FolderName;
-            var gameInfoFile = Path.Combine(gameFolder, "game_info.xml");
+            this.Config.GameFolder = gameFolder;
             try
             {
-                var gameInfoXml = new XmlDocument();
-                gameInfoXml.Load(gameInfoFile);
-                var gameServer = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
-                this.LbGameServerDetail.Content = gameServer;
-                var gameVersion = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
-                this.LbGameVersionDetail.Content = gameVersion;
-                var buildNumber = gameVersion[(gameVersion.LastIndexOf('.') + 1)..];
-                var modFolder = Path.Combine(gameFolder, "bin", buildNumber, "res_mods");
-                var localeFile = Path.Combine(modFolder, "locale_config.xml");
-                var localeXml = new XmlDocument();
-                localeXml.Load(localeFile);
-                var language = localeXml["locale_config"]?["lang_mapping"]?["lang"]?.Attributes["full"]?.Value ?? string.Empty;
-                var chsModStatus = string.Compare(language, "schinese", StringComparison.OrdinalIgnoreCase) == 0;
-                this.LbGameChsVersionDetail.Content = chsModStatus ? "已安装" : "未安装";
-                this.Config.GameFolder = gameFolder;
-                this.Config.Save();
-                this.TbGameFolder.Text = this.Config.GameFolder;
+                await this._gameDetector.Load(this.Config.GameFolder);
+                this.TbGameFolder.Text = this._gameDetector.Folder;
+                this.LbGameServerDetail.Content = this._gameDetector.Server;
+                this.LbGameVersionDetail.Content = this._gameDetector.Version;
+                this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
+                await this.Config.SaveAsync();
             }
             catch (Exception exception)
             {
-                _ = MessageBox.Show("该文件夹路径不合法！", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-                this._logger.LogError(exception, "选择游戏路径异常");
+                this.TbStatus.Text += exception.Message + "\r\n";
+                this._logger.Error(exception, string.Empty);
             }
 
         }
@@ -136,15 +130,33 @@ namespace Xanadu.KorabliChsMod
             Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
         }
 
-        private void Window_Initialized(object sender, EventArgs e)
+        private async void Window_Initialized(object sender, EventArgs e)
         {
             var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
             this.LbVersion.Content = fullVersion.Split('+')[0];
-            this.TbGameFolder.Text = this.Config.GameFolder;
-            this.TbStatus.Text = $"考拉比汉社厂 v{fullVersion}";
+            if (Directory.Exists(this.Config.GameFolder))
+            {
+                try
+                {
+                    await this._gameDetector.Load(this.Config.GameFolder);
+                    this.TbGameFolder.Text = this._gameDetector.Folder;
+                    this.LbGameServerDetail.Content = this._gameDetector.Server;
+                    this.LbGameVersionDetail.Content = this._gameDetector.Version;
+                    this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
+                }
+                catch (Exception exception)
+                {
+                    this.TbStatus.Text += exception.Message + "\r\n";
+                    this._logger.Error(exception, string.Empty);
+                }
+
+            }
+
+            this.TbStatus.Text += $"考拉比汉社厂 v{fullVersion}";
+            this._logger.Information($"考拉比汉社厂 v{fullVersion}");
         }
 
-        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             this.Config.Proxy = new ProxyConfig
             {
@@ -153,7 +165,7 @@ namespace Xanadu.KorabliChsMod
                 Password = this.TbProxyPassword.Text
             };
 
-            this.Config.Save();
+            await this.Config.SaveAsync();
         }
     }
 }

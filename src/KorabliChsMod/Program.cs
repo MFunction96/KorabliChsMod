@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
+using Xanadu.KorabliChsMod.Config;
+using Xanadu.KorabliChsMod.Core;
 
 namespace Xanadu.KorabliChsMod
 {
@@ -15,7 +17,10 @@ namespace Xanadu.KorabliChsMod
                 {
                     services.AddSingleton<App>();
                     services.AddSingleton<MainWindow>();
-                    services.AddLogging(builder => builder.AddConsole());
+                    services.AddSingleton<IGameDetector, GameDetector>();
+                    services.AddSerilog(configuration => configuration
+                        .Enrich.FromLogContext()
+                        .WriteTo.File(KorabliConfig.LogFile));
                 })
                 .Build();
 
