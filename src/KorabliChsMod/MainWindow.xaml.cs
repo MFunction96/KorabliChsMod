@@ -1,9 +1,19 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using Serilog;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Windows;
-using System.Xml;
-using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
-using Path = System.IO.Path;
+using System.Windows.Documents;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Xanadu.KorabliChsMod.Config;
+using Xanadu.KorabliChsMod.Core;
 
 namespace Xanadu.KorabliChsMod
 {
@@ -15,16 +25,54 @@ namespace Xanadu.KorabliChsMod
         /// <summary>
         /// 
         /// </summary>
-        private readonly ILogger<MainWindow> _logger;
+        private readonly ILogger _logger;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly IGameDetector _gameDetector;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly INetworkEngine _networkEngine;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly BackgroundWorker _worker;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private KorabliConfig Config { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static string AppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "KorabliChsMod");
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="logger"></param>
-        public MainWindow(ILogger<MainWindow> logger)
+        /// <param name="gameDetector"></param>
+        /// <param name="networkEngine"></param>
+        public MainWindow(ILogger logger, IGameDetector gameDetector, INetworkEngine networkEngine)
         {
             this._logger = logger;
+            this._gameDetector = gameDetector;
+            this._networkEngine = networkEngine;
+            this._networkEngine.NetworkEngineEvent += this.SyncNetworkEngineMessage;
+            // TODO: Github与Gitee切换
+            _ = this._networkEngine.Headers.TryAdd("Accept", "application/vnd.github+json");
+            _ = this._networkEngine.Headers.TryAdd("X-GitHub-Api-Version", "2022-11-28");
+            _ = this._networkEngine.Headers.TryAdd("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0");
+
+            this.Config = new KorabliConfig();
+            this.Config.Read();
             InitializeComponent();
+            this._worker = new BackgroundWorker();
         }
 
         /// <summary>
@@ -32,7 +80,7 @@ namespace Xanadu.KorabliChsMod
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnGameLocation_Click(object sender, RoutedEventArgs e)
+        private async void BtnGameFolder_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFolderDialog()
             {
@@ -48,30 +96,142 @@ namespace Xanadu.KorabliChsMod
             }
 
             var gameFolder = dialog.FolderName;
-            var gameInfoFile = Path.Combine(gameFolder, "game_info.xml");
+            this.Config.GameFolder = gameFolder;
             try
             {
-                var gameInfoXml = new XmlDocument();
-                gameInfoXml.Load(gameInfoFile);
-                var gameServer = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
-                this.LbGameServerDetail.Content = gameServer;
-                var gameVersion = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
-                this.LbGameVersionDetail.Content = gameVersion;
-                var buildNumber = gameVersion[(gameVersion.LastIndexOf('.') + 1)..];
-                var modFolder = Path.Combine(gameFolder, "bin", buildNumber, "res_mods");
-                var localeFile = Path.Combine(modFolder, "locale_config.xml");
-                var localeXml = new XmlDocument();
-                localeXml.Load(localeFile);
-                var language = localeXml["locale_config"]?["lang_mapping"]?["lang"]?.Attributes["full"]?.Value ?? string.Empty;
-                var chsModStatus = string.Compare(language, "schinese", StringComparison.OrdinalIgnoreCase) == 0;
-                this.LbGameChsVersionDetail.Content = chsModStatus ? "已安装" : "未安装";
+                await this._gameDetector.Load(this.Config.GameFolder);
+                this.TbGameFolder.Text = this._gameDetector.Folder;
+                this.LbGameServerDetail.Content = this._gameDetector.Server;
+                this.LbGameVersionDetail.Content = this._gameDetector.Version;
+                this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
+                await this.Config.SaveAsync();
             }
             catch (Exception exception)
             {
-                _ = MessageBox.Show("该文件夹路径不合法！", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-                this._logger.LogError(exception, "选择游戏路径异常");
+                this.TbStatus.Text += exception.Message + "\r\n";
+                this._logger.Error(exception, string.Empty);
             }
-            
+
+        }
+
+        private void BtnInstall_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnUninstall_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void HlDdf_Click(object sender, RoutedEventArgs e)
+        {
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
+        }
+
+        private void HlMf_Click(object sender, RoutedEventArgs e)
+        {
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
+        }
+
+        private void HlNg_Click(object sender, RoutedEventArgs e)
+        {
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
+        }
+
+        private void HlWalks_Click(object sender, RoutedEventArgs e)
+        {
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
+        }
+
+        private void HlMod_Click(object sender, RoutedEventArgs e)
+        {
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
+        }
+
+        private void HlProject_Click(object sender, RoutedEventArgs e)
+        {
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
+        }
+
+        private async void Window_Initialized(object sender, EventArgs e)
+        {
+            var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
+            this.LbVersion.Content = fullVersion.Split('+')[0];
+            if (!Directory.Exists(MainWindow.AppDataPath))
+            {
+                Directory.CreateDirectory(MainWindow.AppDataPath);
+            }
+
+            if (Directory.Exists(this.Config.GameFolder))
+            {
+                try
+                {
+                    await this._gameDetector.Load(this.Config.GameFolder);
+                    this.TbGameFolder.Text = this._gameDetector.Folder;
+                    this.LbGameServerDetail.Content = this._gameDetector.Server;
+                    this.LbGameVersionDetail.Content = this._gameDetector.Version;
+                    this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
+                }
+                catch (Exception exception)
+                {
+                    this.TbStatus.Text += exception.Message + "\r\n";
+                    this._logger.Error(exception, string.Empty);
+                }
+
+            }
+
+            this.TbStatus.Text += $"考拉比汉社厂 v{fullVersion}\r\n";
+            this._logger.Information($"考拉比汉社厂 v{fullVersion}");
+        }
+
+        private async void BtnSave_Click(object sender, RoutedEventArgs e)
+        {
+            this.Config.Proxy = new ProxyConfig
+            {
+                Address = this.TbProxyAddress.Text,
+                Username = this.TbProxyUsername.Text,
+                Password = this.TbProxyPassword.Text
+            };
+
+            await this.Config.SaveAsync();
+        }
+
+        private async void BtnUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            var response = await this._networkEngine.SendAsync(new HttpRequestMessage(HttpMethod.Get,
+                "https://api.github.com/repos/MFunction96/KorabliChsMod/releases"), 5);
+            if (response is null || !response.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            var releases = await response!.Content.ReadAsStringAsync();
+            var jArray = JsonConvert.DeserializeObject<JArray>(releases) ?? [];
+            var latest = jArray[0];
+            var downloadFile = @"";
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+                Arguments =
+                    $"-ExecutionPolicy Unrestricted -File {Environment.CurrentDirectory}\\Update.ps1 -Id {Environment.ProcessId} -ZipPath {downloadFile} -InstallPath {Environment.CurrentDirectory}",
+                WorkingDirectory = Environment.CurrentDirectory,
+                CreateNoWindow = true
+            };
+
+            Process.Start(processInfo);
+        }
+
+        private void SyncNetworkEngineMessage(object? sender, NetworkEngineEventArg e)
+        {
+            this.TbStatus.Text += e.Message + "\r\n";
+            this.SvStatus.ScrollToBottom();
         }
     }
 }
