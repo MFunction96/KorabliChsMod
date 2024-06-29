@@ -66,6 +66,8 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <TextBlock x:Name="TbStatus" Height="152" Margin="10,0,10,10" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="16" Background="Black" Foreground="White"><Run Language="zh-cn" Text="状态信息..."/></TextBlock>
+        <ScrollViewer x:Name="SvStatus" Margin="10,580,10,10">
+            <TextBlock x:Name="TbStatus" TextWrapping="Wrap" FontSize="16" Background="Black" Foreground="White"><Run Language="zh-cn" Text="状态信息..."/></TextBlock>
+        </ScrollViewer>
     </Grid>
 </Window>

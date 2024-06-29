@@ -10,7 +10,7 @@ namespace Xanadu.KorabliChsMod.Core
     public sealed class GameDetector : IGameDetector
     {
         /// <inheritdoc />
-        public string Folder { get; private set; }
+        public string Folder { get; private set; } = string.Empty;
 
         /// <inheritdoc />
         public string GameInfoXmlPath => Path.Combine(this.Folder, IGameDetector.GameInfoXmlFileName);
@@ -22,10 +22,10 @@ namespace Xanadu.KorabliChsMod.Core
         public string LocaleInfoXmlPath => Path.Combine(this.ModFolder, IGameDetector.LocaleInfoXmlFileName);
 
         /// <inheritdoc />
-        public string Server { get; private set; }
+        public string Server { get; private set; } = string.Empty;
 
         /// <inheritdoc />
-        public string Version { get; private set; }
+        public string Version { get; private set; } = string.Empty;
 
         /// <inheritdoc />
         public string BuildNumber => this.Version[(this.Version.LastIndexOf('.') + 1)..];
@@ -34,7 +34,7 @@ namespace Xanadu.KorabliChsMod.Core
         public bool IsTest { get; private set; }
 
         /// <inheritdoc />
-        public string Locale { get; private set; }
+        public string Locale { get; private set; } = string.Empty;
 
         /// <inheritdoc />
         public bool ChsMod { get; private set; }

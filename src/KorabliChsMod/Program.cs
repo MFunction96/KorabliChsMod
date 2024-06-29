@@ -18,13 +18,14 @@ namespace Xanadu.KorabliChsMod
                     services.AddSingleton<App>();
                     services.AddSingleton<MainWindow>();
                     services.AddSingleton<IGameDetector, GameDetector>();
+                    services.AddSingleton<INetworkEngine, NetworkEngine>();
                     services.AddSerilog(configuration => configuration
                         .Enrich.FromLogContext()
                         .WriteTo.File(KorabliConfig.LogFile));
                 })
                 .Build();
 
-            var app = host.Services.GetService<App>();
+            var app = host.Services.GetService<App>()!;
             app.Run();
         }
     }

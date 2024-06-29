@@ -10,6 +10,8 @@
 		<RepositoryUrl>https://github.com/MFunction96/KorabliChsMod</RepositoryUrl>
 		<Copyright>2021-2024 Xanadu</Copyright>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
 		<Version Condition=" '$(BIN_VER)' == '' ">0.0.1-alpha</Version>
 		<Version Condition=" '$(BIN_VER)' != '' ">$(BIN_VER)</Version>
 	</PropertyGroup>
