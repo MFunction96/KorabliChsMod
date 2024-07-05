@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
 using Xanadu.KorabliChsMod.Config;
@@ -22,6 +23,7 @@ namespace Xanadu.KorabliChsMod
                     services.AddSerilog(configuration => configuration
                         .Enrich.FromLogContext()
                         .WriteTo.File(KorabliConfig.LogFile));
+                    services.AddLogging(configuration => configuration.AddConsole().AddSerilog());
                 })
                 .Build();
 
