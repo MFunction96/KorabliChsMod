@@ -1,4 +1,4 @@
-﻿namespace Xanadu.KorabliChsMod.Config
+﻿namespace Xanadu.KorabliChsMod.Core.Config
 {
     /// <summary>
     /// 
@@ -8,16 +8,16 @@
         /// <summary>
         /// 
         /// </summary>
-        public string Address { get; set; }
+        public string Address { get; set; } = string.Empty;
 
         /// <summary>
         /// 
         /// </summary>
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         /// <summary>
         /// 
         /// </summary>
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 }

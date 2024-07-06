@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="考拉比汉社厂" Height="769" Width="477" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="ToolWindow" FontSize="20" Initialized="Window_Initialized">
+        Title="考拉比汉社厂" Height="769" Width="477" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="ToolWindow" FontSize="20" Initialized="Window_Initialized" Loaded="Window_Loaded">
     <Grid>
         <TabControl Margin="10,10,10,178">
             <TabItem Header="功能" FontSize="20">

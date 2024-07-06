@@ -1,6 +1,7 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Xanadu.KorabliChsMod.Core
 {
-    public sealed class NetworkEngine(ILogger logger) : INetworkEngine
+    public sealed class NetworkEngine(ILogger<NetworkEngine> logger) : INetworkEngine
     {
         private bool _disposed;
 
@@ -41,7 +42,7 @@ namespace Xanadu.KorabliChsMod.Core
             }
             catch (Exception e)
             {
-                logger.Error(e, string.Empty);
+                logger.LogError(e, string.Empty);
                 return false;
             }
 
@@ -64,7 +65,7 @@ namespace Xanadu.KorabliChsMod.Core
 
                 var res = await this.Client.SendAsync(request, cancellationToken);
 
-                logger.Information($"{res.StatusCode} -> {request.RequestUri?.AbsoluteUri}");
+                logger.LogInformation($"{res.StatusCode} -> {request.RequestUri?.AbsoluteUri}");
                 this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
                 {
                     Message = $"结束单次请求：{res.StatusCode} {request.RequestUri?.AbsoluteUri}"
@@ -85,7 +86,7 @@ namespace Xanadu.KorabliChsMod.Core
 
                     response = await this.Client.SendAsync(request, cancellationToken);
                     response.EnsureSuccessStatusCode();
-                    logger.Information($"{response.StatusCode} -> {request.RequestUri?.AbsoluteUri}");
+                    logger.LogInformation($"{response.StatusCode} -> {request.RequestUri?.AbsoluteUri}");
                     this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
                     {
                         Message = $"结束请求：{response.StatusCode} {request.RequestUri?.AbsoluteUri}"
@@ -95,7 +96,7 @@ namespace Xanadu.KorabliChsMod.Core
                 }
                 catch (Exception e)
                 {
-                    logger.Error(e, string.Empty);
+                    logger.LogError(e, string.Empty);
                     this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
                     {
                         Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.AbsoluteUri}",
@@ -112,6 +113,39 @@ namespace Xanadu.KorabliChsMod.Core
             });
 
             return null;
+        }
+
+        public async Task DownloadAsync(HttpRequestMessage request, string filePath, int retry = 0,
+            CancellationToken cancellationToken = default)
+        {
+            using var response = await this.SendAsync(request, 5, cancellationToken);
+            try
+            {
+                if (response is null || !response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException();
+                }
+
+                await using var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                await using var fsb = new BufferedStream(fs);
+                await using var nsb = new BufferedStream(await response.Content.ReadAsStreamAsync(cancellationToken));
+                await nsb.CopyToAsync(fsb, cancellationToken);
+                nsb.Close();
+                fsb.Close();
+                fs.Close();
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, string.Empty);
+                this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
+                {
+                    Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.AbsoluteUri}",
+                    Exception = e
+                });
+
+                throw;
+            }
+
         }
 
         #region Disposing
@@ -143,7 +177,7 @@ namespace Xanadu.KorabliChsMod.Core
             {
                 // Dispose managed resources.
                 this.Client.Dispose();
-                logger.Information($"{this.GetType().Name} disposing");
+                logger.LogInformation($"{this.GetType().Name} disposing");
 
             }
             // Call the appropriate methods to clean up

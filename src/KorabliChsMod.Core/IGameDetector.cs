@@ -75,5 +75,19 @@ namespace Xanadu.KorabliChsMod.Core
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public Task Load(string gameInfoXmlPath, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public Task Backup(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public Task Restore(CancellationToken cancellationToken = default);
     }
 }

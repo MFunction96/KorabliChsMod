@@ -14,5 +14,6 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Version Condition=" '$(BIN_VER)' == '' ">0.0.1-alpha</Version>
 		<Version Condition=" '$(BIN_VER)' != '' ">$(BIN_VER)</Version>
+		<DotNetMajorVersion>8.*</DotNetMajorVersion>
 	</PropertyGroup>
 </Project>
