@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog" Version="4.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="$(DotNetMajorVersion)" />
+    <PackageReference Include="Newtonsoft.Json" Version="*" />
+    <PackageReference Include="Skidbladnir.IO.File" Version="*" />
   </ItemGroup>
 
 </Project>

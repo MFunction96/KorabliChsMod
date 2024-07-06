@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Xanadu.Skidbladnir.IO.File.Cache;
 
 namespace Xanadu.KorabliChsMod.Core
 {
@@ -32,5 +33,16 @@ namespace Xanadu.KorabliChsMod.Core
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public Task<HttpResponseMessage?> SendAsync(HttpRequestMessage request, int retry = 0, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="filePath"></param>
+        /// <param name="retry"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public Task DownloadAsync(HttpRequestMessage request, string filePath, int retry = 0,
+            CancellationToken cancellationToken = default);
     }
 }

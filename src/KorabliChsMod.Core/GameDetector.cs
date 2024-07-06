@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using System.Xml;
 namespace Xanadu.KorabliChsMod.Core
 {
     /// <inheritdoc />
-    public sealed class GameDetector : IGameDetector
+    public sealed class GameDetector(ILogger<GameDetector> logger) : IGameDetector
     {
         /// <inheritdoc />
         public string Folder { get; private set; } = string.Empty;
@@ -16,7 +17,7 @@ namespace Xanadu.KorabliChsMod.Core
         public string GameInfoXmlPath => Path.Combine(this.Folder, IGameDetector.GameInfoXmlFileName);
 
         /// <inheritdoc />
-        public string ModFolder => this.IsTest ? throw new NotImplementedException(): Path.Combine(this.Folder, "bin", this.BuildNumber, "res_mods");
+        public string ModFolder => this.IsTest ? throw new NotImplementedException() : Path.Combine(this.Folder, "bin", this.BuildNumber, "res_mods");
 
         /// <inheritdoc />
         public string LocaleInfoXmlPath => Path.Combine(this.ModFolder, IGameDetector.LocaleInfoXmlFileName);
@@ -44,17 +45,45 @@ namespace Xanadu.KorabliChsMod.Core
         {
             return Task.Run(() =>
             {
-                this.IsTest = false;
-                this.Folder = gameFolder;
-                var gameInfoXml = new XmlDocument();
-                gameInfoXml.Load(this.GameInfoXmlPath);
-                this.Server = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
-                this.Version = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
-                var localeXml = new XmlDocument();
-                localeXml.Load(this.LocaleInfoXmlPath);
-                this.Locale = localeXml["locale_config"]?["lang_mapping"]?["lang"]?.Attributes["full"]?.Value ?? string.Empty;
-                this.ChsMod = string.Compare(this.Locale, "schinese", StringComparison.OrdinalIgnoreCase) == 0;
+                try
+                {
+                    this.IsTest = false;
+                    this.Folder = gameFolder;
+                    var gameInfoXml = new XmlDocument();
+                    gameInfoXml.Load(this.GameInfoXmlPath);
+                    this.Server = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
+                    this.Version = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
+                    if (!File.Exists(this.LocaleInfoXmlPath))
+                    {
+                        this.Locale = "RU";
+                        this.ChsMod = false;
+                    }
+                    else
+                    {
+                        var localeXml = new XmlDocument();
+                        localeXml.Load(this.LocaleInfoXmlPath);
+                        this.Locale = localeXml["locale_config"]?["lang_mapping"]?["lang"]?.Attributes["full"]?.Value ?? string.Empty;
+                        this.ChsMod = string.Compare(this.Locale, "schinese", StringComparison.OrdinalIgnoreCase) == 0;
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, string.Empty);
+                    throw;
+                }
+
             }, cancellationToken);
+        }
+
+        public Task Backup(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Restore(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
     }
 }

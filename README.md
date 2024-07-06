@@ -28,6 +28,8 @@
 
 <img src="https://dev.azure.com/XanaCN/f06af8ee-5084-455c-ac24-8fc4f735382c/_apis/git/repositories/d36405a6-bc74-45e3-b720-3a2c79f5c30e/items?path=/doc/README/.NETDesktopRuntime.png" alt="红框框" width="640" height="auto">
 
+> 如果不知道选择哪个，请选择`x64`即可
+
 #### 下载考拉比汉社厂最新版本
 
 无论Github还是Gitee，均转去最新发布下载即可，或访问以下链接以下载：
@@ -45,9 +47,9 @@
 - [x] 建立Azure DevOps全自动工作流
 - [x] Github, Gitee镜像仓库同步
 - [x] Github镜像仓库自动发布
-- [ ] 主汉化程序自更新功能
-- [ ] 主汉化更新程序核心功能，仅支持Github源的正式服汉化，包括汉化下载与更新、版本识别等核心功能
-- [ ] 网络代理选项
+- [x] 主汉化程序自更新功能
+- [x] 主汉化更新程序核心功能，仅支持Github源的正式服汉化，包括汉化下载与更新、版本识别等核心功能
+- [x] 网络代理选项
 
 ### 阶段二
 
