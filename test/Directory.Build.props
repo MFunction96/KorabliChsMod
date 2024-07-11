@@ -12,9 +12,10 @@
 		<PackageReference Include="MSTest.TestAdapter" Version="*" />
 		<PackageReference Include="MSTest.TestFramework" Version="*" />
 		<PackageReference Include="coverlet.collector" Version="*" />
+		<PackageReference Include="Moq" Version="*" />
 	</ItemGroup>
 
 	<ItemGroup>
-	<Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
-  </ItemGroup>
+		<Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+	</ItemGroup>
 </Project>

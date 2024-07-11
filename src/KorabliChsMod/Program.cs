@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
+using System.Text;
 using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Config;
 using Xanadu.Skidbladnir.IO.File.Cache;
@@ -21,10 +22,10 @@ namespace Xanadu.KorabliChsMod
                     services.AddSingleton<MainWindow>();
                     // 注册日志组件
                     services.AddLogging(configuration => configuration.AddConsole().AddSerilog());
-                    // 注册日志文件输出
+                    // 注册日志文件输出，48MB大小限制
                     services.AddSerilog(configuration => configuration
                         .Enrich.FromLogContext()
-                        .WriteTo.File(IKorabliFileHub.LogFilePath));
+                        .WriteTo.File(IKorabliFileHub.LogFilePath, encoding: Encoding.UTF8, fileSizeLimitBytes: 50331648));
                     // 注册配置文件
                     services.AddSingleton<IKorabliFileHub, KorabliFileHub>();
                     // 注册游戏探查服务
