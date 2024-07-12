@@ -3,7 +3,7 @@
 
 Name "考拉比汉社厂"
 OutFile "KorabliChsModInstaller.exe"
- 
+
 RequestExecutionLevel User
 ShowInstDetails Show
 InstallDir $Appdata
