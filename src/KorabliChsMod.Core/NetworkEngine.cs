@@ -19,26 +19,31 @@ namespace Xanadu.KorabliChsMod.Core
 
         public ConcurrentDictionary<string, string> Headers { get; } = new();
 
-        public bool SetProxy(string address = "")
+        public bool SetProxy(Uri? uri)
         {
             try
             {
-                var handler = new HttpClientHandler
+                lock (this.Client)
                 {
-                    AllowAutoRedirect = true,
-                    AutomaticDecompression = DecompressionMethods.All
-                };
+                    var handler = new HttpClientHandler
+                    {
+                        AllowAutoRedirect = true,
+                        AutomaticDecompression = DecompressionMethods.All
+                    };
 
-                if (string.IsNullOrEmpty(address))
-                {
-                    handler.Proxy = new WebProxy(new Uri(address));
+                    if (uri is not null)
+                    {
+                        handler.Proxy = new WebProxy(uri);
+                    }
+
+                    this.Client = new HttpClient(handler, true)
+                    {
+                        DefaultRequestVersion = Version.Parse("2.0"),
+                        DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
+                    };
+
                 }
-
-                this.Client = new HttpClient(handler, true)
-                {
-                    DefaultRequestVersion = Version.Parse("2.0"),
-                    DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
-                };
+                
             }
             catch (Exception e)
             {

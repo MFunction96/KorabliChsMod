@@ -7,14 +7,13 @@ OutFile "KorabliChsModInstaller.exe"
 RequestExecutionLevel User
 ShowInstDetails Show
 InstallDir $Appdata
+!define MUI_ABORTWARNING_TEXT "确定要取消安装吗?"
 
-!define MUI_ABORTWARNING_TEXT "Are you sure you wish to abort installation?"
- 
 Var CompletedText
 CompletedText $CompletedText
- 
+
 !insertmacro MUI_PAGE_WELCOME
- 
+
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_PAGE_CUSTOMFUNCTION_PRE InstFilesPre
 !define MUI_PAGE_CUSTOMFUNCTION_SHOW InstFilesShow
@@ -23,24 +22,29 @@ Var MUI_HeaderText
 Var MUI_HeaderSubText
 !define MUI_INSTFILESPAGE_FINISHHEADER_TEXT "$MUI_HeaderText"
 !define MUI_INSTFILESPAGE_FINISHHEADER_SUBTEXT "$MUI_HeaderSubText"
+!insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
- 
+!define MUI_FINISHPAGE_RUN
+!define MUI_FINISHPAGE_RUN_TEXT "运行 考拉比汉社厂"
+!define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
 !insertmacro MUI_PAGE_FINISH
 
-!insertmacro MUI_LANGUAGE "SimpChinese"
+Function LaunchLink
+  ExecShell "" "$instdir\KorabliChsMod\KorabliChsMod.exe"
+FunctionEnd
 
 Var CurrentPage
 Var UserIsMakingAbortDecision
 Var UserAborted
 Var SectionAborted
- 
+
 Function PauseIfUserIsMakingAbortDecision
   ${DoWhile} $UserIsMakingAbortDecision == "yes"
     Sleep 500
   ${Loop}
 FunctionEnd
 !define PauseIfUserIsMakingAbortDecision `Call PauseIfUserIsMakingAbortDecision`
- 
+
 !macro CheckUserAborted
   ${PauseIfUserIsMakingAbortDecision}
   ${If} $UserAborted == "yes"
@@ -48,7 +52,7 @@ FunctionEnd
   ${EndIf}
 !macroend
 !define CheckUserAborted `!insertmacro CheckUserAborted`
- 
+
 !macro EndUserAborted
   ${CheckUserAborted}
   goto _useraborted_end
@@ -63,12 +67,12 @@ FunctionEnd
   _useraborted_end:
 !macroend
 !define EndUserAborted `!insertmacro EndUserAborted`
- 
+
 Function InstFilesPre
   StrCpy $CurrentPage "InstFiles"
   StrCpy $UserAborted "no"
 FunctionEnd
- 
+
 Function InstFilesShow
   GetDlgItem $0 $HWNDPARENT 2
   EnableWindow $0 1
@@ -120,3 +124,5 @@ Function onUserAbort
     Abort
   ${EndIf}
 FunctionEnd
+
+!insertmacro MUI_LANGUAGE "SimpChinese"

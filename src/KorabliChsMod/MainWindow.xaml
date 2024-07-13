@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="考拉比汉社厂" Height="769" Width="477" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="ToolWindow" FontSize="20" Initialized="Window_Initialized" Loaded="Window_Loaded">
+        Title="考拉比汉社厂" Height="769" Width="477" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="ToolWindow" FontSize="20" Initialized="Window_Initialized" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid>
         <TabControl Margin="10,10,10,178">
             <TabItem Header="功能" FontSize="20">
@@ -49,7 +49,7 @@
                     <Label VerticalAlignment="Top" FontSize="16" Margin="40,213,31,0" Padding="0,0,0,0" Foreground="#FF0027FF" d:LayoutOverrides="Width">
                         <Hyperlink x:Name="HlProject" NavigateUri='https://github.com/MFunction96/KorabliChsMod' Click="HlProject_Click">https://github.com/MFunction96/KorabliChsMod</Hyperlink>
                     </Label>
-                    <Label Content="考拉比汉社厂许可：GNU General Public License 3.0" Margin="37,240,37,0" FontSize="16" Height="32" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment"/>
+                    <Label Content="考拉比汉社厂许可：AGPL-3.0" Margin="122,239,108,0" FontSize="16" Height="32" VerticalAlignment="Top"/>
                     <Label Content="莱服邀请码（字母顺序）" Margin="132,277,132,0" FontSize="16" Height="32" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment"/>
                     <Label Height="25" VerticalAlignment="Top" FontSize="16" Margin="22,314,20,0" Padding="0,0,0,0" Foreground="#FF0027FF" d:LayoutOverrides="Width">
                         <Hyperlink x:Name="HlDdf" NavigateUri='https://flot.ru/DDF_FantasyV' Click="HlDdf_Click">https://flot.ru/DDF_FantasyV</Hyperlink>
