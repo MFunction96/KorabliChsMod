@@ -13,12 +13,12 @@ namespace Xanadu.KorabliChsMod.Core
     public interface INetworkEngine : IDisposable
     {
         public ConcurrentDictionary<string, string> Headers { get; }
-        
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="address"></param>
-        public bool SetProxy(string address = "");
+        /// <param name="uri"></param>
+        public bool SetProxy(Uri? uri);
 
         /// <summary>
         /// 

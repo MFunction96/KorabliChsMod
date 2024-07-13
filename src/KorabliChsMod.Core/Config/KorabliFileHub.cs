@@ -14,7 +14,7 @@ namespace Xanadu.KorabliChsMod.Core.Config
     /// <summary>
     /// 
     /// </summary>
-    public class KorabliFileHub(ILogger<KorabliFileHub> logger) : IKorabliFileHub
+    public class KorabliFileHub(ILogger<KorabliFileHub> logger, INetworkEngine networkEngine) : IKorabliFileHub
     {
         /// <summary>
         /// 
@@ -124,8 +124,23 @@ namespace Xanadu.KorabliChsMod.Core.Config
         /// <inheritdoc />
         public async Task SaveAsync()
         {
+            if (!string.IsNullOrEmpty(this.Proxy.Address))
+            {
+                try
+                {
+                    var uri = new Uri(this.Proxy.Address);
+                    _ = networkEngine.SetProxy(uri);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
+
             var json = JsonConvert.SerializeObject(this, Formatting.Indented);
             await File.WriteAllTextAsync(IKorabliFileHub.ConfigFilePath, json, Encoding.UTF8);
         }
+
     }
 }

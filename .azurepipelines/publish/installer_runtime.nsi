@@ -36,13 +36,13 @@ RequestExecutionLevel User
 ShowInstDetails Show
 InstallDir $Appdata
 
-!define MUI_ABORTWARNING_TEXT "Are you sure you wish to abort installation?"
- 
+!define MUI_ABORTWARNING_TEXT "确定要取消安装吗?"
+
 Var CompletedText
 CompletedText $CompletedText
- 
+
 !insertmacro MUI_PAGE_WELCOME
- 
+
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_PAGE_CUSTOMFUNCTION_PRE InstFilesPre
 !define MUI_PAGE_CUSTOMFUNCTION_SHOW InstFilesShow
@@ -51,24 +51,22 @@ Var MUI_HeaderText
 Var MUI_HeaderSubText
 !define MUI_INSTFILESPAGE_FINISHHEADER_TEXT "$MUI_HeaderText"
 !define MUI_INSTFILESPAGE_FINISHHEADER_SUBTEXT "$MUI_HeaderSubText"
+!insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
- 
 !insertmacro MUI_PAGE_FINISH
-
-!insertmacro MUI_LANGUAGE "SimpChinese"
 
 Var CurrentPage
 Var UserIsMakingAbortDecision
 Var UserAborted
 Var SectionAborted
- 
+
 Function PauseIfUserIsMakingAbortDecision
   ${DoWhile} $UserIsMakingAbortDecision == "yes"
     Sleep 500
   ${Loop}
 FunctionEnd
 !define PauseIfUserIsMakingAbortDecision `Call PauseIfUserIsMakingAbortDecision`
- 
+
 !macro CheckUserAborted
   ${PauseIfUserIsMakingAbortDecision}
   ${If} $UserAborted == "yes"
@@ -76,7 +74,7 @@ FunctionEnd
   ${EndIf}
 !macroend
 !define CheckUserAborted `!insertmacro CheckUserAborted`
- 
+
 !macro EndUserAborted
   ${CheckUserAborted}
   goto _useraborted_end
@@ -91,12 +89,12 @@ FunctionEnd
   _useraborted_end:
 !macroend
 !define EndUserAborted `!insertmacro EndUserAborted`
- 
+
 Function InstFilesPre
   StrCpy $CurrentPage "InstFiles"
   StrCpy $UserAborted "no"
 FunctionEnd
- 
+
 Function InstFilesShow
   GetDlgItem $0 $HWNDPARENT 2
   EnableWindow $0 1
@@ -110,8 +108,7 @@ FunctionEnd
 ; Otherwise it returns null(""). 
 ; Written by kenglish_hi
 ; Adapted from StrReplace written by dandaman32
- 
- 
+
 Var STR_HAYSTACK
 Var STR_NEEDLE
 Var STR_CONTAINS_VAR_1
@@ -119,7 +116,7 @@ Var STR_CONTAINS_VAR_2
 Var STR_CONTAINS_VAR_3
 Var STR_CONTAINS_VAR_4
 Var STR_RETURN_VAR
- 
+
 Function StrContains
   Exch $STR_NEEDLE
   Exch 1
@@ -143,14 +140,14 @@ Function StrContains
    Pop $STR_NEEDLE ;Prevent "invalid opcode" errors and keep the
    Exch $STR_RETURN_VAR  
 FunctionEnd
- 
+
 !macro _StrContainsConstructor OUT NEEDLE HAYSTACK
   Push `${HAYSTACK}`
   Push `${NEEDLE}`
   Call StrContains
   Pop `${OUT}`
 !macroend
- 
+
 !define StrContains '!insertmacro "_StrContainsConstructor"'
 
 Section "考拉比汉社厂"
@@ -167,7 +164,8 @@ Section "考拉比汉社厂"
 SectionEnd
 
 Section ".NET 8.0运行环境"
-	DetailPrint "检查 ${__SECTION__} 是否已安装"
+
+  DetailPrint "检查 ${__SECTION__} 是否已安装"
 	nsExec::ExecToStack "dotnet --list-runtimes"
 	Pop $0
 	Push "Microsoft.WindowsDesktop.App 8"
@@ -181,6 +179,7 @@ notfound:
 		DetailPrint "安装 ${__SECTION__}"
     ${CheckUserAborted}
     !insertmacro ShellExecWait "runas" '"$instdir\KorabliChsMod\windowsdesktop-runtime-win-x64.exe"' '/install /passive /norestart' "" ${SW_SHOW} $1
+    Delete "$instdir\KorabliChsMod\windowsdesktop-runtime-win-x64.exe"
 		DetailPrint "安装 ${__SECTION__} 完成"
 		${EndUserAborted}
 done:
@@ -221,3 +220,5 @@ Function onUserAbort
     Abort
   ${EndIf}
 FunctionEnd
+
+!insertmacro MUI_LANGUAGE "SimpChinese"

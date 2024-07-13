@@ -3,7 +3,6 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -289,7 +288,7 @@ namespace Xanadu.KorabliChsMod
                 Directory.CreateDirectory(downloadFolder);
             }
 
-            var zipFile = this._cachePool.Register("KorabliChsMod.zip", "download");
+            var exeFile = this._cachePool.Register("KorabliChsModInstaller.exe", "download");
             try
             {
                 var response = await this._networkEngine.SendAsync(new HttpRequestMessage(HttpMethod.Get,
@@ -304,15 +303,15 @@ namespace Xanadu.KorabliChsMod
                 var latest = jArray.First(q => !q["prerelease"]!.Value<bool>());
                 var assets = latest["assets"]! as JArray;
                 var downloadFile = assets!.First(q =>
-                    string.Compare(q["content_type"]!.Value<string>(), "application/zip", StringComparison.OrdinalIgnoreCase) == 0)["browser_download_url"]!.Value<string>();
+                    string.Compare(q["name"]!.Value<string>(), "KorabliChsModInstaller.exe", StringComparison.OrdinalIgnoreCase) == 0)["browser_download_url"]!.Value<string>();
                 await this._networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
-                    zipFile.FullPath, 5);
+                    exeFile.FullPath, 5);
 
                 var processInfo = new ProcessStartInfo
                 {
-                    FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+                    FileName = @"C:\Windows\System32\cmd.exe",
                     Arguments =
-                        $"-ExecutionPolicy Unrestricted -File {Environment.CurrentDirectory}\\Update.ps1 -Id {Environment.ProcessId} -ZipPath {zipFile} -InstallPath {Environment.CurrentDirectory}",
+                        $"/q /c \"taskkill /F /PID {Environment.ProcessId} 1>nul 2>&1 && {exeFile.FullPath} /S /D {Path.GetDirectoryName(Environment.CurrentDirectory)} && {Environment.CurrentDirectory}/KorabliChsMod.exe\"",
                     WorkingDirectory = Environment.CurrentDirectory,
                     CreateNoWindow = true
                 };
@@ -323,7 +322,7 @@ namespace Xanadu.KorabliChsMod
             {
                 this.TbStatus.Text += exception.Message + "\r\n";
                 this.SvStatus.ScrollToBottom();
-                this._cachePool.UnRegister(zipFile);
+                this._cachePool.UnRegister(exeFile);
             }
 
             this.BtnUpdate.IsEnabled = true;
@@ -337,12 +336,18 @@ namespace Xanadu.KorabliChsMod
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            this.TbProxyAddress.Text = this._korabliFileHub.Proxy.Address;
             this.TbGameFolder.Text = this._gameDetector.Folder;
             this.LbGameServerDetail.Content = this._gameDetector.Server;
             this.LbGameVersionDetail.Content = this._gameDetector.Version;
             this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
             this.BtnInstall.IsEnabled = true;
             this.BtnUninstall.IsEnabled = true;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }
