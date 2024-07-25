@@ -17,7 +17,10 @@ namespace Xanadu.KorabliChsMod.Core
         public string GameInfoXmlPath => Path.Combine(this.Folder, IGameDetector.GameInfoXmlFileName);
 
         /// <inheritdoc />
-        public string ModFolder => this.IsTest ? throw new NotImplementedException() : Path.Combine(this.Folder, "bin", this.BuildNumber, "res_mods");
+        public string MetaDataXmlPath => Path.Combine(this.Folder, "game_metadata", IGameDetector.MetaDataXmlFileName);
+        
+        /// <inheritdoc />
+        public string ModFolder => this.IsTest ? Path.Combine(this.Folder, "bin", this.BuildNumber, "res") : Path.Combine(this.Folder, "bin", this.BuildNumber, "res_mods");
 
         /// <inheritdoc />
         public string LocaleInfoXmlPath => Path.Combine(this.ModFolder, IGameDetector.LocaleInfoXmlFileName);
@@ -53,6 +56,9 @@ namespace Xanadu.KorabliChsMod.Core
                     gameInfoXml.Load(this.GameInfoXmlPath);
                     this.Server = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
                     this.Version = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
+                    var metadataXml = new XmlDocument();
+                    metadataXml.Load(this.MetaDataXmlPath);
+                    this.IsTest = string.Compare(metadataXml["protocol"]?["predefined_section"]?["app_id"]?.InnerText, "WOWS.RPT.PRODUCTION", StringComparison.OrdinalIgnoreCase) == 0;
                     if (!File.Exists(this.LocaleInfoXmlPath))
                     {
                         this.Locale = "RU";

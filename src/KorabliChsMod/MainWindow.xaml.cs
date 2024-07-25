@@ -102,14 +102,7 @@ namespace Xanadu.KorabliChsMod
             this._korabliFileHub.GameFolder = gameFolder;
             try
             {
-                await this._gameDetector.Load(this._korabliFileHub.GameFolder);
-                this.TbGameFolder.Text = this._gameDetector.Folder;
-                this.LbGameServerDetail.Content = this._gameDetector.Server;
-                this.LbGameVersionDetail.Content = this._gameDetector.Version;
-                this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
-                await this._korabliFileHub.SaveAsync();
-                this.BtnInstall.IsEnabled = true;
-                this.BtnUninstall.IsEnabled = true;
+                this.ReloadFolder();
             }
             catch (Exception exception)
             {
@@ -139,7 +132,7 @@ namespace Xanadu.KorabliChsMod
 
                 var releases = await response.Content.ReadAsStringAsync();
                 var jArray = JsonConvert.DeserializeObject<JArray>(releases) ?? [];
-                var latest = jArray.First(q => !q["prerelease"]!.Value<bool>());
+                var latest = jArray.First(q => q["prerelease"]!.Value<bool>() == this._gameDetector.IsTest);
                 var modVersion = latest["tag_name"]!.Value<string>();
                 var downloadFile = latest["zipball_url"]!.Value<string>();
                 await this._networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
@@ -150,18 +143,10 @@ namespace Xanadu.KorabliChsMod
                 var zipFolder = Path.Combine(zipFile.Pool.BasePath, entry);
                 ZipFile.ExtractToDirectory(zipFile.FullPath, zipFile.Pool.BasePath, Encoding.UTF8, true);
                 IOExtension.CopyDirectory(zipFolder, this._gameDetector.ModFolder, true);
-                await File.WriteAllTextAsync(Path.Combine(this._gameDetector.ModFolder, "Korabli_localization_chs.sig"),
+                await File.WriteAllTextAsync(Path.Combine(this._gameDetector.ModFolder, "Korabli_localization_chs.ver"),
                     modVersion, Encoding.UTF8);
 
-                await this._gameDetector.Load(this._korabliFileHub.GameFolder);
-                await this._korabliFileHub.SaveAsync();
-
-                this.TbGameFolder.Text = this._gameDetector.Folder;
-                this.LbGameServerDetail.Content = this._gameDetector.Server;
-                this.LbGameVersionDetail.Content = this._gameDetector.Version;
-                this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
-                this.BtnInstall.IsEnabled = true;
-                this.BtnUninstall.IsEnabled = true;
+                this.ReloadFolder();
 
                 MessageBox.Show("汉化完成！");
             }
@@ -176,7 +161,7 @@ namespace Xanadu.KorabliChsMod
             this.BtnUninstall.IsEnabled = true;
         }
 
-        private async void BtnUninstall_Click(object sender, RoutedEventArgs e)
+        private void BtnUninstall_Click(object sender, RoutedEventArgs e)
         {
             this.BtnInstall.IsEnabled = false;
             this.BtnUninstall.IsEnabled = false;
@@ -184,15 +169,7 @@ namespace Xanadu.KorabliChsMod
             {
                 var backupFolder = this._korabliFileHub.PeekLatestBackup();
                 IOExtension.CopyDirectory(backupFolder, this._gameDetector.ModFolder, true);
-                await this._gameDetector.Load(this._korabliFileHub.GameFolder);
-                await this._korabliFileHub.SaveAsync();
-                this.TbGameFolder.Text = this._gameDetector.Folder;
-                this.LbGameServerDetail.Content = this._gameDetector.Server;
-                this.LbGameVersionDetail.Content = this._gameDetector.Version;
-                this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
-                this.BtnInstall.IsEnabled = true;
-                this.BtnUninstall.IsEnabled = true;
-
+                this.ReloadFolder();
                 MessageBox.Show("还原完成！");
             }
             catch (Exception exception)
@@ -322,9 +299,9 @@ namespace Xanadu.KorabliChsMod
             {
                 this.TbStatus.Text += exception.Message + "\r\n";
                 this.SvStatus.ScrollToBottom();
-                this._cachePool.UnRegister(exeFile);
             }
 
+            this._cachePool.UnRegister(exeFile);
             this.BtnUpdate.IsEnabled = true;
         }
 
@@ -337,17 +314,27 @@ namespace Xanadu.KorabliChsMod
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.TbProxyAddress.Text = this._korabliFileHub.Proxy.Address;
-            this.TbGameFolder.Text = this._gameDetector.Folder;
-            this.LbGameServerDetail.Content = this._gameDetector.Server;
-            this.LbGameVersionDetail.Content = this._gameDetector.Version;
-            this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
-            this.BtnInstall.IsEnabled = true;
-            this.BtnUninstall.IsEnabled = true;
+            this.ReloadFolder();
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private async void ReloadFolder()
+        {
+            this.BtnInstall.IsEnabled = false;
+            this.BtnUninstall.IsEnabled = false;
+            await this._gameDetector.Load(this._korabliFileHub.GameFolder);
+            await this._korabliFileHub.SaveAsync();
+            this.TbGameFolder.Text = this._gameDetector.Folder;
+            this.LbGameServerDetail.Content = this._gameDetector.Server;
+            this.LbGameVersionDetail.Content = this._gameDetector.Version;
+            this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
+            this.LbGameTestDetail.Content = this._gameDetector.IsTest ? "测试服" : "正式服";
+            this.BtnInstall.IsEnabled = true;
+            this.BtnUninstall.IsEnabled = true;
         }
     }
 }
