@@ -21,7 +21,17 @@ namespace Xanadu.KorabliChsMod.Core
         /// <summary>
         /// 
         /// </summary>
+        public const string MetaDataXmlFileName = "metadata.xml";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Folder { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string MetaDataXmlPath { get; }
 
         /// <summary>
         /// 

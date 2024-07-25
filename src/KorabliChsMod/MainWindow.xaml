@@ -20,8 +20,8 @@
                     <Label x:Name="LbGameChsVersionDetail" Content="请选择游戏位置" HorizontalAlignment="Left" Height="42" Margin="141,231,0,0" VerticalAlignment="Top" Width="262" d:LayoutOverrides="VerticalAlignment"/>
                     <Button x:Name="BtnInstall" Content="安装" HorizontalAlignment="Left" Height="46" Margin="73,364,0,0" VerticalAlignment="Top" Click="BtnInstall_Click" d:LayoutOverrides="HorizontalAlignment" Width="125" IsDefault="True" IsEnabled="False"/>
                     <Button x:Name="BtnUninstall" Content="还原" HorizontalAlignment="Left" Height="46" Margin="270,364,0,0" VerticalAlignment="Top" Width="133" Click="BtnUninstall_Click" IsEnabled="False"/>
-                    <Label x:Name="LbGameTest" Content="测试服" HorizontalAlignment="Left" Height="42" Margin="10,288,0,0" VerticalAlignment="Top" Width="126"/>
-                    <Label x:Name="LbGameTestDetail" Content="该功能暂不开放" HorizontalAlignment="Left" Height="42" Margin="141,288,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="LbGameTest" Content="客户端类型" HorizontalAlignment="Left" Height="42" Margin="10,288,0,0" VerticalAlignment="Top" Width="126"/>
+                    <Label x:Name="LbGameTestDetail" Content="请选择游戏位置" HorizontalAlignment="Left" Height="42" Margin="141,288,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="设置" FontSize="20">
