@@ -1,0 +1,133 @@
+<protocol name="app_metadata" version="7.0" wgc_publisher_id="lesta">
+    <version>20240508112800</version>
+    <predefined_section>
+		<app_id public="true">WOWS.RU.PRODUCTION</app_id>
+		<chain_id>f21</chain_id>
+		<supported_languages>RU</supported_languages>
+		<default_language>RU</default_language>
+		<name>Мир кораблей</name>
+		<fs_name>Korabli</fs_name>
+		<shortcut_name>Мир кораблей</shortcut_name>
+		<executables>
+			<executable>WorldOfWarships.exe</executable>
+		</executables>
+		<launch_options>
+			<option id="SAFE_MODE">--safe</option>
+			<option id="RESET_ALL">--ra</option>
+			<option id="GAMECHECK">--gamecheck</option>
+		</launch_options>
+		<keep_patches_interval>0</keep_patches_interval>
+		<max_unpacking_threads_ssd>4</max_unpacking_threads_ssd>
+		<max_unpacking_threads_hdd>4</max_unpacking_threads_hdd>
+		<multiplier_unpacking_threads_ssd>0.5</multiplier_unpacking_threads_ssd>
+		<multiplier_unpacking_threads_hdd>0.5</multiplier_unpacking_threads_hdd>
+		<client_types default="high">
+			<client_type aliases="full" arch="x64" id="high">
+				<initial_app_type>incomplete</initial_app_type>
+				<final_app_type>high</final_app_type>
+				<min_supported_os>Win7</min_supported_os>
+				<required_redistributables>
+					<value elevation_required="true">vc2019</value>
+					<value elevation_required="true">vc2019_x64</value>
+				</required_redistributables>
+				<client_parts>
+					<client_part id="client" integrity="true" />
+					<client_part id="locale" integrity="true" />
+					<client_part id="sdcontent" integrity="true" />
+					<client_part app_type="high" id="hotfix" integrity="true" />
+				</client_parts>
+			</client_type>
+		</client_types>
+		<login_enabled>true</login_enabled>
+		<realms_settings>
+			<instances>
+				<instance default="true" id="wows_ru">
+					<platform_realm_id>ru</platform_realm_id>
+					<game_id>wows</game_id>
+					<title_id>ru.wows</title_id>
+					<options>
+						<option key="build_type">prod</option>
+						<option key="client_realm">ru</option>
+					</options>
+					<content_service_url>http://lstuscs-ru.lesta.ru/</content_service_url>
+					<common_agreements>
+						<agreement id="ru_eula" />
+					</common_agreements>
+					<common_commerce_agreements>
+						<agreement id="ru_eula" />
+					</common_commerce_agreements>
+					<features>
+						<feature enabled="true" id="game_pages_targeting" />
+						<feature enabled="true" id="buy_game_items" />
+					</features>
+				</instance>
+			</instances>
+		</realms_settings>
+		<localization>
+			<item id="HIGH__NAME">
+				<text xml:lang="ru">Клиент с высоким качеством звука.</text>
+				<text xml:lang="en">Game client with high-quality sound.</text>
+			</item>
+			<item id="HIGH__SHORT_NAME">
+				<text xml:lang="ru">HIGH</text>
+				<text xml:lang="en">HIGH</text>
+			</item>
+			<item id="HIGH__DESCRIPTION">
+				<text xml:lang="ru">Клиент с высоким качеством звуков включает в себя звуковые эффекты высокого качества.</text>
+				<text xml:lang="en">The game client with high-quality sound includes sound effects of high quality.</text>
+			</item>
+			<item id="HIGH__LOCALE__TITLE">
+				<text xml:lang="ru">Мини-клиент</text>
+				<text xml:lang="en">Mini Client</text>
+			</item>
+			<item id="HIGH__LOCALE__INFO_BEFORE_INSTALL_TEXT">
+				<text xml:lang="ru">Вы получите доступ к боевому обучению и технике начальных уровней</text>
+				<text xml:lang="en">You will receive access to Battle Training and vehicles of starting tiers</text>
+			</item>
+			<item id="HIGH__LOCALE__INFO_AFTER_INSTALL_TITLE">
+				<text xml:lang="ru">Начинайте играть!</text>
+				<text xml:lang="en">Start Playing!</text>
+			</item>
+			<item id="HIGH__LOCALE__INFO_AFTER_INSTALL_TEXT">
+				<text xml:lang="ru">У вас уже есть доступ к боевому обучению и технике начальных уровней</text>
+				<text xml:lang="en">You now have access to Battle Training and vehicles of starting tiers</text>
+			</item>
+			<item id="IDENTITY_REALM_NAME__PT">
+				<text xml:lang="ru">Public Test</text>
+				<text xml:lang="en">Public Test</text>
+			</item>
+			<item id="LAUNCH_OPTION_TITLE__SAFE_MODE">
+				<text xml:lang="ru">Запуск игры без модификаций</text>
+				<text xml:lang="en">Launch the game in safe mode</text>
+			</item>
+			<item id="LAUNCH_OPTION_DESCRIPTION__SAFE_MODE">
+				<text xml:lang="ru">Игра запустится без установленных модификаций клиента.</text>
+				<text xml:lang="en">Any installed game client modifications will be ignored.</text>
+			</item>
+			<item id="LAUNCH_OPTION_TITLE__RESET_ALL">
+				<text xml:lang="ru">Запуск игры со сбросом настроек</text>
+				<text xml:lang="en">Launch the game with settings reset</text>
+			</item>
+			<item id="LAUNCH_OPTION_DESCRIPTION__RESET_ALL">
+				<text xml:lang="ru">Игра запустится со стандартными настройками, без модификаций. Все ваши настройки будут сброшены.</text>
+				<text xml:lang="en">The game will be launched with default settings, without any modifications. All your settings will be reset.</text>
+			</item>
+			<item id="LAUNCH_OPTION_TITLE__GAMECHECK">
+				<text xml:lang="ru">Собрать отчет GameCheck</text>
+				<text xml:lang="en">Generate GameCheck report</text>
+			</item>
+			<item id="LAUNCH_OPTION_DESCRIPTION__GAMECHECK">
+				<text xml:lang="ru">Собрать отчет GameCheck</text>
+				<text xml:lang="en">Generate GameCheck report</text>
+			</item>
+		</localization>
+	</predefined_section>
+
+    <generated_section>
+        
+            <launch_forbidden>False</launch_forbidden>
+        
+            <stop_supporting>False</stop_supporting>
+        
+    </generated_section>
+</protocol>
