@@ -58,7 +58,7 @@ namespace Xanadu.KorabliChsMod.Core
                     this.Version = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
                     var metadataXml = new XmlDocument();
                     metadataXml.Load(this.MetaDataXmlPath);
-                    this.IsTest = string.Compare(metadataXml["protocol"]?["predefined_section"]?["app_id"]?.InnerText, "WOWS.RPT.PRODUCTION", StringComparison.OrdinalIgnoreCase) == 0;
+                    this.IsTest = string.Compare(metadataXml["protocol"]?["predefined_section"]?["app_id"]?.InnerText, "WOWS.RU.PRODUCTION", StringComparison.OrdinalIgnoreCase) != 0;
                     if (!File.Exists(this.LocaleInfoXmlPath))
                     {
                         this.Locale = "RU";

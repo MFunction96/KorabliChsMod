@@ -16,6 +16,7 @@ using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Config;
 using Xanadu.Skidbladnir.IO.File;
 using Xanadu.Skidbladnir.IO.File.Cache;
+// ReSharper disable RedundantExtendsListEntry
 
 namespace Xanadu.KorabliChsMod
 {
@@ -77,13 +78,31 @@ namespace Xanadu.KorabliChsMod
             this._korabliFileHub.Load();
             InitializeComponent();
         }
+        private void Window_Initialized(object sender, EventArgs e)
+        {
+            var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
+            this.LbVersion.Content = fullVersion.Split('+')[0];
+            if (!Directory.Exists(MainWindow.AppDataPath))
+            {
+                Directory.CreateDirectory(MainWindow.AppDataPath);
+            }
+
+            this.TbStatus.Text += $"考拉比汉社厂 v{fullVersion}\r\n";
+            this._logger.LogInformation($"考拉比汉社厂 v{fullVersion}");
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.TbProxyAddress.Text = this._korabliFileHub.Proxy.Address;
+            this.ReloadFolder();
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void BtnGameFolder_Click(object sender, RoutedEventArgs e)
+        private void BtnGameFolder_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFolderDialog
             {
@@ -106,8 +125,7 @@ namespace Xanadu.KorabliChsMod
             }
             catch (Exception exception)
             {
-                this.TbStatus.Text += exception.Message + "\r\n";
-                this._logger.LogError(exception, string.Empty);
+                this.WriteErrorToStatus(exception);
             }
 
         }
@@ -122,7 +140,7 @@ namespace Xanadu.KorabliChsMod
             {
 
                 var backupFolder = await this._korabliFileHub.EnqueueBackup(true);
-                IOExtension.CopyDirectory(this._gameDetector.ModFolder, backupFolder, true);
+                IOExtension.CopyDirectory(this._gameDetector.ModFolder, backupFolder);
                 var response = await this._networkEngine.SendAsync(new HttpRequestMessage(HttpMethod.Get,
                     "https://api.github.com/repos/DDFantasyV/Korabli_localization_chs/releases"), 5);
                 if (response is null || !response.IsSuccessStatusCode)
@@ -142,7 +160,7 @@ namespace Xanadu.KorabliChsMod
                 var entry = zip.Entries[0].FullName;
                 var zipFolder = Path.Combine(zipFile.Pool.BasePath, entry);
                 ZipFile.ExtractToDirectory(zipFile.FullPath, zipFile.Pool.BasePath, Encoding.UTF8, true);
-                IOExtension.CopyDirectory(zipFolder, this._gameDetector.ModFolder, true);
+                IOExtension.CopyDirectory(zipFolder, this._gameDetector.ModFolder);
                 await File.WriteAllTextAsync(Path.Combine(this._gameDetector.ModFolder, "Korabli_localization_chs.ver"),
                     modVersion, Encoding.UTF8);
 
@@ -152,8 +170,7 @@ namespace Xanadu.KorabliChsMod
             }
             catch (Exception exception)
             {
-                this.TbStatus.Text += exception.Message + "\r\n";
-                this._logger.LogError(exception, string.Empty);
+                this.WriteErrorToStatus(exception);
             }
 
             this._cachePool.UnRegister(zipFile);
@@ -168,14 +185,13 @@ namespace Xanadu.KorabliChsMod
             try
             {
                 var backupFolder = this._korabliFileHub.PeekLatestBackup();
-                IOExtension.CopyDirectory(backupFolder, this._gameDetector.ModFolder, true);
+                IOExtension.CopyDirectory(backupFolder, this._gameDetector.ModFolder);
                 this.ReloadFolder();
                 MessageBox.Show("还原完成！");
             }
             catch (Exception exception)
             {
-                this.TbStatus.Text += exception.Message + "\r\n";
-                this._logger.LogError(exception, string.Empty);
+                this.WriteErrorToStatus(exception);
             }
             this.BtnInstall.IsEnabled = true;
             this.BtnUninstall.IsEnabled = true;
@@ -215,33 +231,6 @@ namespace Xanadu.KorabliChsMod
         {
             var hyperlink = sender as Hyperlink;
             Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
-        }
-
-        private void Window_Initialized(object sender, EventArgs e)
-        {
-            var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
-            this.LbVersion.Content = fullVersion.Split('+')[0];
-            if (!Directory.Exists(MainWindow.AppDataPath))
-            {
-                Directory.CreateDirectory(MainWindow.AppDataPath);
-            }
-
-            if (Directory.Exists(this._korabliFileHub.GameFolder))
-            {
-                try
-                {
-                    this._gameDetector.Load(this._korabliFileHub.GameFolder).GetAwaiter().GetResult();
-                }
-                catch (Exception exception)
-                {
-                    this.TbStatus.Text += exception.Message + "\r\n";
-                    this._logger.LogError(exception, string.Empty);
-                }
-
-            }
-
-            this.TbStatus.Text += $"考拉比汉社厂 v{fullVersion}\r\n";
-            this._logger.LogInformation($"考拉比汉社厂 v{fullVersion}");
         }
 
         private async void BtnSave_Click(object sender, RoutedEventArgs e)
@@ -297,8 +286,7 @@ namespace Xanadu.KorabliChsMod
             }
             catch (Exception exception)
             {
-                this.TbStatus.Text += exception.Message + "\r\n";
-                this.SvStatus.ScrollToBottom();
+                this.WriteErrorToStatus(exception);
             }
 
             this._cachePool.UnRegister(exeFile);
@@ -311,11 +299,7 @@ namespace Xanadu.KorabliChsMod
             this.SvStatus.ScrollToBottom();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.TbProxyAddress.Text = this._korabliFileHub.Proxy.Address;
-            this.ReloadFolder();
-        }
+
 
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -326,8 +310,27 @@ namespace Xanadu.KorabliChsMod
         {
             this.BtnInstall.IsEnabled = false;
             this.BtnUninstall.IsEnabled = false;
-            await this._gameDetector.Load(this._korabliFileHub.GameFolder);
-            await this._korabliFileHub.SaveAsync();
+            try
+            {
+                if (!string.IsNullOrEmpty(this._korabliFileHub.GameFolder))
+                {
+                    await this._gameDetector.Load(this._korabliFileHub.GameFolder);
+                }
+
+                await this._korabliFileHub.SaveAsync();
+
+                if (string.IsNullOrEmpty(this._korabliFileHub.GameFolder))
+                {
+                    return;
+                }
+
+            }
+            catch (Exception exception)
+            {
+                this.WriteErrorToStatus(exception);
+                return;
+            }
+
             this.TbGameFolder.Text = this._gameDetector.Folder;
             this.LbGameServerDetail.Content = this._gameDetector.Server;
             this.LbGameVersionDetail.Content = this._gameDetector.Version;
@@ -335,6 +338,16 @@ namespace Xanadu.KorabliChsMod
             this.LbGameTestDetail.Content = this._gameDetector.IsTest ? "测试服" : "正式服";
             this.BtnInstall.IsEnabled = true;
             this.BtnUninstall.IsEnabled = true;
+        }
+
+        private void WriteErrorToStatus(Exception exception, bool autoScroll = true)
+        {
+            this._logger.LogError(exception, string.Empty);
+            this.TbStatus.Text += exception.Message + "\r\n";
+            if (autoScroll)
+            {
+                this.SvStatus.ScrollToBottom();
+            }
         }
     }
 }
