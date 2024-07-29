@@ -95,7 +95,7 @@
 
 ## 感谢
 
-来自[@年糕特工队](https://space.bilibili.com/103312972)、[@walksQAQ](https://space.bilibili.com/87278382)共同制作的汉化，[@DDF_FantasyV](https://space.bilibili.com/475887963)提供的技术支持。
+来自[@年糕特工队](https://space.bilibili.com/103312972)、[@DDF_FantasyV](https://space.bilibili.com/475887963)、[@walksQAQ](https://space.bilibili.com/87278382)共同制作的汉化。
 
 ## 莱服邀请码（字母顺序）
 
