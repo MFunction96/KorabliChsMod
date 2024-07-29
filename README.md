@@ -16,27 +16,33 @@
 
 考拉比汉社厂由.NET 8编写，因此需要.NET 8运行环境。
 
-### *自动安装（待完成）*
+### 安装
 
-咕咕咕~
+无论Github还是Gitee，均转去最新发布下载即可，或访问以下链接以下载安装包含.NET 8运行环境的安装包：
 
-### 手动安装
+- Github: https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstallerWithRuntime.exe
 
-#### 安装.NET 桌面运行时
+> 如果确定本地已安装.NET 8运行环境，可选择以下安装包：
+>
+> - Github: https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstaller.exe
 
-前往官方网站：https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0 ，在页面右侧找到`.NET 桌面运行时`，选择合适的版本下载并安装。
+按照安装说明及提示完成安装即可，默认安装位置为：`%AppData%\KorabliChsMod`，即`C:\Users\<用户名>\AppData\Roaming\KorabliChsMod`，安装过程中会自动在桌面创建快捷方式。
 
-<img src="https://dev.azure.com/XanaCN/f06af8ee-5084-455c-ac24-8fc4f735382c/_apis/git/repositories/d36405a6-bc74-45e3-b720-3a2c79f5c30e/items?path=/doc/README/.NETDesktopRuntime.png" alt="红框框" width="640" height="auto">
+### 使用
 
-> 如果不知道选择哪个，请选择`x64`即可
+打开桌面快捷方式，进入程序。
 
-#### 下载考拉比汉社厂最新版本
+1. 选择正确的游戏客户端安装的位置。
+2. 点击`安装`，等待片刻即可完成。**无论检测到汉化安装与否，程序均会安装/覆盖安装最新版本的汉化补丁至指定客户端**。
 
-无论Github还是Gitee，均转去最新发布下载即可，或访问以下链接以下载：
+![主程序](https://dev.azure.com/XanaCN/f06af8ee-5084-455c-ac24-8fc4f735382c/_apis/git/repositories/d36405a6-bc74-45e3-b720-3a2c79f5c30e/items?path=/doc/README/MainWindow.png)
 
-- Github: https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsMod.zip
+> 目前正在紧锣密鼓地开发客户端自动搜索功能，敬请期待。
 
-解压下载好的压缩包，打开其中`KorabliChsMod.exe`尽可享受享用。
+### 更新
+
+方法一：在程序界面标签-关于-更新，稍等片刻即可完成自更新。
+方法二：按照安装方法重新下载安装即可。
 
 ## 计划
 
