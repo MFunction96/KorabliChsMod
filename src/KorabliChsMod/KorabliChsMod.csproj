@@ -6,7 +6,18 @@
 		<StartupObject>Xanadu.KorabliChsMod.Program</StartupObject>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<ApplicationIcon>pineapple.ico</ApplicationIcon>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="pineapple.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="pineapple.ico">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="..\..\LICENSE">
@@ -31,6 +42,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\KorabliChsMod.Core\KorabliChsMod.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="pineapple.ico" />
 	</ItemGroup>
 
 </Project>
