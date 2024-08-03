@@ -58,6 +58,10 @@ Var MUI_HeaderSubText
 !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
 !insertmacro MUI_PAGE_FINISH
 
+Function LaunchLink
+  ExecShell "" "$instdir\KorabliChsMod\KorabliChsMod.exe"
+FunctionEnd
+
 Var CurrentPage
 Var UserIsMakingAbortDecision
 Var UserAborted
