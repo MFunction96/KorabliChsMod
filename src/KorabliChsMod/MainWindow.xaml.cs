@@ -277,7 +277,7 @@ namespace Xanadu.KorabliChsMod
                 {
                     FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
                     Arguments =
-                        $"-ExecutionPolicy Unrestricted -Command \"Stop-Process -Id {Environment.ProcessId} -Force ; $p = Start-Process -FilePath \'{exeFile.FullPath}\' -ArgumentList \'/S /D \"\"{Path.GetDirectoryName(Environment.CurrentDirectory)}\"\"\' -PassThru ; $p.WaitForExit() ; Start-Process -FilePath \'{Environment.CurrentDirectory}\\KorabliChsMod.exe\'\"",
+                        $"-ExecutionPolicy Unrestricted -Command \"Stop-Process -Id {Environment.ProcessId} -Force ; $p = Start-Process -FilePath \'{exeFile.FullPath}\' -ArgumentList \'/S /D={Path.GetDirectoryName(Environment.CurrentDirectory)}\' -PassThru ; $p.WaitForExit() ; Start-Process -FilePath \'{Environment.CurrentDirectory}\\KorabliChsMod.exe\'\"",
                     WorkingDirectory = Environment.CurrentDirectory,
                     CreateNoWindow = true
                 };
