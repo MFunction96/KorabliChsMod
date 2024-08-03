@@ -65,15 +65,15 @@ namespace Xanadu.KorabliChsMod.Core
             {
                 this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
                 {
-                    Message = $"开始单次请求：{request.RequestUri?.AbsoluteUri}"
+                    Message = $"开始单次请求：{request.RequestUri?.Host}"
                 });
 
                 var res = await this.Client.SendAsync(request, cancellationToken);
 
-                logger.LogInformation($"{res.StatusCode} -> {request.RequestUri?.AbsoluteUri}");
+                logger.LogInformation($"{res.StatusCode} -> {request.RequestUri?.Host}");
                 this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
                 {
-                    Message = $"结束单次请求：{res.StatusCode} {request.RequestUri?.AbsoluteUri}"
+                    Message = $"结束单次请求：{res.StatusCode} {request.RequestUri?.Host}"
                 });
 
                 return res;
@@ -86,7 +86,7 @@ namespace Xanadu.KorabliChsMod.Core
                 {
                     this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
                     {
-                        Message = $"开始请求：{request.RequestUri?.AbsoluteUri}"
+                        Message = $"开始请求：{request.RequestUri?.Host}"
                     });
 
                     response = await this.Client.SendAsync(request, cancellationToken);
@@ -94,7 +94,7 @@ namespace Xanadu.KorabliChsMod.Core
                     logger.LogInformation($"{response.StatusCode} -> {request.RequestUri?.AbsoluteUri}");
                     this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
                     {
-                        Message = $"结束请求：{response.StatusCode} {request.RequestUri?.AbsoluteUri}"
+                        Message = $"结束请求：{response.StatusCode} {request.RequestUri?.Host}"
                     });
 
                     return response;
@@ -104,7 +104,7 @@ namespace Xanadu.KorabliChsMod.Core
                     logger.LogError(e, string.Empty);
                     this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
                     {
-                        Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.AbsoluteUri}",
+                        Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.Host}",
                         Exception = e
                     });
                 }
@@ -114,7 +114,7 @@ namespace Xanadu.KorabliChsMod.Core
 
             this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
             {
-                Message = $"请求失败 {response?.StatusCode} {request.RequestUri?.AbsoluteUri}"
+                Message = $"请求失败 {response?.StatusCode} {request.RequestUri?.Host}"
             });
 
             return null;
@@ -144,7 +144,7 @@ namespace Xanadu.KorabliChsMod.Core
                 logger.LogError(e, string.Empty);
                 this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
                 {
-                    Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.AbsoluteUri}",
+                    Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.Host}",
                     Exception = e
                 });
 

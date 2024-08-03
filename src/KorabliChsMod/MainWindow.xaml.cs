@@ -275,13 +275,14 @@ namespace Xanadu.KorabliChsMod
 
                 var processInfo = new ProcessStartInfo
                 {
-                    FileName = @"C:\Windows\System32\cmd.exe",
+                    FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
                     Arguments =
-                        $"/q /c \"taskkill /F /PID {Environment.ProcessId} 1>nul 2>&1 && {exeFile.FullPath} /S /D {Path.GetDirectoryName(Environment.CurrentDirectory)} && {Environment.CurrentDirectory}/KorabliChsMod.exe\"",
+                        $"-ExecutionPolicy Unrestricted -Command \"Stop-Process -Id {Environment.ProcessId} -Force ; $p = Start-Process -FilePath \'{exeFile.FullPath}\' -ArgumentList \'/S /D={Path.GetDirectoryName(Environment.CurrentDirectory)}\' -PassThru ; $p.WaitForExit() ; Start-Process -FilePath \'{Environment.CurrentDirectory}\\KorabliChsMod.exe\'\"",
                     WorkingDirectory = Environment.CurrentDirectory,
                     CreateNoWindow = true
                 };
 
+                this._logger.LogInformation($"\"{processInfo.FileName}\" {processInfo.Arguments}");
                 Process.Start(processInfo);
             }
             catch (Exception exception)
@@ -333,7 +334,7 @@ namespace Xanadu.KorabliChsMod
 
             this.TbGameFolder.Text = this._gameDetector.Folder;
             this.LbGameServerDetail.Content = this._gameDetector.Server;
-            this.LbGameVersionDetail.Content = this._gameDetector.Version;
+            this.LbGameVersionDetail.Content = this._gameDetector.PreInstalled ? this._gameDetector.ServerVersion : this._gameDetector.ClientVersion;
             this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
             this.LbGameTestDetail.Content = this._gameDetector.IsTest ? "测试服" : "正式服";
             this.BtnInstall.IsEnabled = true;
