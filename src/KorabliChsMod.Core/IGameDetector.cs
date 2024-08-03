@@ -26,6 +26,11 @@ namespace Xanadu.KorabliChsMod.Core
         /// <summary>
         /// 
         /// </summary>
+        public const string PreferencesXmlFileName = "preferences.xml";
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Folder { get; }
 
         /// <summary>
@@ -37,6 +42,11 @@ namespace Xanadu.KorabliChsMod.Core
         /// 
         /// </summary>
         public string GameInfoXmlPath { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string PreferencesXmlPath { get; }
 
         /// <summary>
         /// 
@@ -56,12 +66,22 @@ namespace Xanadu.KorabliChsMod.Core
         /// <summary>
         /// 
         /// </summary>
-        public string Version { get; }
+        public string ServerVersion { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ClientVersion { get; }
         
         /// <summary>
         /// 
         /// </summary>
         public string BuildNumber { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool PreInstalled { get; }
 
         /// <summary>
         /// 

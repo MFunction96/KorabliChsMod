@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -18,7 +20,10 @@ namespace Xanadu.KorabliChsMod.Core
 
         /// <inheritdoc />
         public string MetaDataXmlPath => Path.Combine(this.Folder, "game_metadata", IGameDetector.MetaDataXmlFileName);
-        
+
+        /// <inheritdoc />
+        public string PreferencesXmlPath => Path.Combine(this.Folder, IGameDetector.PreferencesXmlFileName);
+
         /// <inheritdoc />
         public string ModFolder => this.IsTest ? Path.Combine(this.Folder, "bin", this.BuildNumber, "res") : Path.Combine(this.Folder, "bin", this.BuildNumber, "res_mods");
 
@@ -29,10 +34,16 @@ namespace Xanadu.KorabliChsMod.Core
         public string Server { get; private set; } = string.Empty;
 
         /// <inheritdoc />
-        public string Version { get; private set; } = string.Empty;
+        public string ServerVersion { get; private set; } = string.Empty;
 
         /// <inheritdoc />
-        public string BuildNumber => this.Version[(this.Version.LastIndexOf('.') + 1)..];
+        public string ClientVersion { get; private set; } = string.Empty;
+
+        /// <inheritdoc />
+        public bool PreInstalled { get; private set; }
+
+        /// <inheritdoc />
+        public string BuildNumber => this.PreInstalled ? this.ServerVersion[(this.ServerVersion.LastIndexOf('.') + 1)..] : this.ClientVersion[(this.ClientVersion.LastIndexOf('.') + 1)..];
 
         /// <inheritdoc />
         public bool IsTest { get; private set; }
@@ -55,7 +66,10 @@ namespace Xanadu.KorabliChsMod.Core
                     var gameInfoXml = new XmlDocument();
                     gameInfoXml.Load(this.GameInfoXmlPath);
                     this.Server = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
-                    this.Version = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
+                    this.ClientVersion = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
+                    this.PreInstalled = !(gameInfoXml["protocol"]?["game"]?["accepted_preinstalls"]?.IsEmpty ?? true);
+                    var preferenceLines = File.ReadLines(this.PreferencesXmlPath, Encoding.UTF8);
+                    this.ServerVersion = preferenceLines.First(q => q.Contains("last_server_version")).Replace("<last_server_version>", string.Empty).Replace("</last_server_version>", string.Empty).Trim('\t').Trim().Replace(",", ".");
                     var metadataXml = new XmlDocument();
                     metadataXml.Load(this.MetaDataXmlPath);
                     this.IsTest = string.Compare(metadataXml["protocol"]?["predefined_section"]?["app_id"]?.InnerText, "WOWS.RU.PRODUCTION", StringComparison.OrdinalIgnoreCase) != 0;

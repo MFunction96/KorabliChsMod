@@ -17,7 +17,7 @@ namespace Xanadu.KorabliChsModTests
             var gameDetector = new GameDetector(this._mockLogger.Object);
             await gameDetector.Load(Environment.CurrentDirectory);
 
-            Assert.AreEqual("13.6.0.0.8601080", gameDetector.Version);
+            Assert.AreEqual("13.6.0.0.8601080", gameDetector.ClientVersion);
         }
     }
 }
