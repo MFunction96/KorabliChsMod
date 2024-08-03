@@ -43,7 +43,7 @@ namespace Xanadu.KorabliChsMod.Core
         public bool PreInstalled { get; private set; }
 
         /// <inheritdoc />
-        public string BuildNumber => this.PreInstalled ? this.ServerVersion[(this.ServerVersion.LastIndexOf('.') + 1)..] : this.ClientVersion[(this.ClientVersion.LastIndexOf('.') + 1)..];
+        public string BuildNumber => this.PreInstalled && !string.IsNullOrEmpty(this.ServerVersion) ? this.ServerVersion[(this.ServerVersion.LastIndexOf('.') + 1)..] : this.ClientVersion[(this.ClientVersion.LastIndexOf('.') + 1)..];
 
         /// <inheritdoc />
         public bool IsTest { get; private set; }
@@ -68,8 +68,12 @@ namespace Xanadu.KorabliChsMod.Core
                     this.Server = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
                     this.ClientVersion = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
                     this.PreInstalled = !(gameInfoXml["protocol"]?["game"]?["accepted_preinstalls"]?.IsEmpty ?? true);
-                    var preferenceLines = File.ReadLines(this.PreferencesXmlPath, Encoding.UTF8);
-                    this.ServerVersion = preferenceLines.First(q => q.Contains("last_server_version")).Replace("<last_server_version>", string.Empty).Replace("</last_server_version>", string.Empty).Trim('\t').Trim().Replace(",", ".");
+                    if (File.Exists(this.PreferencesXmlPath))
+                    {
+                        var preferenceLines = File.ReadLines(this.PreferencesXmlPath, Encoding.UTF8);
+                        this.ServerVersion = preferenceLines.First(q => q.Contains("last_server_version")).Replace("<last_server_version>", string.Empty).Replace("</last_server_version>", string.Empty).Trim('\t').Trim().Replace(",", ".");
+                    }
+
                     var metadataXml = new XmlDocument();
                     metadataXml.Load(this.MetaDataXmlPath);
                     this.IsTest = string.Compare(metadataXml["protocol"]?["predefined_section"]?["app_id"]?.InnerText, "WOWS.RU.PRODUCTION", StringComparison.OrdinalIgnoreCase) != 0;
