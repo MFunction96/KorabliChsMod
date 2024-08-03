@@ -20,13 +20,19 @@
 
 无论Github还是Gitee，均转去最新发布下载即可，或访问以下链接以下载安装包含.NET 8运行环境的安装包：
 
-- Github: https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstallerWithRuntime.exe
+Github: https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstallerWithRuntime.exe
 
 > 如果确定本地已安装.NET 8运行环境，可选择以下安装包：
 >
-> - Github: https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstaller.exe
+> Github: https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstaller.exe
 
 按照安装说明及提示完成安装即可，默认安装位置为：`%AppData%\KorabliChsMod`，即`C:\Users\<用户名>\AppData\Roaming\KorabliChsMod`，安装过程中会自动在桌面创建快捷方式。
+
+> **<font color='red'>请勿安装在包含空格的路径下，当前版本暂不支持此类路径静默升级。</font>** ~~*后续可能懒得支持了*~~
+> 
+> 推荐路径：`C:\Program`
+>
+> 不推荐路径：`C:\Program Files` （包含空格）
 
 ### 使用
 
@@ -42,6 +48,9 @@
 ### 更新
 
 方法一：在程序界面标签-关于-更新，稍等片刻即可完成自更新。
+
+![升级](https://dev.azure.com/XanaCN/f06af8ee-5084-455c-ac24-8fc4f735382c/_apis/git/repositories/d36405a6-bc74-45e3-b720-3a2c79f5c30e/items?path=/doc/README/Update.png)
+
 方法二：按照安装方法重新下载安装即可。
 
 ## 计划
