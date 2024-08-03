@@ -299,9 +299,7 @@ namespace Xanadu.KorabliChsMod
             this.TbStatus.Text += e.Message + "\r\n";
             this.SvStatus.ScrollToBottom();
         }
-
-
-
+        
         private void Window_Closed(object sender, EventArgs e)
         {
             Application.Current.Shutdown();
@@ -334,7 +332,7 @@ namespace Xanadu.KorabliChsMod
 
             this.TbGameFolder.Text = this._gameDetector.Folder;
             this.LbGameServerDetail.Content = this._gameDetector.Server;
-            this.LbGameVersionDetail.Content = this._gameDetector.PreInstalled ? this._gameDetector.ServerVersion : this._gameDetector.ClientVersion;
+            this.LbGameVersionDetail.Content = this._gameDetector.PreInstalled && !string.IsNullOrEmpty(this._gameDetector.ServerVersion) ? this._gameDetector.ServerVersion : this._gameDetector.ClientVersion;
             this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
             this.LbGameTestDetail.Content = this._gameDetector.IsTest ? "测试服" : "正式服";
             this.BtnInstall.IsEnabled = true;
