@@ -2,15 +2,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\KorabliChsMod\KorabliChsMod.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="game_info.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="game_metadata\metadata.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="preferences.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>

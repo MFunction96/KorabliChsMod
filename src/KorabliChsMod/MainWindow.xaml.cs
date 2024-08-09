@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -11,9 +12,11 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Config;
+using Xanadu.KorabliChsMod.DI;
 using Xanadu.Skidbladnir.IO.File;
 using Xanadu.Skidbladnir.IO.File.Cache;
 // ReSharper disable RedundantExtendsListEntry
@@ -25,6 +28,11 @@ namespace Xanadu.KorabliChsMod
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        private const string ManualSelection = "手动选择客户端位置";
+
         /// <summary>
         /// 
         /// </summary>
@@ -53,7 +61,17 @@ namespace Xanadu.KorabliChsMod
         /// <summary>
         /// 
         /// </summary>
+        private readonly ILgcIntegrator _lgcIntegrator;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private static string AppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "KorabliChsMod");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly HashSet<string> _gameFolders = new();
 
         /// <summary>
         /// 
@@ -63,7 +81,8 @@ namespace Xanadu.KorabliChsMod
         /// <param name="networkEngine"></param>
         /// <param name="cachePool"></param>
         /// <param name="korabliFileHub"></param>
-        public MainWindow(ILogger<MainWindow> logger, IGameDetector gameDetector, INetworkEngine networkEngine, ICachePool cachePool, IKorabliFileHub korabliFileHub)
+        /// <param name="lgcIntegrator"></param>
+        public MainWindow(ILogger<MainWindow> logger, IGameDetector gameDetector, INetworkEngine networkEngine, ICachePool cachePool, IKorabliFileHub korabliFileHub, ILgcIntegrator lgcIntegrator)
         {
             this._logger = logger;
             this._gameDetector = gameDetector;
@@ -71,10 +90,12 @@ namespace Xanadu.KorabliChsMod
             this._networkEngine.NetworkEngineEvent += this.SyncNetworkEngineMessage;
             this._cachePool = cachePool;
             this._korabliFileHub = korabliFileHub;
+            this._lgcIntegrator = lgcIntegrator;
             // TODO: Github与Gitee切换
             _ = this._networkEngine.Headers.TryAdd("Accept", "application/vnd.github+json");
             _ = this._networkEngine.Headers.TryAdd("X-GitHub-Api-Version", "2022-11-28");
             _ = this._networkEngine.Headers.TryAdd("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0");
+            this._lgcIntegrator.Load();
             this._korabliFileHub.Load();
             InitializeComponent();
         }
@@ -87,47 +108,25 @@ namespace Xanadu.KorabliChsMod
                 Directory.CreateDirectory(MainWindow.AppDataPath);
             }
 
-            this.TbStatus.Text += $"考拉比汉社厂 v{fullVersion}\r\n";
+            this.TbStatus.Text += $"考拉比汉社厂 v{this.LbVersion.Content}\r\n";
             this._logger.LogInformation($"考拉比汉社厂 v{fullVersion}");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.TbProxyAddress.Text = this._korabliFileHub.Proxy.Address;
-            this.ReloadFolder();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnGameFolder_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFolderDialog
+            if (this._lgcIntegrator.GameFolders.Count > 0)
             {
-                Multiselect = false,
-                Title = "选择窝窝屎本体位置"
-            };
+                foreach (var folder in this._lgcIntegrator.GameFolders)
+                {
+                    this._gameFolders.Add(folder);
+                }
 
-            var result = dialog.ShowDialog();
-
-            if (!(result ?? false))
-            {
-                return;
             }
 
-            var gameFolder = dialog.FolderName;
-            this._korabliFileHub.GameFolder = gameFolder;
-            try
-            {
-                this.ReloadFolder();
-            }
-            catch (Exception exception)
-            {
-                this.WriteErrorToStatus(exception);
-            }
-
+            this._gameFolders.Add(MainWindow.ManualSelection);
+            this.CbGameLocation.ItemsSource = this._gameFolders;
+            this.CbGameLocation.SelectedValue = this._gameDetector.Folder;
         }
 
         private async void BtnInstall_Click(object sender, RoutedEventArgs e)
@@ -184,8 +183,9 @@ namespace Xanadu.KorabliChsMod
             this.BtnUninstall.IsEnabled = false;
             try
             {
-                var backupFolder = this._korabliFileHub.PeekLatestBackup();
-                IOExtension.CopyDirectory(backupFolder, this._gameDetector.ModFolder);
+                //var backupFolder = this._korabliFileHub.PeekLatestBackup();
+                //IOExtension.CopyDirectory(backupFolder, this._gameDetector.ModFolder);
+                IOExtension.DeleteDirectory(this._gameDetector.ModFolder);
                 this.ReloadFolder();
                 MessageBox.Show("还原完成！");
             }
@@ -267,6 +267,14 @@ namespace Xanadu.KorabliChsMod
                 var releases = await response.Content.ReadAsStringAsync();
                 var jArray = JsonConvert.DeserializeObject<JArray>(releases) ?? [];
                 var latest = jArray.First(q => !q["prerelease"]!.Value<bool>());
+                var name = latest["name"]!.Value<string>()!;
+                var version = name[name.IndexOf(" ", StringComparison.OrdinalIgnoreCase)..].Trim();
+                if (string.Compare(version, this.LbVersion.Content.ToString(), StringComparison.OrdinalIgnoreCase) <= 0)
+                {
+                    this.WriteErrorToStatus(new Exception("已经是最新版本"));
+                    return;
+                }
+
                 var assets = latest["assets"]! as JArray;
                 var downloadFile = assets!.First(q =>
                     string.Compare(q["name"]!.Value<string>(), "KorabliChsModInstaller.exe", StringComparison.OrdinalIgnoreCase) == 0)["browser_download_url"]!.Value<string>();
@@ -299,10 +307,54 @@ namespace Xanadu.KorabliChsMod
             this.TbStatus.Text += e.Message + "\r\n";
             this.SvStatus.ScrollToBottom();
         }
-        
+
+        private void CbGameLocation_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.CbGameLocation.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            if (string.Compare(this.CbGameLocation.SelectedValue.ToString(), MainWindow.ManualSelection, StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                var dialog = new OpenFolderDialog
+                {
+                    Multiselect = false,
+                    Title = "选择窝窝屎本体位置"
+                };
+
+                var result = dialog.ShowDialog();
+
+                if (!(result ?? false))
+                {
+                    this.CbGameLocation.SelectedIndex = -1;
+                    return;
+                }
+
+                var gameFolder = dialog.FolderName;
+                this._korabliFileHub.GameFolder = gameFolder;
+            }
+            else
+            {
+                this._korabliFileHub.GameFolder = this.CbGameLocation.SelectedValue.ToString()!;
+            }
+
+            this.ReloadFolder();
+        }
+
         private void Window_Closed(object sender, EventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void WriteErrorToStatus(Exception exception, bool autoScroll = true)
+        {
+            this._logger.LogError(exception, string.Empty);
+            this.TbStatus.Text += exception.Message + "\r\n";
+            if (autoScroll)
+            {
+                this.SvStatus.ScrollToBottom();
+            }
         }
 
         private async void ReloadFolder()
@@ -327,26 +379,20 @@ namespace Xanadu.KorabliChsMod
             catch (Exception exception)
             {
                 this.WriteErrorToStatus(exception);
+                this.CbGameLocation.SelectedIndex = -1;
                 return;
             }
 
-            this.TbGameFolder.Text = this._gameDetector.Folder;
+            this._gameFolders.Add(this._gameDetector.Folder);
+            this.CbGameLocation.SelectedValue = this._gameDetector.Folder;
             this.LbGameServerDetail.Content = this._gameDetector.Server;
             this.LbGameVersionDetail.Content = this._gameDetector.PreInstalled && !string.IsNullOrEmpty(this._gameDetector.ServerVersion) ? this._gameDetector.ServerVersion : this._gameDetector.ClientVersion;
             this.LbGameChsVersionDetail.Content = this._gameDetector.ChsMod ? "已安装" : "未安装";
             this.LbGameTestDetail.Content = this._gameDetector.IsTest ? "测试服" : "正式服";
             this.BtnInstall.IsEnabled = true;
             this.BtnUninstall.IsEnabled = true;
+
         }
 
-        private void WriteErrorToStatus(Exception exception, bool autoScroll = true)
-        {
-            this._logger.LogError(exception, string.Empty);
-            this.TbStatus.Text += exception.Message + "\r\n";
-            if (autoScroll)
-            {
-                this.SvStatus.ScrollToBottom();
-            }
-        }
     }
 }

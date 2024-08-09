@@ -10,8 +10,7 @@
             <TabItem Header="功能" FontSize="20">
                 <Grid >
                     <Label x:Name="LbGameLocation" Content="客户端位置" HorizontalAlignment="Left" Height="33" Margin="10,36,0,0" VerticalAlignment="Top" Width="126"/>
-                    <TextBox x:Name="TbGameFolder" HorizontalAlignment="Left" Height="27" Margin="136,42,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="243" TabIndex="0"/>
-                    <Button x:Name="BtnGameLocation" Content="..." HorizontalAlignment="Left" Height="27" Margin="395,42,0,0" VerticalAlignment="Top" Width="33" Click="BtnGameFolder_Click"/>
+                    <ComboBox x:Name="CbGameLocation" HorizontalAlignment="Left" Height="31" Margin="135,38,0,0" VerticalAlignment="Top" Width="286" SelectionChanged="CbGameLocation_SelectionChanged"/>
                     <Label x:Name="LbGameServer" Content="客户端区服" HorizontalAlignment="Left" Height="40" Margin="10,104,0,0" VerticalAlignment="Top" Width="126" d:LayoutOverrides="VerticalAlignment"/>
                     <Label x:Name="LbGameVersion" Content="客户端版本" HorizontalAlignment="Left" Margin="10,165,0,0" Width="126" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" Height="42"/>
                     <Label x:Name="LbGameChsVersion" Content="汉化版本" HorizontalAlignment="Left" Height="42" Margin="10,231,0,0" VerticalAlignment="Top" Width="126" d:LayoutOverrides="VerticalAlignment"/>
@@ -19,7 +18,7 @@
                     <Label x:Name="LbGameVersionDetail" Content="请选择游戏位置" HorizontalAlignment="Left" Margin="141,170,0,0" Width="262" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment"/>
                     <Label x:Name="LbGameChsVersionDetail" Content="请选择游戏位置" HorizontalAlignment="Left" Height="42" Margin="141,231,0,0" VerticalAlignment="Top" Width="262" d:LayoutOverrides="VerticalAlignment"/>
                     <Button x:Name="BtnInstall" Content="安装" HorizontalAlignment="Left" Height="46" Margin="73,364,0,0" VerticalAlignment="Top" Click="BtnInstall_Click" d:LayoutOverrides="HorizontalAlignment" Width="125" IsDefault="True" IsEnabled="False"/>
-                    <Button x:Name="BtnUninstall" Content="还原" HorizontalAlignment="Left" Height="46" Margin="270,364,0,0" VerticalAlignment="Top" Width="133" Click="BtnUninstall_Click" IsEnabled="False"/>
+                    <Button x:Name="BtnUninstall" Content="删除所有Mod" HorizontalAlignment="Left" Height="46" Margin="270,364,0,0" VerticalAlignment="Top" Width="133" Click="BtnUninstall_Click" IsEnabled="False"/>
                     <Label x:Name="LbGameTest" Content="客户端类型" HorizontalAlignment="Left" Height="42" Margin="10,288,0,0" VerticalAlignment="Top" Width="126"/>
                     <Label x:Name="LbGameTestDetail" Content="请选择游戏位置" HorizontalAlignment="Left" Height="42" Margin="141,288,0,0" VerticalAlignment="Top"/>
                 </Grid>
