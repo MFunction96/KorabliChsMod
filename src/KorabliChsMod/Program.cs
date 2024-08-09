@@ -6,10 +6,12 @@ using System;
 using System.Text;
 using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Config;
+using Xanadu.KorabliChsMod.DI;
 using Xanadu.Skidbladnir.IO.File.Cache;
 
 namespace Xanadu.KorabliChsMod
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Program
     {
         [STAThread]
@@ -30,6 +32,8 @@ namespace Xanadu.KorabliChsMod
                     services.AddSingleton<IKorabliFileHub, KorabliFileHub>();
                     // 注册游戏探查服务
                     services.AddSingleton<IGameDetector, GameDetector>();
+                    // 注册Lesta Game Center探查服务
+                    services.AddSingleton<ILgcIntegrator, LgcIntegrator>();
                     // 注册网络引擎服务
                     services.AddSingleton<INetworkEngine, NetworkEngine>();
                     // 注册缓存池服务

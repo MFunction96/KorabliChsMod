@@ -20,11 +20,14 @@
 
 无论Github还是Gitee，均转去最新发布下载即可，或访问以下链接以下载安装包含.NET 8运行环境的安装包：
 
-Github: https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstallerWithRuntime.exe
+Github: [KorabliChsModInstallerWithRuntime.exe](https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstallerWithRuntime.exe)
 
+Gitee: *待完善*
 > 如果确定本地已安装.NET 8运行环境，可选择以下安装包：
 >
-> Github: https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstaller.exe
+> Github: [KorabliChsModInstaller.exe](https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstaller.exe)
+>
+> Gitee: *待完善*
 
 按照安装说明及提示完成安装即可，默认安装位置为：`%AppData%\KorabliChsMod`，即`C:\Users\<用户名>\AppData\Roaming\KorabliChsMod`，安装过程中会自动在桌面创建快捷方式。
 
@@ -42,8 +45,9 @@ Github: https://github.com/MFunction96/KorabliChsMod/releases/latest/download/Ko
 2. 点击`安装`，等待片刻即可完成。**无论检测到汉化安装与否，程序均会安装/覆盖安装最新版本的汉化补丁至指定客户端**。
 
 ![主程序](https://dev.azure.com/XanaCN/f06af8ee-5084-455c-ac24-8fc4f735382c/_apis/git/repositories/d36405a6-bc74-45e3-b720-3a2c79f5c30e/items?path=/doc/README/MainWindow.png)
+![主程序](https://dev.azure.com/XanaCN/f06af8ee-5084-455c-ac24-8fc4f735382c/_apis/git/repositories/d36405a6-bc74-45e3-b720-3a2c79f5c30e/items?path=/doc/README/MainWindowDetail.png)
 
-> 目前正在紧锣密鼓地开发客户端自动搜索功能，敬请期待。
+> 程序会自动检测游戏客户端安装位置，如果检测不到，请手动选择游戏客户端安装位置。
 
 ### 更新
 
@@ -69,7 +73,7 @@ Github: https://github.com/MFunction96/KorabliChsMod/releases/latest/download/Ko
 ### 阶段二
 
 - [ ] 界面美化
-- [ ] 支持自动定位莱服客户端安装位置
+- [x] 支持自动定位莱服客户端安装位置
 - [x] 支持测试服汉化
 - [ ] Gitee镜像仓库自动发布
 - [ ] 支持多镜像选择

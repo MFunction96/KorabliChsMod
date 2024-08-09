@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Xanadu.KorabliChsMod.Core;
 
-namespace Xanadu.KorabliChsModTests
+namespace Xanadu.Test.KorabliChsMod.Core
 {
     [TestClass]
     public class GameDetectorTest
