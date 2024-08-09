@@ -272,6 +272,7 @@ namespace Xanadu.KorabliChsMod
                 if (string.Compare(version, this.LbVersion.Content.ToString(), StringComparison.OrdinalIgnoreCase) <= 0)
                 {
                     this.WriteErrorToStatus(new Exception("已经是最新版本"));
+                    return;
                 }
 
                 var assets = latest["assets"]! as JArray;
