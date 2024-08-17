@@ -56,6 +56,16 @@ namespace Xanadu.KorabliChsMod.Core.Config
         /// <summary>
         /// 
         /// </summary>
+        public MirrorList Mirror { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool AllowPreRelease { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="reserve"></param>
         public void Load(int reserve = 2);
 
