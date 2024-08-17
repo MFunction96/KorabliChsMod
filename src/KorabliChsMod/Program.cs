@@ -38,6 +38,8 @@ namespace Xanadu.KorabliChsMod
                     services.AddSingleton<INetworkEngine, NetworkEngine>();
                     // 注册缓存池服务
                     services.AddSingleton<ICachePool, CachePool>();
+                    // 注册更新助理服务
+                    services.AddSingleton<IUpdateHelper, UpdateHelper>();
                 })
                 .Build();
 

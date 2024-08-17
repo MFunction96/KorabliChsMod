@@ -66,6 +66,11 @@ namespace Xanadu.KorabliChsMod
         /// <summary>
         /// 
         /// </summary>
+        private readonly IUpdateHelper _updateHelper;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private static string AppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "KorabliChsMod");
 
         /// <summary>
@@ -76,13 +81,19 @@ namespace Xanadu.KorabliChsMod
         /// <summary>
         /// 
         /// </summary>
+        private Version AppVersion { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="logger"></param>
         /// <param name="gameDetector"></param>
         /// <param name="networkEngine"></param>
         /// <param name="cachePool"></param>
         /// <param name="korabliFileHub"></param>
         /// <param name="lgcIntegrator"></param>
-        public MainWindow(ILogger<MainWindow> logger, IGameDetector gameDetector, INetworkEngine networkEngine, ICachePool cachePool, IKorabliFileHub korabliFileHub, ILgcIntegrator lgcIntegrator)
+        /// <param name="updateHelper"></param>
+        public MainWindow(ILogger<MainWindow> logger, IGameDetector gameDetector, INetworkEngine networkEngine, ICachePool cachePool, IKorabliFileHub korabliFileHub, ILgcIntegrator lgcIntegrator, IUpdateHelper updateHelper)
         {
             this._logger = logger;
             this._gameDetector = gameDetector;
@@ -91,25 +102,28 @@ namespace Xanadu.KorabliChsMod
             this._cachePool = cachePool;
             this._korabliFileHub = korabliFileHub;
             this._lgcIntegrator = lgcIntegrator;
+            this._updateHelper = updateHelper;
             // TODO: Github与Gitee切换
             _ = this._networkEngine.Headers.TryAdd("Accept", "application/vnd.github+json");
             _ = this._networkEngine.Headers.TryAdd("X-GitHub-Api-Version", "2022-11-28");
             _ = this._networkEngine.Headers.TryAdd("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0");
             this._lgcIntegrator.Load();
             this._korabliFileHub.Load();
+            var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
+            _ = Version.TryParse(fullVersion.Split('+')[0], out var version);
+            this.AppVersion = version ?? Version.Parse("0.0.0");
             InitializeComponent();
         }
         private void Window_Initialized(object sender, EventArgs e)
         {
-            var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
-            this.LbVersion.Content = fullVersion.Split('+')[0];
+            this.LbVersion.Content = this.AppVersion.ToString();
             if (!Directory.Exists(MainWindow.AppDataPath))
             {
                 Directory.CreateDirectory(MainWindow.AppDataPath);
             }
 
             this.TbStatus.Text += $"考拉比汉社厂 v{this.LbVersion.Content}\r\n";
-            this._logger.LogInformation($"考拉比汉社厂 v{fullVersion}");
+            this._logger.LogInformation($"考拉比汉社厂 v{this.AppVersion.ToString()}");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -254,51 +268,19 @@ namespace Xanadu.KorabliChsMod
                 Directory.CreateDirectory(downloadFolder);
             }
 
-            var exeFile = this._cachePool.Register("KorabliChsModInstaller.exe", "download");
             try
             {
-                var response = await this._networkEngine.SendAsync(new HttpRequestMessage(HttpMethod.Get,
-                    "https://api.github.com/repos/MFunction96/KorabliChsMod/releases"), 5);
-                if (response is null || !response.IsSuccessStatusCode)
+                var latestVersion = await this._updateHelper.Check();
+                if (this.AppVersion.CompareTo(latestVersion) < 0)
                 {
-                    return;
+                    await this._updateHelper.Update();
                 }
-
-                var releases = await response.Content.ReadAsStringAsync();
-                var jArray = JsonConvert.DeserializeObject<JArray>(releases) ?? [];
-                var latest = jArray.First(q => !q["prerelease"]!.Value<bool>());
-                var name = latest["name"]!.Value<string>()!;
-                var version = name[name.IndexOf(" ", StringComparison.OrdinalIgnoreCase)..].Trim();
-                if (string.Compare(version, this.LbVersion.Content.ToString(), StringComparison.OrdinalIgnoreCase) <= 0)
-                {
-                    this.WriteErrorToStatus(new Exception("已经是最新版本"));
-                    return;
-                }
-
-                var assets = latest["assets"]! as JArray;
-                var downloadFile = assets!.First(q =>
-                    string.Compare(q["name"]!.Value<string>(), "KorabliChsModInstaller.exe", StringComparison.OrdinalIgnoreCase) == 0)["browser_download_url"]!.Value<string>();
-                await this._networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
-                    exeFile.FullPath, 5);
-
-                var processInfo = new ProcessStartInfo
-                {
-                    FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
-                    Arguments =
-                        $"-ExecutionPolicy Unrestricted -Command \"Stop-Process -Id {Environment.ProcessId} -Force ; $p = Start-Process -FilePath \'{exeFile.FullPath}\' -ArgumentList \'/S /D={Path.GetDirectoryName(Environment.CurrentDirectory)}\' -PassThru ; $p.WaitForExit() ; Start-Process -FilePath \'{Environment.CurrentDirectory}\\KorabliChsMod.exe\'\"",
-                    WorkingDirectory = Environment.CurrentDirectory,
-                    CreateNoWindow = true
-                };
-
-                this._logger.LogInformation($"\"{processInfo.FileName}\" {processInfo.Arguments}");
-                Process.Start(processInfo);
             }
             catch (Exception exception)
             {
                 this.WriteErrorToStatus(exception);
             }
 
-            this._cachePool.UnRegister(exeFile);
             this.BtnUpdate.IsEnabled = true;
         }
 

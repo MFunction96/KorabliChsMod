@@ -26,6 +26,12 @@ namespace Xanadu.KorabliChsMod.Core.Config
         public ProxyConfig Proxy { get; set; } = new();
 
         /// <inheritdoc />
+        public MirrorList Mirror { get; set; } = MirrorList.Gitee;
+
+        /// <inheritdoc />
+        public bool AllowPreRelease { get; set; } = false;
+
+        /// <inheritdoc />
         public int Reserve { get; protected set; } = 2;
 
         /// <inheritdoc />

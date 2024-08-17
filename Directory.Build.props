@@ -15,5 +15,6 @@
 		<Version Condition=" '$(BIN_VER)' == '' ">0.0.1-alpha</Version>
 		<Version Condition=" '$(BIN_VER)' != '' ">$(BIN_VER)</Version>
 		<DotNetMajorVersion>8.*</DotNetMajorVersion>
+		<Platforms>x64</Platforms>
 	</PropertyGroup>
 </Project>

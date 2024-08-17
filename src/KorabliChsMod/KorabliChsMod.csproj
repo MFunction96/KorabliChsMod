@@ -10,10 +10,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="pineapple.ico" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Content Include="pineapple.ico">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
