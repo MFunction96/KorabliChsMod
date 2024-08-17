@@ -4,6 +4,7 @@
 
 [![dotnet](https://img.shields.io/badge/.NET-%3E%3D8.0.4-blue.svg?style=flat-square&logo=.NET)](https://dotnet.microsoft.com/)
 [![GitHub License](https://img.shields.io/github/license/MFunction96/KorabliChsMod)](https://github.com/MFunction96/KorabliChsMod/blob/main/LICENSE)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/MFunction96/KorabliChsMod/total)
 
 
 傻瓜式就连小刻都会用的莱服窝窝屎汉化更新程序。

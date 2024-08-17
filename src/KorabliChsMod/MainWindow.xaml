@@ -25,12 +25,14 @@
             </TabItem>
             <TabItem Header="设置" FontSize="20">
                 <Grid >
-                    <Label Content="代理地址" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" Width="99"/>
-                    <TextBox x:Name="TbProxyAddress" HorizontalAlignment="Left" Height="30" Margin="135,23,0,0" TextWrapping="Wrap" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" Width="307" ToolTip=""/>
-                    <Label Content="代理用户名" HorizontalAlignment="Left" Margin="10,78,0,0" Width="119" VerticalAlignment="Top"/>
-                    <TextBox x:Name="TbProxyUsername" HorizontalAlignment="Left" Height="30" Margin="135,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="307" d:LayoutOverrides="VerticalAlignment" IsEnabled="False" Text="该功能暂未开放"/>
-                    <Label Content="代理密码" HorizontalAlignment="Left" Margin="10,136,0,0" VerticalAlignment="Top" Width="99" d:LayoutOverrides="VerticalAlignment"/>
-                    <TextBox x:Name="TbProxyPassword" HorizontalAlignment="Left" Height="30" Margin="135,139,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="306" d:LayoutOverrides="VerticalAlignment" IsEnabled="False" Text="该功能暂未开放"/>
+                    <Label Content="代理地址" HorizontalAlignment="Left" Margin="10,114,0,0" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" Width="99"/>
+                    <TextBox x:Name="TbProxyAddress" HorizontalAlignment="Left" Height="30" Margin="135,117,0,0" TextWrapping="Wrap" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" Width="306" ToolTip=""/>
+                    <Label Content="代理用户名" HorizontalAlignment="Left" Margin="10,172,0,0" Width="119" VerticalAlignment="Top"/>
+                    <TextBox x:Name="TbProxyUsername" HorizontalAlignment="Left" Height="30" Margin="135,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="306" d:LayoutOverrides="VerticalAlignment" IsEnabled="False" Text="该功能暂未开放"/>
+                    <Label Content="代理密码" HorizontalAlignment="Left" Margin="10,230,0,0" VerticalAlignment="Top" Width="99"/>
+                    <TextBox x:Name="TbProxyPassword" HorizontalAlignment="Left" Height="30" Margin="135,233,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="306" d:LayoutOverrides="VerticalAlignment" IsEnabled="False" Text="该功能暂未开放"/>
+                    <Label Content="更新源" HorizontalAlignment="Left" Margin="10,33,0,0" VerticalAlignment="Top" Width="99" d:LayoutOverrides="VerticalAlignment"/>
+                    <ComboBox x:Name="CbMirrorList" HorizontalAlignment="Left" Height="30" Width="300" Margin="135,36,0,0" VerticalAlignment="Top" IsEnabled="False"/>
                     <Button x:Name="BtnSave" Content="保存" Height="29" Margin="162,401,162,0" VerticalAlignment="Top" d:LayoutOverrides="Width" Click="BtnSave_Click"/>
                 </Grid>
             </TabItem>
