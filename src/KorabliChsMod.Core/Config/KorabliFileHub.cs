@@ -60,7 +60,9 @@ namespace Xanadu.KorabliChsMod.Core.Config
                 var config =
                     JsonConvert.DeserializeObject<KorabliFileHub>(
                         await File.ReadAllTextAsync(IKorabliFileHub.ConfigFilePath, Encoding.UTF8))!;
+
                 this.Proxy = config.Proxy;
+                this.UpdateEngineProxy();
                 this.GameFolder = config.GameFolder;
             }
             catch (Exception e)
@@ -130,23 +132,28 @@ namespace Xanadu.KorabliChsMod.Core.Config
         /// <inheritdoc />
         public async Task SaveAsync()
         {
-            if (!string.IsNullOrEmpty(this.Proxy.Address))
-            {
-                try
-                {
-                    var uri = new Uri(this.Proxy.Address);
-                    _ = networkEngine.SetProxy(uri);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-            }
-
+            this.UpdateEngineProxy();
             var json = JsonConvert.SerializeObject(this, Formatting.Indented);
             await File.WriteAllTextAsync(IKorabliFileHub.ConfigFilePath, json, Encoding.UTF8);
         }
 
+        private void UpdateEngineProxy()
+        {
+            if (string.IsNullOrEmpty(this.Proxy.Address))
+            {
+                return;
+            }
+
+            try
+            {
+                var uri = new Uri(this.Proxy.Address);
+                _ = networkEngine.SetProxy(uri);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, string.Empty);
+                throw;
+            }
+        }
     }
 }
