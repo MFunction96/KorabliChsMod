@@ -141,6 +141,9 @@ namespace Xanadu.KorabliChsMod
             this._gameFolders.Add(MainWindow.ManualSelection);
             this.CbGameLocation.ItemsSource = this._gameFolders;
             this.CbGameLocation.SelectedValue = this._gameDetector.Folder;
+            this.CbMirrorList.Items.Add("Gitee （推荐大陆玩家使用）");
+            this.CbMirrorList.Items.Add("Github （推荐海外玩家使用）");
+            this.CbMirrorList.SelectedIndex = 1;
         }
 
         private async void BtnInstall_Click(object sender, RoutedEventArgs e)
