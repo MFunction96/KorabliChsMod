@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<protocol name="game_info" wgc_publisher_id="lesta" version="2.16">
+    <game>
+        <id>WOWS.RU.PRODUCTION</id>
+        <index>0</index>
+        <installed>true</installed>
+        <localization>RU</localization>
+        <content_localizations>
+            <content_localization realm="ru">ru</content_localization>
+        </content_localizations>
+        <client_type>high</client_type>
+        <show_guide>false</show_guide>
+        <update_urls>
+            <value>https://lstus-ru.lesta.ru/</value>
+        </update_urls>
+        <corrupt_parts/>
+        <part_versions>
+            <version name="client" installed="13.6.0.0.8601080" available="13.6.0.0.8601080"/>
+            <version name="hotfix" installed="13.6.0.0.8601080" available="13.6.0.0.8601080"/>
+            <version name="locale" installed="13.6.0.0.8601080" available="13.6.0.0.8601080"/>
+            <version name="sdcontent" installed="13.6.0.0.8601080" available="13.6.0.0.8601080"/>
+        </part_versions>
+        <parameters>
+            <value name="preinstall_balloon_shown">false</value>
+        </parameters>
+        <dlc/>
+        <in_game_overlay>true</in_game_overlay>
+        <accepted_preinstalls/>
+        <available_content_languages>
+            <language_id>ru</language_id>
+        </available_content_languages>
+    </game>
+</protocol>

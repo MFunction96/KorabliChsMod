@@ -71,7 +71,11 @@ namespace Xanadu.KorabliChsMod.Core
                     if (File.Exists(this.PreferencesXmlPath))
                     {
                         var preferenceLines = File.ReadLines(this.PreferencesXmlPath, Encoding.UTF8);
-                        this.ServerVersion = preferenceLines.First(q => q.Contains("last_server_version")).Replace("<last_server_version>", string.Empty).Replace("</last_server_version>", string.Empty).Trim('\t').Trim().Replace(",", ".");
+                        var serverVersion = preferenceLines.FirstOrDefault(q => q.Contains("last_server_version"));
+                        if (!string.IsNullOrEmpty(serverVersion))
+                        {
+                            this.ServerVersion = serverVersion.Replace("<last_server_version>", string.Empty).Replace("</last_server_version>", string.Empty).Trim('\t').Trim().Replace(",", ".");
+                        }
                     }
 
                     var metadataXml = new XmlDocument();
