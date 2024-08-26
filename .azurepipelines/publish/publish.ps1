@@ -1,40 +1,84 @@
 param(
-	[Parameter(Mandatory = $true)]
-	[string] $OutputFolder,
-	[Parameter(Mandatory = $false)]
-	[string] $Proxy = ""
+    [Parameter(Mandatory = $true)]
+    [string] $OutputFolder,
+    [Parameter(Mandatory = $false)]
+    [string] $Proxy = ""
 )
 
 $workFolder = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [Guid]::NewGuid().ToString())
 $publishFolder = [System.IO.Path]::Combine($workFolder, 'KorabliChsMod')
-dotnet publish --output $publishFolder
-try {
-	Remove-Item -Path $OutputFolder -Force -Recurse
-}
-catch {
 
+function Invoke-Signing {
+    param (
+        [string] $FilePath,
+        [string] $CertPath,
+        [string] $CertPassword
+    )
+
+    & "C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\SignTool.exe" sign /f $CertPath /p $CertPassword /fd SHA256 $FilePath
 }
+
+function Invoke-Hashing {
+    param (
+        [string] $FilePath
+    )
+
+    $hash = Get-FileHash -Path $FilePath -Algorithm SHA256
+    $hash.Hash | Out-File -FilePath "$FilePath.sha256" -Encoding utf8 -Force
+}
+
+function Get-WebFile {
+    param (
+        [string] $Url,
+        [string] $OutputPath,
+        [string] $Proxy = ""
+    )
+
+    $curlArgs = @(
+        "-sL",
+        "-o", $OutputPath,
+        "--connect-timeout", "60",
+        "--max-time", "60",
+        "--retry", "5",
+        "--retry-delay", "5",
+        "--retry-max-time", "60"
+    )
+
+    if ($Proxy) {
+        $curlArgs += "--proxy", $Proxy
+    }
+
+    & curl @curlArgs $Url
+}
+
+dotnet publish --output $publishFolder
+
+try {
+    Remove-Item -Path $OutputFolder -Force -Recurse
+} catch {}
+
 New-Item -Path $OutputFolder -ItemType Directory -Force
 
-makensis.exe /X"SetCompressor /SOLID /FINAL lzma" /DSOURCE="$publishFolder" /DVERSION="$env:BIN_VER" /INPUTCHARSET UTF8 /OUTPUTCHARSET UTF8 .\.azurepipelines\publish\installer.nsi
-Copy-Item -Path "./.azurepipelines/publish/KorabliChsModInstaller.exe" -Destination $OutputFolder -Force
-Write-Output $env:GPG_PASSPHRASE | gpg --local-user 0x889174C5 --armor --batch --yes --output "$outputFolder/KorabliChsModInstaller.exe.sig" --passphrase-fd 0 --pinentry-mode loopback --detach-sign "$outputFolder/KorabliChsModInstaller.exe"
-$hash = Get-FileHash -Path "$outputFolder/KorabliChsModInstaller.exe" -Algorithm SHA256
-Write-Output $hash.Hash | Out-File -FilePath "$outputFolder/KorabliChsModInstaller.exe.sha256" -Encoding utf8 -Force
+# 签名生成的程序文件
+Invoke-Signing "$publishFolder\KorabliChsMod.exe" "D:\Certificate\Xanadu_CodeSign_RSA_ICA1-PKCS8.pfx" $env:PFX_PASSWORD
+Invoke-Hashing "$publishFolder\KorabliChsMod.exe"
 
-if ([string]::IsNullOrEmpty($Proxy)) {
-	curl -sL -o $publishFolder/windowsdesktop-runtime-win-x64.exe https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299" --connect-timeout 60 --max-time 60 --retry 5 --retry-delay 5 --retry-max-time 60
-} else {
-	curl -sL -o $publishFolder/windowsdesktop-runtime-win-x64.exe https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299" --connect-timeout 60 --max-time 60 --retry 5 --retry-delay 5 --retry-max-time 60 --proxy $Proxy
-}
+# 生成安装包
+& "makensis.exe" /X"SetCompressor /SOLID /FINAL lzma" /DSOURCE="$publishFolder" /DVERSION="$env:BIN_VER" /INPUTCHARSET UTF8 /OUTPUTCHARSET UTF8 ".\.azurepipelines\publish\installer.nsi"
+Copy-Item -Path ".\.azurepipelines\publish\KorabliChsModInstaller.exe" -Destination $OutputFolder -Force
 
-makensis.exe /X"SetCompressor /SOLID /FINAL lzma" /DSOURCE="$publishFolder" /DVERSION="$env:BIN_VER" /INPUTCHARSET UTF8 /OUTPUTCHARSET UTF8 .\.azurepipelines\publish\installer_runtime.nsi
-Copy-Item -Path "./.azurepipelines/publish/KorabliChsModInstallerWithRuntime.exe" -Destination $OutputFolder -Force
-Write-Output $env:GPG_PASSPHRASE | gpg --local-user 0x889174C5 --armor --batch --yes --output "$outputFolder/KorabliChsModInstallerWithRuntime.exe.sig" --passphrase-fd 0 --pinentry-mode loopback --detach-sign "$outputFolder/KorabliChsModInstallerWithRuntime.exe"
-$hash = Get-FileHash -Path "$outputFolder/KorabliChsModInstallerWithRuntime.exe" -Algorithm SHA256
-Write-Output $hash.Hash | Out-File -FilePath "$outputFolder/KorabliChsModInstallerWithRuntime.exe.sha256" -Encoding utf8 -Force
+Invoke-Signing "$OutputFolder\KorabliChsModInstaller.exe" "D:\Certificate\Xanadu_CodeSign_RSA_ICA1-PKCS8.pfx" $env:PFX_PASSWORD
+Invoke-Hashing "$OutputFolder\KorabliChsModInstaller.exe"
+
+Get-WebFile "https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe" "$publishFolder/windowsdesktop-runtime-win-x64.exe" $Proxy
+
+# 生成带运行时的安装包
+& "makensis.exe" /X"SetCompressor /SOLID /FINAL lzma" /DSOURCE="$publishFolder" /DVERSION="$env:BIN_VER" /INPUTCHARSET UTF8 /OUTPUTCHARSET UTF8 ".\.azurepipelines\publish\installer_runtime.nsi"
+Copy-Item -Path ".\.azurepipelines\publish\KorabliChsModInstallerWithRuntime.exe" -Destination $OutputFolder -Force
+
+Invoke-Signing "$OutputFolder\KorabliChsModInstallerWithRuntime.exe" "D:\Certificate\Xanadu_CodeSign_RSA_ICA1-PKCS8.pfx" $env:PFX_PASSWORD
+Invoke-Hashing "$OutputFolder\KorabliChsModInstallerWithRuntime.exe"
+
 try {
-  Remove-Item -Path $workFolder -Force -Recurse
-} catch {
-
-}
+    Remove-Item -Path $workFolder -Force -Recurse
+} catch {}

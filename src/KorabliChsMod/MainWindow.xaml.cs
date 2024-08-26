@@ -126,19 +126,36 @@ namespace Xanadu.KorabliChsMod
             this._logger.LogInformation($"考拉比汉社厂 v{this.AppVersion.ToString()}");
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.TbProxyAddress.Text = this._korabliFileHub.Proxy.Address;
             if (this._lgcIntegrator.GameFolders.Count > 0)
             {
                 foreach (var folder in this._lgcIntegrator.GameFolders)
                 {
-                    this._gameFolders.Add(folder);
+                    await this._gameDetector.Load(folder);
+                    if (this._gameDetector.IsWows)
+                    {
+                        this._gameFolders.Add(folder);
+                    }
                 }
 
             }
 
             this._gameFolders.Add(MainWindow.ManualSelection);
+            this._gameDetector.Clear();
+            if (!string.IsNullOrEmpty(this._korabliFileHub.GameFolder))
+            {
+                try
+                {
+                    await this._gameDetector.Load(this._korabliFileHub.GameFolder);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            }
+
             this.CbGameLocation.ItemsSource = this._gameFolders;
             this.CbGameLocation.SelectedValue = this._gameDetector.Folder;
             this.CbMirrorList.Items.Add("Gitee （推荐大陆玩家使用）");
@@ -260,6 +277,7 @@ namespace Xanadu.KorabliChsMod
             };
 
             await this._korabliFileHub.SaveAsync();
+            this.TbStatus.Text += "配置保存成功\r\n";
         }
 
         private async void BtnUpdate_Click(object sender, RoutedEventArgs e)
@@ -276,7 +294,12 @@ namespace Xanadu.KorabliChsMod
                 var latestVersion = await this._updateHelper.Check();
                 if (this.AppVersion.CompareTo(latestVersion) < 0)
                 {
+                    this.TbStatus.Text += "发现新版本，开始更新\r\n";
                     await this._updateHelper.Update();
+                }
+                else
+                {
+                    this.TbStatus.Text += "已经是最新版本\r\n";
                 }
             }
             catch (Exception exception)

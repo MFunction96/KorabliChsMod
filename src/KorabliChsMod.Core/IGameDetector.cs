@@ -31,6 +31,11 @@ namespace Xanadu.KorabliChsMod.Core
         /// <summary>
         /// 
         /// </summary>
+        public bool IsWows { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Folder { get; }
 
         /// <summary>
@@ -109,15 +114,6 @@ namespace Xanadu.KorabliChsMod.Core
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task Backup(CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task Restore(CancellationToken cancellationToken = default);
+        public void Clear();
     }
 }
