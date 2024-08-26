@@ -1,9 +1,6 @@
-!include "LogicLib.nsh"
 !include "MUI2.nsh"
+!include "LogicLib.nsh"
 !include "WinMessages.nsh"
- 
-Name "考拉比汉社厂"
-OutFile "KorabliChsModInstallerWithRuntime.exe"
 
 !macro ShellExecWait verb app param workdir show exitoutvar ;only app and show must be != "", every thing else is optional
 #define SEE_MASK_NOCLOSEPROCESS 0x40 
@@ -31,81 +28,6 @@ System::Store L
 	pop ${exitoutvar}
 !endif
 !macroend
- 
-RequestExecutionLevel User
-ShowInstDetails Show
-InstallDir $Appdata
-
-!define MUI_ABORTWARNING_TEXT "确定要取消安装吗?"
-
-Var CompletedText
-CompletedText $CompletedText
-
-!insertmacro MUI_PAGE_WELCOME
-
-!define MUI_FINISHPAGE_NOAUTOCLOSE
-!define MUI_PAGE_CUSTOMFUNCTION_PRE InstFilesPre
-!define MUI_PAGE_CUSTOMFUNCTION_SHOW InstFilesShow
-!define MUI_PAGE_CUSTOMFUNCTION_LEAVE InstFilesLeave
-Var MUI_HeaderText
-Var MUI_HeaderSubText
-!define MUI_INSTFILESPAGE_FINISHHEADER_TEXT "$MUI_HeaderText"
-!define MUI_INSTFILESPAGE_FINISHHEADER_SUBTEXT "$MUI_HeaderSubText"
-!insertmacro MUI_PAGE_DIRECTORY
-!insertmacro MUI_PAGE_INSTFILES
-!define MUI_FINISHPAGE_RUN
-!define MUI_FINISHPAGE_RUN_TEXT "运行 考拉比汉社厂"
-!define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
-!insertmacro MUI_PAGE_FINISH
-
-Function LaunchLink
-  ExecShell "" "$instdir\KorabliChsMod\KorabliChsMod.exe"
-FunctionEnd
-
-Var CurrentPage
-Var UserIsMakingAbortDecision
-Var UserAborted
-Var SectionAborted
-
-Function PauseIfUserIsMakingAbortDecision
-  ${DoWhile} $UserIsMakingAbortDecision == "yes"
-    Sleep 500
-  ${Loop}
-FunctionEnd
-!define PauseIfUserIsMakingAbortDecision `Call PauseIfUserIsMakingAbortDecision`
-
-!macro CheckUserAborted
-  ${PauseIfUserIsMakingAbortDecision}
-  ${If} $UserAborted == "yes"
-    goto _userabort_aborted
-  ${EndIf}
-!macroend
-!define CheckUserAborted `!insertmacro CheckUserAborted`
-
-!macro EndUserAborted
-  ${CheckUserAborted}
-  goto _useraborted_end
-  _userabort_aborted:
-    ${If} $SectionAborted == ""
-      StrCpy $SectionAborted "${__SECTION__}"
-      DetailPrint "${__SECTION__} installation interrupted."
-    ${ElseIf} $SectionAborted != "${__SECTION__}"
-      DetailPrint "  ${__SECTION__} installation skipped."
-    ${EndIf}
- 
-  _useraborted_end:
-!macroend
-!define EndUserAborted `!insertmacro EndUserAborted`
-
-Function InstFilesPre
-  StrCpy $CurrentPage "InstFiles"
-  StrCpy $UserAborted "no"
-FunctionEnd
-
-Function InstFilesShow
-  GetDlgItem $0 $HWNDPARENT 2
-  EnableWindow $0 1
-FunctionEnd
 
 ; Unicode True
 
@@ -125,107 +47,166 @@ Var STR_CONTAINS_VAR_4
 Var STR_RETURN_VAR
 
 Function StrContains
-  Exch $STR_NEEDLE
-  Exch 1
-  Exch $STR_HAYSTACK
-  ; Uncomment to debug
-  ;MessageBox MB_OK 'STR_NEEDLE = $STR_NEEDLE STR_HAYSTACK = $STR_HAYSTACK '
-    StrCpy $STR_RETURN_VAR ""
-    StrCpy $STR_CONTAINS_VAR_1 -1
-    StrLen $STR_CONTAINS_VAR_2 $STR_NEEDLE
-    StrLen $STR_CONTAINS_VAR_4 $STR_HAYSTACK
-    loop:
-      IntOp $STR_CONTAINS_VAR_1 $STR_CONTAINS_VAR_1 + 1
-      StrCpy $STR_CONTAINS_VAR_3 $STR_HAYSTACK $STR_CONTAINS_VAR_2 $STR_CONTAINS_VAR_1
-      StrCmp $STR_CONTAINS_VAR_3 $STR_NEEDLE found
-      StrCmp $STR_CONTAINS_VAR_1 $STR_CONTAINS_VAR_4 done
-      Goto loop
-    found:
-      StrCpy $STR_RETURN_VAR $STR_NEEDLE
-      Goto done
-    done:
-   Pop $STR_NEEDLE ;Prevent "invalid opcode" errors and keep the
-   Exch $STR_RETURN_VAR  
+	Exch $STR_NEEDLE
+	Exch 1
+	Exch $STR_HAYSTACK
+	; Uncomment to debug
+	;MessageBox MB_OK 'STR_NEEDLE = $STR_NEEDLE STR_HAYSTACK = $STR_HAYSTACK '
+		StrCpy $STR_RETURN_VAR ""
+		StrCpy $STR_CONTAINS_VAR_1 -1
+		StrLen $STR_CONTAINS_VAR_2 $STR_NEEDLE
+		StrLen $STR_CONTAINS_VAR_4 $STR_HAYSTACK
+		loop:
+			IntOp $STR_CONTAINS_VAR_1 $STR_CONTAINS_VAR_1 + 1
+			StrCpy $STR_CONTAINS_VAR_3 $STR_HAYSTACK $STR_CONTAINS_VAR_2 $STR_CONTAINS_VAR_1
+			StrCmp $STR_CONTAINS_VAR_3 $STR_NEEDLE found
+			StrCmp $STR_CONTAINS_VAR_1 $STR_CONTAINS_VAR_4 done
+			Goto loop
+		found:
+			StrCpy $STR_RETURN_VAR $STR_NEEDLE
+			Goto done
+		done:
+	 Pop $STR_NEEDLE ;Prevent "invalid opcode" errors and keep the
+	 Exch $STR_RETURN_VAR
 FunctionEnd
 
 !macro _StrContainsConstructor OUT NEEDLE HAYSTACK
-  Push `${HAYSTACK}`
-  Push `${NEEDLE}`
-  Call StrContains
-  Pop `${OUT}`
+	Push `${HAYSTACK}`
+	Push `${NEEDLE}`
+	Call StrContains
+	Pop `${OUT}`
 !macroend
 
 !define StrContains '!insertmacro "_StrContainsConstructor"'
 
-Section "考拉比汉社厂"
+Name "考拉比汉社厂"
+OutFile "KorabliChsModInstallerWithRuntime.exe"
+InstallDir $AppData\KorabliChsMod
+RequestExecutionLevel user
+ShowInstDetails show
 
-	DetailPrint "安装 ${__SECTION__}"
-	${CheckUserAborted}
+!define MUI_ABORTWARNING_TEXT "确定要取消安装吗?"
+
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+!define MUI_FINISHPAGE_RUN
+!define MUI_FINISHPAGE_RUN_TEXT "运行 考拉比汉社厂"
+!define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
+!insertmacro MUI_PAGE_FINISH
+
+!insertmacro MUI_LANGUAGE "SimpChinese"
+
+Function LaunchLink
+	ExecShell "" "$InstDir\KorabliChsMod.exe"
+FunctionEnd
+
+Function CheckForOldVersion
+	ReadRegStr $0 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\KorabliChsMod" "UninstallString"
+	${If} $0 != ""
+		# ExecWait "$0 /S"
+	${EndIf}
+FunctionEnd
+
+Function .onInit
+	Call CheckForOldVersion
+FunctionEnd
+
+Section "KorabliChsMod"
 	SetOutPath "$InstDir"
-	File /r ${SOURCE}
-	DetailPrint "创建快捷方式"
-	CreateShortcut "$desktop\考拉比汉社厂.lnk" "$instdir\KorabliChsMod\KorabliChsMod.exe"
-	DetailPrint "安装 ${__SECTION__} 完成"
-	${EndUserAborted}
+	File /r "${SOURCE}\*.*"
+	
+	; 创建中文名快捷方式
+	CreateShortcut "$Desktop\考拉比汉社厂.lnk" "$InstDir\KorabliChsMod.exe"
 
+	; 生成卸载程序
+	WriteUninstaller "$InstDir\uninstall.exe"
+
+	; 在控制面板的“程序和功能”中注册卸载程序（使用英文名）
+	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\KorabliChsMod" "DisplayName" "考拉比汉社厂"
+	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\KorabliChsMod" "UninstallString" "$InstDir\uninstall.exe"
+	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\KorabliChsMod" "InstallLocation" "$InstDir"
+	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\KorabliChsMod" "DisplayIcon" "$InstDir\KorabliChsMod.exe"
+	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\KorabliChsMod" "Publisher" "MFunction"
+	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\KorabliChsMod" "DisplayVersion" "${VERSION}"
+SectionEnd
+
+Section "Uninstall"
+	; 删除中文名快捷方式
+	Delete "$Desktop\考拉比汉社厂.lnk"
+	; 删除安装程序文件
+	Delete "$InstDir\config.json"
+	Delete "$InstDir\KorabliChsMod.Core.deps.json"
+	Delete "$InstDir\KorabliChsMod.Core.dll"
+	Delete "$InstDir\KorabliChsMod.Core.pdb"
+	Delete "$InstDir\KorabliChsMod.deps.json"
+	Delete "$InstDir\KorabliChsMod.dll"
+	Delete "$InstDir\KorabliChsMod.exe"
+	Delete "$InstDir\KorabliChsMod.exe.sha256"
+	Delete "$InstDir\KorabliChsMod.log"
+	Delete "$InstDir\KorabliChsMod.pdb"
+	Delete "$InstDir\KorabliChsMod.runtimeconfig.json"
+	Delete "$InstDir\Microsoft.Extensions.Configuration.Abstractions.dll"
+	Delete "$InstDir\Microsoft.Extensions.Configuration.Binder.dll"
+	Delete "$InstDir\Microsoft.Extensions.Configuration.CommandLine.dll"
+	Delete "$InstDir\Microsoft.Extensions.Configuration.dll"
+	Delete "$InstDir\Microsoft.Extensions.Configuration.EnvironmentVariables.dll"
+	Delete "$InstDir\Microsoft.Extensions.Configuration.FileExtensions.dll"
+	Delete "$InstDir\Microsoft.Extensions.Configuration.Json.dll"
+	Delete "$InstDir\Microsoft.Extensions.Configuration.UserSecrets.dll"
+	Delete "$InstDir\Microsoft.Extensions.DependencyInjection.Abstractions.dll"
+	Delete "$InstDir\Microsoft.Extensions.DependencyInjection.dll"
+	Delete "$InstDir\Microsoft.Extensions.Diagnostics.Abstractions.dll"
+	Delete "$InstDir\Microsoft.Extensions.Diagnostics.dll"
+	Delete "$InstDir\Microsoft.Extensions.FileProviders.Abstractions.dll"
+	Delete "$InstDir\Microsoft.Extensions.FileProviders.Physical.dll"
+	Delete "$InstDir\Microsoft.Extensions.FileSystemGlobbing.dll"
+	Delete "$InstDir\Microsoft.Extensions.Hosting.Abstractions.dll"
+	Delete "$InstDir\Microsoft.Extensions.Hosting.dll"
+	Delete "$InstDir\Microsoft.Extensions.Logging.Abstractions.dll"
+	Delete "$InstDir\Microsoft.Extensions.Logging.Configuration.dll"
+	Delete "$InstDir\Microsoft.Extensions.Logging.Console.dll"
+	Delete "$InstDir\Microsoft.Extensions.Logging.Debug.dll"
+	Delete "$InstDir\Microsoft.Extensions.Logging.dll"
+	Delete "$InstDir\Microsoft.Extensions.Logging.EventLog.dll"
+	Delete "$InstDir\Microsoft.Extensions.Logging.EventSource.dll"
+	Delete "$InstDir\Microsoft.Extensions.Options.ConfigurationExtensions.dll"
+	Delete "$InstDir\Microsoft.Extensions.Options.dll"
+	Delete "$InstDir\Microsoft.Extensions.Primitives.dll"
+	Delete "$InstDir\Newtonsoft.Json.Bson.dll"
+	Delete "$InstDir\Newtonsoft.Json.dll"
+	Delete "$InstDir\pineapple.ico"
+	Delete "$InstDir\Serilog.dll"
+	Delete "$InstDir\Serilog.Extensions.Hosting.dll"
+	Delete "$InstDir\Serilog.Extensions.Logging.dll"
+	Delete "$InstDir\Serilog.Sinks.File.dll"
+	Delete "$InstDir\Skidbladnir.Core.Extension.dll"
+	Delete "$InstDir\Skidbladnir.IO.File.dll"
+	; 删除卸载程序
+	Delete "$InstDir\uninstall.exe"
+	; 删除安装目录
+	RMDir "$InstDir"
+
+	; 删除注册表信息（使用英文名）
+	DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\KorabliChsMod"
 SectionEnd
 
 Section ".NET 8.0运行环境"
-
-  DetailPrint "检查 ${__SECTION__} 是否已安装"
+	DetailPrint "检查 .NET 8.0 运行环境是否已安装"
 	nsExec::ExecToStack "dotnet --list-runtimes"
 	Pop $0
 	Push "Microsoft.WindowsDesktop.App 8"
 	Call StrContains
 	Pop $0
 	StrCmp $0 "" notfound
-		DetailPrint "已安装 ${__SECTION__}"
+		DetailPrint "已安装 .NET 8.0 运行环境"
 		Goto done
 notfound:
-		DetailPrint "未安装 ${__SECTION__}"
-		DetailPrint "安装 ${__SECTION__}"
-    ${CheckUserAborted}
-    !insertmacro ShellExecWait "runas" '"$instdir\KorabliChsMod\windowsdesktop-runtime-win-x64.exe"' '/install /passive /norestart' "" ${SW_SHOW} $1
-    Delete "$instdir\KorabliChsMod\windowsdesktop-runtime-win-x64.exe"
-		DetailPrint "安装 ${__SECTION__} 完成"
-		${EndUserAborted}
+	DetailPrint "未安装 .NET 8.0 运行环境"
+	DetailPrint "安装 .NET 8.0 运行环境"
+	!insertmacro ShellExecWait "runas" '"$InstDir\windowsdesktop-runtime-win-x64.exe"' '/install /passive /norestart' "" ${SW_SHOW} $1
+	Delete "$InstDir\windowsdesktop-runtime-win-x64.exe"
+	DetailPrint "安装 .NET 8.0 运行环境 完成"
 done:
-
+	Delete "$InstDir\windowsdesktop-runtime-win-x64.exe"
 SectionEnd
-
-Section -"Post"
-  ${If} $UserAborted == "yes"
-    StrCpy $CompletedText "Installation aborted."
-    StrCpy $MUI_HeaderText "Installation Failed"
-    StrCpy $MUI_HeaderSubText "Setup was aborted."
-  ${Else}
-    StrCpy $CompletedText "Completed"
-    StrCpy $MUI_HeaderText "Installation Complete"
-    StrCpy $MUI_HeaderSubText "Setup was completed successfully."
-  ${EndIf}
-SectionEnd
- 
-Function InstFilesLeave
-  StrCpy $CurrentPage ""
-FunctionEnd
- 
-!define MUI_CUSTOMFUNCTION_ABORT onUserAbort
-Function onUserAbort
-  StrCpy $UserIsMakingAbortDecision "yes"
-  ${If} ${Cmd} `MessageBox MB_YESNO|MB_DEFBUTTON2 "${MUI_ABORTWARNING_TEXT}" IDYES`
-    ${If} $CurrentPage == "InstFiles"
-      StrCpy $UserAborted "yes"
-      MessageBox MB_OK "User aborted during InstFiles."
-      StrCpy $UserIsMakingAbortDecision "no"
-      Abort
-    ${Else}
-      MessageBox MB_OK "User aborted elsewhere"
-      StrCpy $UserIsMakingAbortDecision "no"
-    ${EndIf}
-  ${Else}
-    StrCpy $UserIsMakingAbortDecision "no"
-    Abort
-  ${EndIf}
-FunctionEnd
-
-!insertmacro MUI_LANGUAGE "SimpChinese"

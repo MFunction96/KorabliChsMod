@@ -46,6 +46,9 @@ namespace Xanadu.KorabliChsMod.Core
         public string BuildNumber => this.PreInstalled && !string.IsNullOrEmpty(this.ServerVersion) ? this.ServerVersion[(this.ServerVersion.LastIndexOf('.') + 1)..] : this.ClientVersion[(this.ClientVersion.LastIndexOf('.') + 1)..];
 
         /// <inheritdoc />
+        public bool IsWows { get; private set; }
+
+        /// <inheritdoc />
         public bool IsTest { get; private set; }
 
         /// <inheritdoc />
@@ -65,6 +68,7 @@ namespace Xanadu.KorabliChsMod.Core
                     this.Folder = gameFolder;
                     var gameInfoXml = new XmlDocument();
                     gameInfoXml.Load(this.GameInfoXmlPath);
+                    this.IsWows = gameInfoXml["protocol"]?["game"]?["id"]?.InnerText.Contains("WOWS", StringComparison.OrdinalIgnoreCase) ?? false;
                     this.Server = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
                     this.ClientVersion = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
                     this.PreInstalled = !(gameInfoXml["protocol"]?["game"]?["accepted_preinstalls"]?.IsEmpty ?? true);
@@ -98,20 +102,19 @@ namespace Xanadu.KorabliChsMod.Core
                 catch (Exception e)
                 {
                     logger.LogError(e, string.Empty);
+                    this.Clear();
                     throw;
                 }
 
             }, cancellationToken);
         }
 
-        public Task Backup(CancellationToken cancellationToken = default)
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Clear()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task Restore(CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
+            this.Folder = string.Empty;
         }
     }
 }
