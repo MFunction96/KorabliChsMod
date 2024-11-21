@@ -37,9 +37,11 @@ namespace Xanadu.KorabliChsMod.Core
 
             using var zip = ZipFile.OpenRead(zipFile.FullPath);
             var entry = zip.Entries[0].FullName;
-            var zipFolder = Path.Combine(zipTempFolder, entry);
+            var extractFolder = Path.Combine(zipTempFolder, entry);
             ZipFile.ExtractToDirectory(zipFile.FullPath, zipTempFolder, Encoding.UTF8, true);
-            IOExtension.CopyDirectory(zipFolder, gameDetector.ModFolder);
+            IOExtension.CopyDirectory(Path.Combine(extractFolder, "texts"), Path.Combine(gameDetector.ModFolder, "texts"));
+            File.Copy(Path.Combine(extractFolder, "locale_config.xml"), Path.Combine(gameDetector.ModFolder, "locale_config.xml"), true);
+            File.Copy(Path.Combine(extractFolder, "LICENSE"), Path.Combine(gameDetector.ModFolder, "LICENSE"), true);
             await File.WriteAllTextAsync(Path.Combine(gameDetector.ModFolder, "Korabli_localization_chs.ver"),
                 modVersion, Encoding.UTF8, cancellationToken);
         }

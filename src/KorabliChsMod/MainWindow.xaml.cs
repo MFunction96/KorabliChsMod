@@ -111,9 +111,7 @@ namespace Xanadu.KorabliChsMod
             this._lgcIntegrator = lgcIntegrator;
             this._updateHelper = updateHelper;
             // TODO: Github与Gitee切换
-            _ = this._networkEngine.Headers.TryAdd("Accept", "application/vnd.github+json");
-            _ = this._networkEngine.Headers.TryAdd("X-GitHub-Api-Version", "2022-11-28");
-            _ = this._networkEngine.Headers.TryAdd("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0");
+            this._networkEngine.Init();
             this._lgcIntegrator.Load();
             this._korabliFileHub.Load();
             var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
@@ -151,6 +149,7 @@ namespace Xanadu.KorabliChsMod
 
             this._gameFolders.Add(MainWindow.ManualSelection);
             this._gameDetector.Clear();
+
             if (!string.IsNullOrEmpty(this._korabliFileHub.GameFolder))
             {
                 try
@@ -170,6 +169,10 @@ namespace Xanadu.KorabliChsMod
                 {
                     this.TbStatus.Text += $"发现新版本{version}，请点击关于-更新按钮进行更新\r\n";
                     this._logger.LogInformation($"Found new version: {version}");
+                }
+                else
+                {
+                    this.TbStatus.Text += $"已是最新版本\r\n";
                 }
             }
             catch (Exception)

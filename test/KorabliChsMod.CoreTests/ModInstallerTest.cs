@@ -1,11 +1,8 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Xanadu.KorabliChsMod.Core;
 using Xanadu.Skidbladnir.IO.File;
 using Xanadu.Skidbladnir.IO.File.Cache;
@@ -28,9 +25,13 @@ namespace Xanadu.Test.KorabliChsMod.Core
             var gameDetector = new GameDetector(this._mockGameDetectorLogger.Object);
             await gameDetector.Load(tempPath);
             var networkEngine = new NetworkEngine(this._mockNetworkEngineLogger.Object);
+            networkEngine.Init();
             var fileCachePool = new FileCachePool(this._mockFileCachePoolLogger.Object);
             var modInstaller = new ModInstaller(networkEngine, fileCachePool, gameDetector);
             await modInstaller.Install();
+            Assert.IsTrue(Directory.Exists(Path.Combine(gameDetector.ModFolder, "texts")));
+            Assert.IsTrue(File.Exists(Path.Combine(gameDetector.ModFolder, "locale_config.xml")));
+            Assert.IsTrue(File.Exists(Path.Combine(gameDetector.ModFolder, "LICENSE")));
             await IOExtension.DeleteDirectory(tempPath, force: true);
         }
     }

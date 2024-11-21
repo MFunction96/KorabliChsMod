@@ -136,7 +136,6 @@ Section "Uninstall"
 	; 删除中文名快捷方式
 	Delete "$Desktop\考拉比汉社厂.lnk"
 	; 删除安装程序文件
-	Delete "$InstDir\config.json"
 	Delete "$InstDir\KorabliChsMod.Core.deps.json"
 	Delete "$InstDir\KorabliChsMod.Core.dll"
 	Delete "$InstDir\KorabliChsMod.Core.pdb"

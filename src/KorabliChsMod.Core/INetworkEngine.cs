@@ -16,6 +16,11 @@ namespace Xanadu.KorabliChsMod.Core
         /// <summary>
         /// 
         /// </summary>
+        public void Init();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="uri"></param>
         public bool SetProxy(Uri? uri);
 
