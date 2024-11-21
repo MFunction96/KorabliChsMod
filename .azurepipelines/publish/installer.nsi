@@ -26,7 +26,7 @@ FunctionEnd
 Function CheckForOldVersion
 	ReadRegStr $0 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\KorabliChsMod" "UninstallString"
 	${If} $0 != ""
-		# ExecWait "$0 /S"
+		ExecWait "$0 /S"
 	${EndIf}
 FunctionEnd
 
@@ -35,6 +35,7 @@ Function .onInit
 FunctionEnd
 
 Section "KorabliChsMod"
+	ExecWait "taskkill /F /IM /T KorabliChsMod.exe"
 	SetOutPath "$InstDir"
 	File /r "${SOURCE}\*.*"
 	
@@ -57,7 +58,6 @@ Section "Uninstall"
 	; 删除中文名快捷方式
 	Delete "$Desktop\考拉比汉社厂.lnk"
 	; 删除安装程序文件
-	Delete "$InstDir\config.json"
 	Delete "$InstDir\KorabliChsMod.Core.deps.json"
 	Delete "$InstDir\KorabliChsMod.Core.dll"
 	Delete "$InstDir\KorabliChsMod.Core.pdb"

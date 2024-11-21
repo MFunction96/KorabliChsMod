@@ -51,7 +51,7 @@ namespace Xanadu.KorabliChsMod
         /// <summary>
         /// 
         /// </summary>
-        private readonly ICachePool _cachePool;
+        private readonly IFileCachePool _cachePool;
 
         /// <summary>
         /// 
@@ -67,6 +67,11 @@ namespace Xanadu.KorabliChsMod
         /// 
         /// </summary>
         private readonly IUpdateHelper _updateHelper;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly IModInstaller _modInstaller;
 
         /// <summary>
         /// 
@@ -87,15 +92,17 @@ namespace Xanadu.KorabliChsMod
         /// 
         /// </summary>
         /// <param name="logger"></param>
+        /// <param name="modInstaller"></param>
         /// <param name="gameDetector"></param>
         /// <param name="networkEngine"></param>
         /// <param name="cachePool"></param>
         /// <param name="korabliFileHub"></param>
         /// <param name="lgcIntegrator"></param>
         /// <param name="updateHelper"></param>
-        public MainWindow(ILogger<MainWindow> logger, IGameDetector gameDetector, INetworkEngine networkEngine, ICachePool cachePool, IKorabliFileHub korabliFileHub, ILgcIntegrator lgcIntegrator, IUpdateHelper updateHelper)
+        public MainWindow(ILogger<MainWindow> logger, IModInstaller modInstaller, IGameDetector gameDetector, INetworkEngine networkEngine, IFileCachePool cachePool, IKorabliFileHub korabliFileHub, ILgcIntegrator lgcIntegrator, IUpdateHelper updateHelper)
         {
             this._logger = logger;
+            this._modInstaller = modInstaller;
             this._gameDetector = gameDetector;
             this._networkEngine = networkEngine;
             this._networkEngine.NetworkEngineEvent += this.SyncNetworkEngineMessage;
@@ -104,9 +111,7 @@ namespace Xanadu.KorabliChsMod
             this._lgcIntegrator = lgcIntegrator;
             this._updateHelper = updateHelper;
             // TODO: Github与Gitee切换
-            _ = this._networkEngine.Headers.TryAdd("Accept", "application/vnd.github+json");
-            _ = this._networkEngine.Headers.TryAdd("X-GitHub-Api-Version", "2022-11-28");
-            _ = this._networkEngine.Headers.TryAdd("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0");
+            this._networkEngine.Init();
             this._lgcIntegrator.Load();
             this._korabliFileHub.Load();
             var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
@@ -144,6 +149,7 @@ namespace Xanadu.KorabliChsMod
 
             this._gameFolders.Add(MainWindow.ManualSelection);
             this._gameDetector.Clear();
+
             if (!string.IsNullOrEmpty(this._korabliFileHub.GameFolder))
             {
                 try
@@ -156,11 +162,28 @@ namespace Xanadu.KorabliChsMod
                 }
             }
 
+            try
+            {
+                var version = await this._updateHelper.Check();
+                if (version > this.AppVersion)
+                {
+                    this.TbStatus.Text += $"发现新版本{version}，请点击关于-更新按钮进行更新\r\n";
+                    this._logger.LogInformation($"Found new version: {version}");
+                }
+                else
+                {
+                    this.TbStatus.Text += $"已是最新版本\r\n";
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
             this.CbGameLocation.ItemsSource = this._gameFolders;
             this.CbGameLocation.SelectedValue = this._gameDetector.Folder;
-            this.CbMirrorList.Items.Add("Gitee （推荐大陆玩家使用）");
-            this.CbMirrorList.Items.Add("Github （推荐海外玩家使用）");
-            this.CbMirrorList.SelectedIndex = 1;
+            this.CbMirrorList.Items.Add("Github");
+            this.CbMirrorList.SelectedIndex = 0;
         }
 
         private async void BtnInstall_Click(object sender, RoutedEventArgs e)
@@ -168,45 +191,19 @@ namespace Xanadu.KorabliChsMod
             this.BtnInstall.IsEnabled = false;
             this.BtnUninstall.IsEnabled = false;
 
-            var zipFile = this._cachePool.Register("Korabli_localization_chs.zip", "download");
             try
             {
-
                 var backupFolder = await this._korabliFileHub.EnqueueBackup(true);
                 IOExtension.CopyDirectory(this._gameDetector.ModFolder, backupFolder);
-                var response = await this._networkEngine.SendAsync(new HttpRequestMessage(HttpMethod.Get,
-                    "https://api.github.com/repos/DDFantasyV/Korabli_localization_chs/releases"), 5);
-                if (response is null || !response.IsSuccessStatusCode)
-                {
-                    return;
-                }
-
-                var releases = await response.Content.ReadAsStringAsync();
-                var jArray = JsonConvert.DeserializeObject<JArray>(releases) ?? [];
-                var latest = jArray.First(q => q["prerelease"]!.Value<bool>() == this._gameDetector.IsTest);
-                var modVersion = latest["tag_name"]!.Value<string>();
-                var downloadFile = latest["zipball_url"]!.Value<string>();
-                await this._networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
-                    zipFile.FullPath, 5);
-
-                using var zip = ZipFile.OpenRead(zipFile.FullPath);
-                var entry = zip.Entries[0].FullName;
-                var zipFolder = Path.Combine(zipFile.Pool.BasePath, entry);
-                ZipFile.ExtractToDirectory(zipFile.FullPath, zipFile.Pool.BasePath, Encoding.UTF8, true);
-                IOExtension.CopyDirectory(zipFolder, this._gameDetector.ModFolder);
-                await File.WriteAllTextAsync(Path.Combine(this._gameDetector.ModFolder, "Korabli_localization_chs.ver"),
-                    modVersion, Encoding.UTF8);
-
+                await this._modInstaller.Install();
                 this.ReloadFolder();
-
-                MessageBox.Show("汉化完成！");
+                this.TbStatus.Text += "汉化完成！\r\n";
             }
             catch (Exception exception)
             {
                 this.WriteErrorToStatus(exception);
             }
 
-            this._cachePool.UnRegister(zipFile);
             this.BtnInstall.IsEnabled = true;
             this.BtnUninstall.IsEnabled = true;
         }

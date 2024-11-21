@@ -9,10 +9,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="game_info.xml">
+	  <None Update="assets\bin\8601080\.gitkeep">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="game_metadata\metadata.xml">
+	  <None Update="assets\game_info.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\game_metadata\metadata.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="Issue\1\game_info.xml">
@@ -24,9 +27,13 @@
 	  <None Update="Issue\1\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="preferences.xml">
+	  <None Update="assets\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="assets\bin\8601080\" />
 	</ItemGroup>
 
 </Project>

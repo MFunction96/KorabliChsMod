@@ -98,6 +98,11 @@ namespace Xanadu.KorabliChsMod.Core
                         this.ChsMod = string.Compare(this.Locale, "schinese", StringComparison.OrdinalIgnoreCase) == 0;
                     }
 
+                    if (!Directory.Exists(this.ModFolder))
+                    {
+                        Directory.CreateDirectory(this.ModFolder);
+                    }
+
                 }
                 catch (Exception e)
                 {

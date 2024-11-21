@@ -13,11 +13,26 @@ namespace Xanadu.KorabliChsMod.Core
     {
         private bool _disposed;
 
+        private bool _init;
+
         private HttpClient Client { get; set; } = new();
 
         public event EventHandler<NetworkEngineEventArg>? NetworkEngineEvent;
 
         public ConcurrentDictionary<string, string> Headers { get; } = new();
+
+        public void Init()
+        {
+            if (this._init)
+            {
+                return;
+            }
+
+            this.Headers.TryAdd("Accept", "application/vnd.github+json");
+            this.Headers.TryAdd("X-GitHub-Api-Version", "2022-11-28");
+            this.Headers.TryAdd("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0");
+            this._init = true;
+        }
 
         public bool SetProxy(Uri? uri)
         {

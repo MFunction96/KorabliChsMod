@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Xanadu.Skidbladnir.IO.File.Cache;
 
 namespace Xanadu.KorabliChsMod.Core
 {
@@ -13,6 +12,11 @@ namespace Xanadu.KorabliChsMod.Core
     public interface INetworkEngine : IDisposable
     {
         public ConcurrentDictionary<string, string> Headers { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Init();
 
         /// <summary>
         /// 
