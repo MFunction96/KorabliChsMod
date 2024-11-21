@@ -1,8 +1,7 @@
-﻿namespace Xanadu.KorabliChsMod
+﻿namespace Xanadu.KorabliChsMod.Core
 {
     public enum MirrorList
     {
-        Github = 0,
-        Gitee = 1
+        Github = 0
     }
 }

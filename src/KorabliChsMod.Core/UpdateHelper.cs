@@ -12,7 +12,7 @@ using Xanadu.Skidbladnir.IO.File.Cache;
 
 namespace Xanadu.KorabliChsMod.Core
 {
-    public class UpdateHelper(ILogger<UpdateHelper> logger, IKorabliFileHub korabliFileHub, INetworkEngine networkEngine, ICachePool cachePool) : IUpdateHelper
+    public class UpdateHelper(ILogger<UpdateHelper> logger, IKorabliFileHub korabliFileHub, INetworkEngine networkEngine, IFileCachePool fileCachePool) : IUpdateHelper
     {
         private JToken? _latestJToken;
         public MirrorList Mirror { get; set; } = MirrorList.Github;
@@ -36,13 +36,13 @@ namespace Xanadu.KorabliChsMod.Core
 
         public async Task Update()
         {
-            var downloadFolder = Path.Combine(cachePool.BasePath, "download");
+            var downloadFolder = Path.Combine(fileCachePool.BasePath, "download");
             if (!Directory.Exists(downloadFolder))
             {
                 Directory.CreateDirectory(downloadFolder);
             }
 
-            var exeFile = cachePool.Register("KorabliChsModInstaller.exe", "download");
+            var exeFile = Path.Combine(fileCachePool.BasePath, "download", "KorabliChsModInstaller.exe");
             try
             {
                 var latest = this._latestJToken ?? await this.GetLatestJToken();
@@ -51,13 +51,13 @@ namespace Xanadu.KorabliChsMod.Core
                     string.Compare(q["name"]!.Value<string>(), "KorabliChsModInstaller.exe",
                         StringComparison.OrdinalIgnoreCase) == 0)["browser_download_url"]!.Value<string>();
                 await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
-                    exeFile.FullPath, 5);
+                    exeFile, 5);
 
                 var processInfo = new ProcessStartInfo
                 {
                     FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
                     Arguments =
-                        $"-ExecutionPolicy Unrestricted -Command \"Stop-Process -Id {Environment.ProcessId} -Force ; $p = Start-Process -FilePath \'{exeFile.FullPath}\' -ArgumentList \'/S /D={Environment.CurrentDirectory}\' -PassThru ; $p.WaitForExit() ; Start-Process -FilePath \'{Environment.CurrentDirectory}\\KorabliChsMod.exe\'\"",
+                        $"-ExecutionPolicy Unrestricted -Command \"Stop-Process -Id {Environment.ProcessId} -Force ; $p = Start-Process -FilePath \'{exeFile}\' -ArgumentList \'/S /D={Environment.CurrentDirectory}\' -PassThru ; $p.WaitForExit() ; Start-Process -FilePath \'{Environment.CurrentDirectory}\\KorabliChsMod.exe\'\"",
                     WorkingDirectory = Environment.CurrentDirectory,
                     CreateNoWindow = true
                 };

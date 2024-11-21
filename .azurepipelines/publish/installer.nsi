@@ -26,7 +26,7 @@ FunctionEnd
 Function CheckForOldVersion
 	ReadRegStr $0 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\KorabliChsMod" "UninstallString"
 	${If} $0 != ""
-		# ExecWait "$0 /S"
+		ExecWait "$0 /S"
 	${EndIf}
 FunctionEnd
 
@@ -35,6 +35,7 @@ Function .onInit
 FunctionEnd
 
 Section "KorabliChsMod"
+	ExecWait "taskkill /F /IM /T KorabliChsMod.exe"
 	SetOutPath "$InstDir"
 	File /r "${SOURCE}\*.*"
 	
