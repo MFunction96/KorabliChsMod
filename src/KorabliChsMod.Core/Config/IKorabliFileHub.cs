@@ -66,6 +66,11 @@ namespace Xanadu.KorabliChsMod.Core.Config
         /// <summary>
         /// 
         /// </summary>
+        public bool AutoUpdate { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="reserve"></param>
         public void Load(int reserve = 2);
 

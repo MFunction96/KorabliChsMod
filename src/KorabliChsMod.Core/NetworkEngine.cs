@@ -17,7 +17,7 @@ namespace Xanadu.KorabliChsMod.Core
 
         private HttpClient Client { get; set; } = new();
 
-        public event EventHandler<NetworkEngineEventArg>? NetworkEngineEvent;
+        public event EventHandler<ServiceEventArg>? ServiceEvent;
 
         public ConcurrentDictionary<string, string> Headers { get; } = new();
 
@@ -34,7 +34,7 @@ namespace Xanadu.KorabliChsMod.Core
             this._init = true;
         }
 
-        public bool SetProxy(Uri? uri)
+        public bool SetProxy(Uri? uri, string username = "", string password = "")
         {
             try
             {
@@ -78,7 +78,7 @@ namespace Xanadu.KorabliChsMod.Core
 
             if (retry == 0)
             {
-                this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Message = $"开始单次请求：{request.RequestUri?.Host}"
                 });
@@ -86,7 +86,7 @@ namespace Xanadu.KorabliChsMod.Core
                 var res = await this.Client.SendAsync(request, cancellationToken);
 
                 logger.LogInformation($"{res.StatusCode} -> {request.RequestUri?.Host}");
-                this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Message = $"结束单次请求：{res.StatusCode} {request.RequestUri?.Host}"
                 });
@@ -99,7 +99,7 @@ namespace Xanadu.KorabliChsMod.Core
             {
                 try
                 {
-                    this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
                         Message = $"开始请求：{request.RequestUri?.Host}"
                     });
@@ -107,7 +107,7 @@ namespace Xanadu.KorabliChsMod.Core
                     response = await this.Client.SendAsync(request, cancellationToken);
                     response.EnsureSuccessStatusCode();
                     logger.LogInformation($"{response.StatusCode} -> {request.RequestUri?.AbsoluteUri}");
-                    this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
                         Message = $"结束请求：{response.StatusCode} {request.RequestUri?.Host}"
                     });
@@ -117,7 +117,7 @@ namespace Xanadu.KorabliChsMod.Core
                 catch (Exception e)
                 {
                     logger.LogError(e, string.Empty);
-                    this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
                         Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.Host}",
                         Exception = e
@@ -127,7 +127,7 @@ namespace Xanadu.KorabliChsMod.Core
                 Thread.Sleep(1000);
             }
 
-            this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
+            this.ServiceEvent?.Invoke(this, new ServiceEventArg
             {
                 Message = $"请求失败 {response?.StatusCode} {request.RequestUri?.Host}"
             });
@@ -157,7 +157,7 @@ namespace Xanadu.KorabliChsMod.Core
             catch (Exception e)
             {
                 logger.LogError(e, string.Empty);
-                this.NetworkEngineEvent?.Invoke(this, new NetworkEngineEventArg
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.Host}",
                     Exception = e
@@ -185,7 +185,7 @@ namespace Xanadu.KorabliChsMod.Core
         /// <param name="disposing">If disposing equals true, the method has been called directly, or indirectly by a user's code. Managed and unmanaged resources can be disposed. If disposing equals false, the method has been called by the runtime from inside the finalizer and you should not reference other objects. Only unmanaged resources can be disposed.</param>
         private void Dispose(bool disposing)
         {
-            // Check to see if Dispose has already been called.
+            // UpdateAvailable to see if Dispose has already been called.
             if (this._disposed)
             {
                 return;

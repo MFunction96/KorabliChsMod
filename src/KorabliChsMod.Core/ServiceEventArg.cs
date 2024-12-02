@@ -2,7 +2,7 @@
 
 namespace Xanadu.KorabliChsMod.Core
 {
-    public class NetworkEngineEventArg : EventArgs
+    public class ServiceEventArg : EventArgs
     {
         public string Message { get; set; } = string.Empty;
 

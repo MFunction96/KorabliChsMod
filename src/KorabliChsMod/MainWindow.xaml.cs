@@ -1,16 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Net.Http;
 using System.Reflection;
-using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -105,11 +100,12 @@ namespace Xanadu.KorabliChsMod
             this._modInstaller = modInstaller;
             this._gameDetector = gameDetector;
             this._networkEngine = networkEngine;
-            this._networkEngine.NetworkEngineEvent += this.SyncNetworkEngineMessage;
+            this._networkEngine.ServiceEvent += this.SyncServiceMessage;
             this._cachePool = cachePool;
             this._korabliFileHub = korabliFileHub;
             this._lgcIntegrator = lgcIntegrator;
             this._updateHelper = updateHelper;
+            this._updateHelper.ServiceEvent += this.SyncServiceMessage;
             // TODO: Github与Gitee切换
             this._networkEngine.Init();
             this._lgcIntegrator.Load();
@@ -162,28 +158,28 @@ namespace Xanadu.KorabliChsMod
                 }
             }
 
-            try
-            {
-                var version = await this._updateHelper.Check();
-                if (version > this.AppVersion)
-                {
-                    this.TbStatus.Text += $"发现新版本{version}，请点击关于-更新按钮进行更新\r\n";
-                    this._logger.LogInformation($"Found new version: {version}");
-                }
-                else
-                {
-                    this.TbStatus.Text += $"已是最新版本\r\n";
-                }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-
             this.CbGameLocation.ItemsSource = this._gameFolders;
             this.CbGameLocation.SelectedValue = this._gameDetector.Folder;
             this.CbMirrorList.Items.Add("Github");
             this.CbMirrorList.SelectedIndex = 0;
+            this.CbAutoUpdate.IsChecked = this._korabliFileHub.AutoUpdate;
+            var thread = new Thread(async void () =>
+            {
+                try
+                {
+                    var available = await this._updateHelper.UpdateAvailable(this.AppVersion);
+                    if (available && this._korabliFileHub.AutoUpdate)
+                    {
+                        await this._updateHelper.Update();
+                    }
+                }
+                catch (Exception exception)
+                {
+                    this.WriteErrorToStatus(exception);
+                }
+                
+            });
+            thread.Start();
         }
 
         private async void BtnInstall_Click(object sender, RoutedEventArgs e)
@@ -288,15 +284,10 @@ namespace Xanadu.KorabliChsMod
 
             try
             {
-                var latestVersion = await this._updateHelper.Check();
-                if (this.AppVersion.CompareTo(latestVersion) < 0)
+                var latestVersion = await this._updateHelper.UpdateAvailable(this.AppVersion);
+                if (latestVersion)
                 {
-                    this.TbStatus.Text += "发现新版本，开始更新\r\n";
                     await this._updateHelper.Update();
-                }
-                else
-                {
-                    this.TbStatus.Text += "已经是最新版本\r\n";
                 }
             }
             catch (Exception exception)
@@ -307,10 +298,13 @@ namespace Xanadu.KorabliChsMod
             this.BtnUpdate.IsEnabled = true;
         }
 
-        private void SyncNetworkEngineMessage(object? sender, NetworkEngineEventArg e)
+        private void SyncServiceMessage(object? sender, ServiceEventArg e)
         {
-            this.TbStatus.Text += e.Message + "\r\n";
-            this.SvStatus.ScrollToBottom();
+            this.Dispatcher.Invoke(() =>
+            {
+                this.TbStatus.Text += e.Message + "\r\n";
+                this.SvStatus.ScrollToBottom();
+            });
         }
 
         private void CbGameLocation_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -352,14 +346,14 @@ namespace Xanadu.KorabliChsMod
             Application.Current.Shutdown();
         }
 
-        private void WriteErrorToStatus(Exception exception, bool autoScroll = true)
+        private void WriteErrorToStatus(Exception exception)
         {
             this._logger.LogError(exception, string.Empty);
-            this.TbStatus.Text += exception.Message + "\r\n";
-            if (autoScroll)
+            this.Dispatcher.Invoke(() =>
             {
+                this.TbStatus.Text += exception.Message + "\r\n";
                 this.SvStatus.ScrollToBottom();
-            }
+            });
         }
 
         private async void ReloadFolder()
