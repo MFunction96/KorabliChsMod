@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Xanadu.KorabliChsMod.Core
 {
-    public interface IUpdateHelper
+    public interface IUpdateHelper : IServiceEvent
     {
         /// <summary>
         /// 
@@ -19,7 +19,7 @@ namespace Xanadu.KorabliChsMod.Core
         /// 
         /// </summary>
         /// <returns></returns>
-        public Task<Version> Check();
+        public Task<bool> UpdateAvailable(Version appVersion);
 
         /// <summary>
         /// 

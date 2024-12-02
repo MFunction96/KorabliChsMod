@@ -9,8 +9,11 @@ namespace Xanadu.KorabliChsMod.Core
     /// <summary>
     /// 
     /// </summary>
-    public interface INetworkEngine : IDisposable
+    public interface INetworkEngine : IServiceEvent, IDisposable
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public ConcurrentDictionary<string, string> Headers { get; }
 
         /// <summary>
@@ -22,12 +25,9 @@ namespace Xanadu.KorabliChsMod.Core
         /// 
         /// </summary>
         /// <param name="uri"></param>
-        public bool SetProxy(Uri? uri);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler<NetworkEngineEventArg>? NetworkEngineEvent;
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        public bool SetProxy(Uri? uri, string username = "", string password = "");
 
         /// <summary>
         /// 

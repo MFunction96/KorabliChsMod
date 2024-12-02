@@ -32,6 +32,9 @@ namespace Xanadu.KorabliChsMod.Core.Config
         public bool AllowPreRelease { get; set; } = false;
 
         /// <inheritdoc />
+        public bool AutoUpdate { get; set; } = true;
+
+        /// <inheritdoc />
         public int Reserve { get; protected set; } = 2;
 
         /// <inheritdoc />
@@ -62,6 +65,7 @@ namespace Xanadu.KorabliChsMod.Core.Config
                         await File.ReadAllTextAsync(IKorabliFileHub.ConfigFilePath, Encoding.UTF8))!;
 
                 this.Proxy = config.Proxy;
+                this.AutoUpdate = config.AutoUpdate;
                 this.UpdateEngineProxy();
                 this.GameFolder = config.GameFolder;
             }
@@ -152,7 +156,7 @@ namespace Xanadu.KorabliChsMod.Core.Config
             catch (Exception e)
             {
                 logger.LogError(e, string.Empty);
-                throw;
+                this.Proxy = new ProxyConfig();
             }
         }
     }

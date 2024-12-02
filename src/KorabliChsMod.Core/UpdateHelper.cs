@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Xanadu.KorabliChsMod.Core.Config;
 using Xanadu.Skidbladnir.IO.File.Cache;
 
@@ -17,20 +17,34 @@ namespace Xanadu.KorabliChsMod.Core
         private JToken? _latestJToken;
         public MirrorList Mirror { get; set; } = MirrorList.Github;
         public Version? LatestVersion { get; private set; }
-        public async Task<Version> Check()
+
+        public event EventHandler<ServiceEventArg>? ServiceEvent;
+
+        public async Task<bool> UpdateAvailable(Version appVersion)
         {
             try
             {
                 this._latestJToken = await this.GetLatestJToken();
+                if (this._latestJToken is null)
+                {
+                    return false;
+                }
+
                 var name = this._latestJToken["name"]!.Value<string>()!;
                 var version = name[name.IndexOf(" ", StringComparison.OrdinalIgnoreCase)..].Trim();
                 this.LatestVersion = Version.Parse(version);
-                return this.LatestVersion;
+                var result = this.LatestVersion > appVersion;
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                {
+                    Message = result ? $"发现新版本{this.LatestVersion}，请点击关于-更新按钮进行更新\r\n" : "已是最新版本\r\n"
+                });
+
+                return this.LatestVersion > appVersion;
             }
             catch (Exception e)
             {
                 logger.LogError(e, string.Empty);
-                throw;
+                return false;
             }
         }
 
@@ -46,7 +60,7 @@ namespace Xanadu.KorabliChsMod.Core
             try
             {
                 var latest = this._latestJToken ?? await this.GetLatestJToken();
-                var assets = latest["assets"]! as JArray;
+                var assets = latest!["assets"]! as JArray;
                 var downloadFile = assets!.First(q =>
                     string.Compare(q["name"]!.Value<string>(), "KorabliChsModInstaller.exe",
                         StringComparison.OrdinalIgnoreCase) == 0)["browser_download_url"]!.Value<string>();
@@ -68,7 +82,6 @@ namespace Xanadu.KorabliChsMod.Core
             catch (Exception e)
             {
                 logger.LogError(e, string.Empty);
-                throw;
             }
         }
 
@@ -76,14 +89,28 @@ namespace Xanadu.KorabliChsMod.Core
         /// 
         /// </summary>
         /// <returns></returns>
-        private async Task<JToken> GetLatestJToken()
+        private async Task<JToken?> GetLatestJToken()
         {
-            var response = await networkEngine.SendAsync(new HttpRequestMessage(HttpMethod.Get,
-                "https://api.github.com/repos/MFunction96/KorabliChsMod/releases"), 5);
-            _ = response!.EnsureSuccessStatusCode();
-            var releases = await response.Content.ReadAsStringAsync();
-            var jArray = JsonConvert.DeserializeObject<JArray>(releases) ?? [];
-            return korabliFileHub.AllowPreRelease ? jArray.First() : jArray.First(q => !q["prerelease"]!.Value<bool>());
+            try
+            {
+                var response = await networkEngine.SendAsync(new HttpRequestMessage(HttpMethod.Get,
+                    "https://api.github.com/repos/MFunction96/KorabliChsMod/releases"), 5);
+                _ = response!.EnsureSuccessStatusCode();
+                var releases = await response.Content.ReadAsStringAsync();
+                var jArray = JsonConvert.DeserializeObject<JArray>(releases) ?? [];
+                return korabliFileHub.AllowPreRelease ? jArray.First() : jArray.First(q => !q["prerelease"]!.Value<bool>());
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, string.Empty);
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                {
+                    Message = "获取版本信息失败！"
+                });
+
+                return null;
+            }
+            
         }
     }
 }
