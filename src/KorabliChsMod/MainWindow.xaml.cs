@@ -103,6 +103,7 @@ namespace Xanadu.KorabliChsMod
             this._networkEngine.ServiceEvent += this.SyncServiceMessage;
             this._cachePool = cachePool;
             this._korabliFileHub = korabliFileHub;
+            this._korabliFileHub.ServiceEvent += this.SyncServiceMessage;
             this._lgcIntegrator = lgcIntegrator;
             this._updateHelper = updateHelper;
             this._updateHelper.ServiceEvent += this.SyncServiceMessage;
@@ -129,79 +130,86 @@ namespace Xanadu.KorabliChsMod
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.TbProxyAddress.Text = this._korabliFileHub.Proxy.Address;
-            if (this._lgcIntegrator.GameFolders.Count > 0)
+            try
             {
-                foreach (var folder in this._lgcIntegrator.GameFolders)
+                this.TbProxyAddress.Text = this._korabliFileHub.Proxy.Address;
+                if (this._lgcIntegrator.GameFolders.Count > 0)
                 {
-                    await this._gameDetector.Load(folder);
-                    if (this._gameDetector.IsWows)
+                    foreach (var folder in this._lgcIntegrator.GameFolders)
                     {
-                        this._gameFolders.Add(folder);
+                        await this._gameDetector.Load(folder);
+                        if (this._gameDetector.IsWows)
+                        {
+                            this._gameFolders.Add(folder);
+                        }
+                    }
+
+                }
+
+                this._gameFolders.Add(ManualSelection);
+                this._gameDetector.Clear();
+
+                if (!string.IsNullOrEmpty(this._korabliFileHub.GameFolder))
+                {
+                    try
+                    {
+                        await this._gameDetector.Load(this._korabliFileHub.GameFolder);
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
                     }
                 }
 
-            }
-
-            this._gameFolders.Add(MainWindow.ManualSelection);
-            this._gameDetector.Clear();
-
-            if (!string.IsNullOrEmpty(this._korabliFileHub.GameFolder))
-            {
-                try
+                this.CbGameLocation.ItemsSource = this._gameFolders;
+                this.CbGameLocation.SelectedValue = this._gameDetector.Folder;
+                this.CbMirrorList.Items.Add("Github");
+                this.CbMirrorList.SelectedIndex = 0;
+                this.CbAutoUpdate.IsChecked = this._korabliFileHub.AutoUpdate;
+                var thread = new Thread(async void () =>
                 {
-                    await this._gameDetector.Load(this._korabliFileHub.GameFolder);
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
-
-            this.CbGameLocation.ItemsSource = this._gameFolders;
-            this.CbGameLocation.SelectedValue = this._gameDetector.Folder;
-            this.CbMirrorList.Items.Add("Github");
-            this.CbMirrorList.SelectedIndex = 0;
-            this.CbAutoUpdate.IsChecked = this._korabliFileHub.AutoUpdate;
-            var thread = new Thread(async void () =>
-            {
-                try
-                {
-                    var available = await this._updateHelper.UpdateAvailable(this.AppVersion);
-                    if (available && this._korabliFileHub.AutoUpdate)
+                    try
                     {
-                        await this._updateHelper.Update();
+                        var available = await this._updateHelper.UpdateAvailable(this.AppVersion);
+                        if (available && this._korabliFileHub.AutoUpdate)
+                        {
+                            await this._updateHelper.Update();
+                        }
                     }
-                }
-                catch (Exception exception)
-                {
-                    this.WriteErrorToStatus(exception);
-                }
-                
-            });
-            thread.Start();
+                    catch (Exception exception)
+                    {
+                        this.WriteErrorToStatus(exception);
+                    }
+
+                });
+                thread.Start();
+            }
+            catch (Exception exception)
+            {
+                this.WriteErrorToStatus(exception);
+            }
         }
 
         private async void BtnInstall_Click(object sender, RoutedEventArgs e)
         {
-            this.BtnInstall.IsEnabled = false;
-            this.BtnUninstall.IsEnabled = false;
-
             try
             {
+                this.BtnInstall.IsEnabled = false;
+                this.BtnUninstall.IsEnabled = false;
                 var backupFolder = await this._korabliFileHub.EnqueueBackup(true);
                 IOExtension.CopyDirectory(this._gameDetector.ModFolder, backupFolder);
                 await this._modInstaller.Install();
                 this.ReloadFolder();
                 this.TbStatus.Text += "汉化完成！\r\n";
+
+                this.BtnInstall.IsEnabled = true;
+                this.BtnUninstall.IsEnabled = true;
             }
             catch (Exception exception)
             {
                 this.WriteErrorToStatus(exception);
             }
 
-            this.BtnInstall.IsEnabled = true;
-            this.BtnUninstall.IsEnabled = true;
         }
 
         private void BtnUninstall_Click(object sender, RoutedEventArgs e)
@@ -262,40 +270,55 @@ namespace Xanadu.KorabliChsMod
 
         private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            this._korabliFileHub.Proxy = new ProxyConfig
+            try
             {
-                Address = this.TbProxyAddress.Text,
-                Username = this.TbProxyUsername.Text,
-                Password = this.TbProxyPassword.Text
-            };
+                this._korabliFileHub.Proxy = new ProxyConfig
+                {
+                    Address = this.TbProxyAddress.Text,
+                    Username = this.TbProxyUsername.Text,
+                    Password = this.TbProxyPassword.Text
+                };
 
-            await this._korabliFileHub.SaveAsync();
-            this.TbStatus.Text += "配置保存成功\r\n";
+                this._korabliFileHub.AutoUpdate = this.CbAutoUpdate.IsChecked ?? false;
+                await this._korabliFileHub.SaveAsync();
+                this.TbStatus.Text += "配置保存成功\r\n";
+            }
+            catch (Exception ex)
+            {
+                this.WriteErrorToStatus(ex);
+            }
         }
 
         private async void BtnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            this.BtnUpdate.IsEnabled = false;
-            var downloadFolder = Path.Combine(this._cachePool.BasePath, "download");
-            if (!Directory.Exists(downloadFolder))
-            {
-                Directory.CreateDirectory(downloadFolder);
-            }
-
             try
             {
-                var latestVersion = await this._updateHelper.UpdateAvailable(this.AppVersion);
-                if (latestVersion)
+                this.BtnUpdate.IsEnabled = false;
+                var downloadFolder = Path.Combine(this._cachePool.BasePath, "download");
+                if (!Directory.Exists(downloadFolder))
                 {
-                    await this._updateHelper.Update();
+                    Directory.CreateDirectory(downloadFolder);
                 }
-            }
-            catch (Exception exception)
-            {
-                this.WriteErrorToStatus(exception);
-            }
 
-            this.BtnUpdate.IsEnabled = true;
+                try
+                {
+                    var latestVersion = await this._updateHelper.UpdateAvailable(this.AppVersion);
+                    if (latestVersion)
+                    {
+                        await this._updateHelper.Update();
+                    }
+                }
+                catch (Exception exception)
+                {
+                    this.WriteErrorToStatus(exception);
+                }
+
+                this.BtnUpdate.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                this.WriteErrorToStatus(ex);
+            }
         }
 
         private void SyncServiceMessage(object? sender, ServiceEventArg e)
