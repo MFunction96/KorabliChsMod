@@ -6,7 +6,7 @@ using Xanadu.Skidbladnir.IO.File;
 
 namespace Xanadu.KorabliChsMod.Core.Config
 {
-    public interface IKorabliFileHub
+    public interface IKorabliFileHub : IServiceEvent
     {
         /// <summary>
         /// 

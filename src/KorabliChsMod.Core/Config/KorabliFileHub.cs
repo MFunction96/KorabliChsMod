@@ -16,6 +16,9 @@ namespace Xanadu.KorabliChsMod.Core.Config
     /// </summary>
     public class KorabliFileHub(ILogger<KorabliFileHub> logger, INetworkEngine networkEngine) : IKorabliFileHub
     {
+        /// <inheritdoc />
+        public event EventHandler<ServiceEventArg>? ServiceEvent;
+        
         /// <summary>
         /// 
         /// </summary>
@@ -136,9 +139,21 @@ namespace Xanadu.KorabliChsMod.Core.Config
         /// <inheritdoc />
         public async Task SaveAsync()
         {
-            this.UpdateEngineProxy();
-            var json = JsonConvert.SerializeObject(this, Formatting.Indented);
-            await File.WriteAllTextAsync(IKorabliFileHub.ConfigFilePath, json, Encoding.UTF8);
+            try
+            {
+                this.UpdateEngineProxy();
+                var json = JsonConvert.SerializeObject(this, Formatting.Indented);
+                await File.WriteAllTextAsync(IKorabliFileHub.ConfigFilePath, json, Encoding.UTF8);
+            }
+            catch (Exception e)
+            {
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                {
+                    Exception = e,
+                    Message = $"配置文件保存失败！\r\n{e.Message}"
+                });
+            }
+            
         }
 
         private void UpdateEngineProxy()
@@ -159,5 +174,6 @@ namespace Xanadu.KorabliChsMod.Core.Config
                 this.Proxy = new ProxyConfig();
             }
         }
+
     }
 }
