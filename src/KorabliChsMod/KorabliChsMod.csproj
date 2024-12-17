@@ -3,10 +3,10 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<UseWPF>true</UseWPF>
-		<StartupObject>Xanadu.KorabliChsMod.Program</StartupObject>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<ApplicationIcon>pineapple.ico</ApplicationIcon>
+		<RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -27,9 +27,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="HandyControls" Version="3.5.3" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotNetMajorVersion)" />
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="$(DotNetMajorVersion)" />
 		<PackageReference Include="Serilog.Sinks.File" Version="*" />
+		<PackageReference Include="Stylet" Version="1.3.7" />
 	</ItemGroup>
 
 	<ItemGroup>
