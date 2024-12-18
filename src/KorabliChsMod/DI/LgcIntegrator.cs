@@ -60,6 +60,8 @@ namespace Xanadu.KorabliChsMod.DI
 
                     this.GameFolders.Add(gameFolder);
                 }
+
+                logger.LogInformation("Lesta Game Center folder found!");
             }
             catch (Exception e)
             {

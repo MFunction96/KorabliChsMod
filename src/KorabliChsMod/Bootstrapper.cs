@@ -1,10 +1,13 @@
-﻿using Prism.DryIoc;
+﻿using Microsoft.Extensions.Logging;
+using Prism.DryIoc;
 using Prism.Ioc;
 using Serilog;
+using System.Text;
 using System.Windows;
 using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Config;
 using Xanadu.KorabliChsMod.DI;
+using Xanadu.KorabliChsMod.ViewModels;
 using Xanadu.KorabliChsMod.Views;
 using Xanadu.Skidbladnir.IO.File.Cache;
 
@@ -20,7 +23,18 @@ namespace Xanadu.KorabliChsMod
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // 注册日志服务
-            containerRegistry.RegisterInstance(Log.Logger);
+            var loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder.AddSerilog(new LoggerConfiguration()
+                    .Enrich.FromLogContext()
+                    .WriteTo.File(IKorabliFileHub.LogFilePath,
+                        encoding: Encoding.UTF8,
+                        fileSizeLimitBytes: 50331648)
+                    .CreateLogger());
+            });
+            // 注册 ILoggerFactory 到容器
+            containerRegistry.RegisterInstance(loggerFactory);
+
             // 注册配置文件
             containerRegistry.RegisterSingleton<IKorabliFileHub, KorabliFileHub>();
             // 注册游戏探查服务
@@ -35,6 +49,10 @@ namespace Xanadu.KorabliChsMod
             containerRegistry.RegisterSingleton<IUpdateHelper, UpdateHelper>();
             // 注册Mod安装服务
             containerRegistry.RegisterSingleton<IModInstaller, ModInstaller>();
+            // 注册主窗口日志服务
+            containerRegistry.RegisterSingleton<ILogger<MainWindowViewModel>, Logger<MainWindowViewModel>>();
+            containerRegistry.RegisterSingleton<ILogger<LgcIntegrator>, Logger<LgcIntegrator>>();
+            containerRegistry.RegisterForNavigation<MainWindowViewModel>();
         }
     }
 }

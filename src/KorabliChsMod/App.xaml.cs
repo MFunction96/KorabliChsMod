@@ -1,9 +1,7 @@
 ﻿using HandyControl.Themes;
 using Serilog;
-using System.Text;
 using System.Windows;
 using System.Windows.Media;
-using Xanadu.KorabliChsMod.Core.Config;
 
 namespace Xanadu.KorabliChsMod
 {
@@ -11,11 +9,6 @@ namespace Xanadu.KorabliChsMod
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .WriteTo.File(IKorabliFileHub.LogFilePath, encoding: Encoding.UTF8, fileSizeLimitBytes: 50331648)
-                .CreateLogger();
-
             base.OnStartup(e);
             var boot = new Bootstrapper();
             boot.Run();
