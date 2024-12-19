@@ -1,9 +1,11 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using HandyControl.Controls;
+﻿using HandyControl.Controls;
 using HandyControl.Themes;
 using HandyControl.Tools;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace Xanadu.KorabliChsMod.Views
 {
@@ -41,7 +43,7 @@ namespace Xanadu.KorabliChsMod.Views
                         WindowStyle = WindowStyle.None,
                         MinWidth = 0,
                         MinHeight = 0,
-                        Title = "Select Accent Color"
+                        Title = "选择显示颜色"
                     };
 
                     picker.SelectedColorChanged += delegate
@@ -55,5 +57,18 @@ namespace Xanadu.KorabliChsMod.Views
             }
         }
         #endregion
+
+        private void HyperLink_OnClick(object sender, RoutedEventArgs e)
+        {
+            var hyperlink = sender as Hyperlink;
+            Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
+        }
+
+        private void ProxySwitch_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.TbProxyAddress.IsEnabled = this.TbProxySwitch.IsChecked ?? false;
+            this.TbProxyUser.IsEnabled = this.TbProxySwitch.IsChecked ?? false;
+            this.PbProxyPassword.IsEnabled = this.TbProxySwitch.IsChecked ?? false;
+        }
     }
 }
