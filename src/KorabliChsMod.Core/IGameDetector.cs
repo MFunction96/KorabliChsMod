@@ -6,7 +6,7 @@ namespace Xanadu.KorabliChsMod.Core
     /// <summary>
     /// 
     /// </summary>
-    public interface IGameDetector
+    public interface IGameDetector : IServiceEvent
     {
         /// <summary>
         /// 
@@ -109,7 +109,7 @@ namespace Xanadu.KorabliChsMod.Core
         /// <param name="gameInfoXmlPath"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task Load(string gameInfoXmlPath, CancellationToken cancellationToken = default);
+        public Task<bool> Load(string gameInfoXmlPath, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 

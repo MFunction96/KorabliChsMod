@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
@@ -12,7 +11,7 @@ using Xanadu.Skidbladnir.IO.File.Cache;
 
 namespace Xanadu.KorabliChsMod.Core
 {
-    public class UpdateHelper(ILogger<UpdateHelper> logger, IKorabliFileHub korabliFileHub, INetworkEngine networkEngine, IFileCachePool fileCachePool) : IUpdateHelper
+    public class UpdateHelper(IKorabliFileHub korabliFileHub, INetworkEngine networkEngine, IFileCachePool fileCachePool) : IUpdateHelper
     {
         private JToken? _latestJToken;
         public MirrorList Mirror { get; set; } = MirrorList.Github;
@@ -43,7 +42,7 @@ namespace Xanadu.KorabliChsMod.Core
             }
             catch (Exception e)
             {
-                logger.LogError(e, string.Empty);
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Exception = e });
                 return false;
             }
         }
@@ -76,12 +75,11 @@ namespace Xanadu.KorabliChsMod.Core
                     CreateNoWindow = true
                 };
 
-                logger.LogInformation($"\"{processInfo.FileName}\" {processInfo.Arguments}");
                 Process.Start(processInfo);
             }
             catch (Exception e)
             {
-                logger.LogError(e, string.Empty);
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Exception = e });
             }
         }
 
@@ -102,15 +100,15 @@ namespace Xanadu.KorabliChsMod.Core
             }
             catch (Exception e)
             {
-                logger.LogError(e, string.Empty);
                 this.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
-                    Message = "获取版本信息失败！"
+                    Message = "获取版本信息失败！",
+                    Exception = e
                 });
 
                 return null;
             }
-            
+
         }
     }
 }

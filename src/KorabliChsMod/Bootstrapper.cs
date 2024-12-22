@@ -51,7 +51,7 @@ namespace Xanadu.KorabliChsMod
             containerRegistry.RegisterSingleton<IModInstaller, ModInstaller>();
             // 注册主窗口日志服务
             containerRegistry.RegisterSingleton<ILogger<MainWindowViewModel>, Logger<MainWindowViewModel>>();
-            containerRegistry.RegisterSingleton<ILogger<LgcIntegrator>, Logger<LgcIntegrator>>();
+            containerRegistry.RegisterSingleton<ILogger<FileCachePool>, Logger<FileCachePool>>();
             containerRegistry.RegisterForNavigation<MainWindowViewModel>();
         }
     }

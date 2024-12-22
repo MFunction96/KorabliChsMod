@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -14,11 +13,11 @@ namespace Xanadu.KorabliChsMod.Core.Config
     /// <summary>
     /// 
     /// </summary>
-    public class KorabliFileHub(ILogger<KorabliFileHub> logger, INetworkEngine networkEngine) : IKorabliFileHub
+    public class KorabliFileHub(INetworkEngine networkEngine) : IKorabliFileHub
     {
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -44,7 +43,7 @@ namespace Xanadu.KorabliChsMod.Core.Config
         public string GameFolder { get; set; } = string.Empty;
 
         /// <inheritdoc />
-        public async void Load(int reserve = 2)
+        public void Load(int reserve = 2)
         {
             try
             {
@@ -54,18 +53,17 @@ namespace Xanadu.KorabliChsMod.Core.Config
                 }
 
                 this.Reserve = reserve;
-                await this.ReloadBackupInstance();
-                await this.TrimBackInstance();
+                //await this.ReloadBackupInstance();
+                //await this.TrimBackInstance();
 
                 if (!File.Exists(IKorabliFileHub.ConfigFilePath))
                 {
-                    await this.SaveAsync();
+                    this.SaveAsync().RunSynchronously();
                     return;
                 }
 
                 var config =
-                    JsonConvert.DeserializeObject<KorabliFileHub>(
-                        await File.ReadAllTextAsync(IKorabliFileHub.ConfigFilePath, Encoding.UTF8))!;
+                    JsonConvert.DeserializeObject<KorabliFileHub>(File.ReadAllText(IKorabliFileHub.ConfigFilePath, Encoding.UTF8))!;
 
                 this.Proxy = config.Proxy;
                 this.AutoUpdate = config.AutoUpdate;
@@ -74,7 +72,12 @@ namespace Xanadu.KorabliChsMod.Core.Config
             }
             catch (Exception e)
             {
-                logger.LogError(e, string.Empty);
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                {
+                    Exception = e,
+                    Message = "配置文件加载失败！"
+                });
+
                 throw;
             }
 
@@ -153,7 +156,7 @@ namespace Xanadu.KorabliChsMod.Core.Config
                     Message = $"配置文件保存失败！\r\n{e.Message}"
                 });
             }
-            
+
         }
 
         private void UpdateEngineProxy()
@@ -170,7 +173,7 @@ namespace Xanadu.KorabliChsMod.Core.Config
             }
             catch (Exception e)
             {
-                logger.LogError(e, string.Empty);
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Message = "代理设置错误，请检查配置" });
                 this.Proxy = new ProxyConfig();
             }
         }
