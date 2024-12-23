@@ -47,7 +47,7 @@ namespace Xanadu.KorabliChsMod.Core
             }
         }
 
-        public async Task Update()
+        public async Task<bool> Update()
         {
             var downloadFolder = Path.Combine(fileCachePool.BasePath, "download");
             if (!Directory.Exists(downloadFolder))
@@ -76,10 +76,12 @@ namespace Xanadu.KorabliChsMod.Core
                 };
 
                 Process.Start(processInfo);
+                return true;
             }
             catch (Exception e)
             {
                 this.ServiceEvent?.Invoke(this, new ServiceEventArg { Exception = e });
+                return false;
             }
         }
 
@@ -103,7 +105,8 @@ namespace Xanadu.KorabliChsMod.Core
                 this.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Message = "获取版本信息失败！",
-                    Exception = e
+                    Exception = e,
+                    AppendException = false
                 });
 
                 return null;

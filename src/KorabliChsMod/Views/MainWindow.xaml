@@ -91,8 +91,8 @@
                             <TextBlock Text="{Binding ChsModInstalled}" Margin="30 0 0 0"/>
                         </hc:SimpleStackPanel>
                         <hc:SimpleStackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 40 0 0">
-                            <Button Style="{StaticResource ButtonPrimary}" Content="安装" FontSize="18" Height="36" Margin="0 0 30 0"></Button>
-                            <Button Style="{StaticResource ButtonDanger}" Content="删除所有Mod" FontSize="18" Height="36" Margin="30 0 0 0"></Button>
+                            <Button Style="{StaticResource ButtonPrimary}" Content="安装" FontSize="18" Height="36" Margin="0 0 30 0" IsEnabled="{Binding CoreEnabled}" Command="{Binding InstallChsModCommand}"></Button>
+                            <Button Style="{StaticResource ButtonDanger}" Content="删除所有Mod" FontSize="18" Height="36" Margin="30 0 0 0" IsEnabled="{Binding CoreEnabled}" Command="{Binding UninstallChsModCommand}"></Button>
                         </hc:SimpleStackPanel>
                     </hc:SimpleStackPanel>
                 </TabItem>
@@ -105,16 +105,16 @@
                         </hc:SimpleStackPanel>
                         <hc:SimpleStackPanel Orientation="Horizontal" Margin="20 25 0 0">
                             <TextBlock Text="代理服务" Margin="0 0 30 0"/>
-                            <ToggleButton Name="TbProxySwitch" Style="{StaticResource ToggleButtonSwitch}" Click="ProxySwitch_OnClick"/>
+                            <ToggleButton Name="TbProxySwitch" Style="{StaticResource ToggleButtonSwitch}" IsChecked="{Binding ProxyEnabled}"/>
                         </hc:SimpleStackPanel>
-                        <TextBox Name="TbProxyAddress" Style="{StaticResource TextBoxExtend}" hc:InfoElement.TitleWidth="90" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="代理地址" Width="405" Margin="20 15 20 0"/>
-                        <TextBox Name="TbProxyUser" Style="{StaticResource TextBoxExtend}" hc:InfoElement.TitleWidth="90" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="代理用户" Width="405" Margin="20 15 20 0"/>
+                        <TextBox Name="TbProxyAddress" Style="{StaticResource TextBoxExtend}" hc:InfoElement.TitleWidth="90" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="代理地址" Width="405" Margin="20 15 20 0" Text="{Binding ProxyAddress}" IsEnabled="{Binding ProxyEnabled}"/>
+                        <TextBox Name="TbProxyUser" Style="{StaticResource TextBoxExtend}" hc:InfoElement.TitleWidth="90" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="代理用户" Width="405" Margin="20 15 20 0" Text="{Binding ProxyUsername}" IsEnabled="{Binding ProxyEnabled}"/>
                         <hc:SimpleStackPanel Orientation="Horizontal" Margin="20 20 20 0">
                             <TextBlock Text="代理密码" Margin="0 0 26 0"/>
-                            <hc:PasswordBox Name="PbProxyPassword" ShowEyeButton="True" Password="" IsSafeEnabled="False" Width="315"/>
+                            <hc:PasswordBox Name="PbProxyPassword" ShowEyeButton="True" UnsafePassword="{Binding ProxyPassword}" IsSafeEnabled="False" Width="315" IsEnabled="{Binding ProxyEnabled}"/>
                         </hc:SimpleStackPanel>
                         <hc:SimpleStackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 30 0 0">
-                            <Button Style="{StaticResource ButtonPrimary}" Content="保存并生效" FontSize="18" Height="36"></Button>
+                            <Button Style="{StaticResource ButtonPrimary}" Content="保存并生效" FontSize="18" Height="36" Command="{Binding SaveSettingsCommand}"></Button>
                         </hc:SimpleStackPanel>
                     </hc:SimpleStackPanel>
                 </TabItem>
@@ -123,7 +123,7 @@
                         <hc:SimpleStackPanel Orientation="Horizontal">
                             <TextBlock Text="软件版本"/>
                             <TextBlock Text="{Binding AppVersion}" Margin="30 0 0 0"/>
-                            <Button Style="{StaticResource ButtonPrimary}" Content="更新" Margin="220 0 0 0"></Button>
+                            <Button Style="{StaticResource ButtonPrimary}" Content="更新" Margin="220 0 0 0" Command="{Binding UpdateCommand}" IsEnabled="{Binding UpdateEnabled}"></Button>
                         </hc:SimpleStackPanel>
                         <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 30 0 0">
                             <TextBlock Text="软件许可"/>

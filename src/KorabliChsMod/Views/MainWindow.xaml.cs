@@ -4,7 +4,6 @@ using HandyControl.Tools;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 
@@ -63,13 +62,6 @@ namespace Xanadu.KorabliChsMod.Views
         {
             var hyperlink = sender as Hyperlink;
             Process.Start(new ProcessStartInfo(hyperlink!.NavigateUri.AbsoluteUri) { UseShellExecute = true });
-        }
-
-        private void ProxySwitch_OnClick(object sender, RoutedEventArgs e)
-        {
-            this.TbProxyAddress.IsEnabled = this.TbProxySwitch.IsChecked ?? false;
-            this.TbProxyUser.IsEnabled = this.TbProxySwitch.IsChecked ?? false;
-            this.PbProxyPassword.IsEnabled = this.TbProxySwitch.IsChecked ?? false;
         }
 
         private void TbMessage_TextChanged(object? sender, RoutedEventArgs e)

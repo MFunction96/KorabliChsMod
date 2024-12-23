@@ -12,6 +12,12 @@ namespace Xanadu.KorabliChsMod.Core.Config
         /// 
         /// </summary>
         [JsonIgnore]
+        public const string DeprecatedHint = "该功能暂未开放";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonIgnore]
         public const string LogFileName = "Korabli.log";
 
         /// <summary>
@@ -105,7 +111,14 @@ namespace Xanadu.KorabliChsMod.Core.Config
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="dry"></param>
         /// <returns></returns>
-        public Task SaveAsync();
+        public bool UpdateEngineProxy(bool dry = false);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Task<bool> SaveAsync();
     }
 }

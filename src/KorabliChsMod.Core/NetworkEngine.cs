@@ -33,7 +33,7 @@ namespace Xanadu.KorabliChsMod.Core
             this._init = true;
         }
 
-        public bool SetProxy(Uri? uri, string username = "", string password = "")
+        public bool SetProxy(Uri? uri, string username = "", string password = "", bool dry = false)
         {
             try
             {
@@ -47,15 +47,21 @@ namespace Xanadu.KorabliChsMod.Core
 
                     if (uri is not null)
                     {
-                        handler.Proxy = new WebProxy(uri);
+                        handler.Proxy = new WebProxy(uri, true, null, new NetworkCredential(username, password));
                     }
 
-                    this.Client = new HttpClient(handler, true)
+                    var client = new HttpClient(handler, true)
                     {
                         DefaultRequestVersion = Version.Parse("2.0"),
                         DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
                     };
 
+                    if (!dry)
+                    {
+                        this.Client = client;
+                    }
+
+                    return true;
                 }
 
             }
@@ -65,7 +71,6 @@ namespace Xanadu.KorabliChsMod.Core
                 return false;
             }
 
-            return true;
         }
 
         public async Task<HttpResponseMessage?> SendAsync(HttpRequestMessage request, int retry = 0, CancellationToken cancellationToken = default)
@@ -102,21 +107,22 @@ namespace Xanadu.KorabliChsMod.Core
             {
                 try
                 {
+                    var req = request.Clone();
                     this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
-                        Message = $"开始请求：{request.RequestUri?.Host}"
+                        Message = $"开始请求：{req.RequestUri?.Host}"
                     });
 
-                    response = await this.Client.SendAsync(request, cancellationToken);
+                    response = await this.Client.SendAsync(req, cancellationToken);
                     response.EnsureSuccessStatusCode();
                     this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
-                        Message = $"{response.StatusCode} -> {request.RequestUri?.Host}"
+                        Message = $"{response.StatusCode} -> {req.RequestUri?.Host}"
                     });
 
                     this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
-                        Message = $"结束请求：{response.StatusCode} {request.RequestUri?.Host}"
+                        Message = $"结束请求：{response.StatusCode} {req.RequestUri?.Host}"
                     });
 
                     return response;

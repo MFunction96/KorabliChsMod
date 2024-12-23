@@ -63,6 +63,11 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// </summary>
         private readonly IUpdateHelper _updateHelper;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly IModInstaller _modInstaller;
+
         #endregion
 
         #region local
@@ -85,12 +90,42 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 
         /// </summary>
+        private bool _coreEnabled;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private string _message = string.Empty;
 
         /// <summary>
         /// 
         /// </summary>
         private bool _autoUpdate;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool _proxyEnabled;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private string _proxyAddress;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private string _proxyUsername;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private string _proxyPassword;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool _updateEnabled;
 
         #endregion
 
@@ -173,6 +208,15 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 
         /// </summary>
+        public bool CoreEnabled
+        {
+            get { return this._coreEnabled && !string.IsNullOrEmpty(this._selectedGameFolder); }
+            set { SetProperty(ref this._coreEnabled, value); }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Message
         {
             get { return this._message; }
@@ -188,16 +232,6 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// </summary>
         public IEnumerable<string> UpdateMirrors => Enum.GetNames(typeof(MirrorList));
 
-        public bool AutoUpdate
-        {
-            get { return this._autoUpdate; }
-            set
-            {
-                this._korabliFileHub.AutoUpdate = value;
-                SetProperty(ref this._autoUpdate, value);
-            }
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -211,6 +245,71 @@ namespace Xanadu.KorabliChsMod.ViewModels
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool AutoUpdate
+        {
+            get { return this._autoUpdate; }
+            set
+            {
+                this._korabliFileHub.AutoUpdate = value;
+                SetProperty(ref this._autoUpdate, value);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ProxyEnabled
+        {
+            get { return this._proxyEnabled; }
+            set
+            {
+                this._korabliFileHub.Proxy.Enabled = value;
+                SetProperty(ref this._proxyEnabled, value);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ProxyAddress
+        {
+            get { return this._proxyAddress; }
+            set
+            {
+                this._korabliFileHub.Proxy.Address = value;
+                SetProperty(ref this._proxyAddress, value);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ProxyUsername
+        {
+            get { return this._proxyUsername; }
+            set
+            {
+                this._korabliFileHub.Proxy.Username = value;
+                SetProperty(ref this._proxyUsername, value);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ProxyPassword
+        {
+            get { return this._proxyPassword; }
+            set
+            {
+                this._korabliFileHub.Proxy.Password = value;
+                SetProperty(ref this._proxyPassword, value);
+            }
+        }
+
         #endregion
 
         #region About
@@ -219,6 +318,15 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// 
         /// </summary>
         public Version AppVersion { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool UpdateEnabled
+        {
+            get { return this._updateEnabled; }
+            set { SetProperty(ref this._updateEnabled, value); }
+        }
 
         #endregion
 
@@ -234,13 +342,15 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <param name="networkEngine"></param>
         /// <param name="korabliFileHub"></param>
         /// <param name="updateHelper"></param>
+        /// <param name="modInstaller"></param>
         public MainWindowViewModel(
             Lazy<ILogger<MainWindowViewModel>> logger,
             Lazy<ILgcIntegrator> lgcIntegrator,
             Lazy<IGameDetector> gameDetector,
             Lazy<INetworkEngine> networkEngine,
             Lazy<IKorabliFileHub> korabliFileHub,
-            Lazy<IUpdateHelper> updateHelper)
+            Lazy<IUpdateHelper> updateHelper,
+            Lazy<IModInstaller> modInstaller)
         {
             this._logger = logger.Value;
             this._lgcIntegrator = lgcIntegrator.Value;
@@ -248,19 +358,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             this._networkEngine = networkEngine.Value;
             this._korabliFileHub = korabliFileHub.Value;
             this._updateHelper = updateHelper.Value;
-
-            this._lgcIntegrator.ServiceEvent += this.SyncServiceMessage;
-            this._networkEngine.ServiceEvent += this.SyncServiceMessage;
-            this._korabliFileHub.ServiceEvent += this.SyncServiceMessage;
-            this._updateHelper.ServiceEvent += this.SyncServiceMessage;
-            this._gameDetector.ServiceEvent += this.SyncServiceMessage;
-
-            this._lgcIntegrator.Load();
-            this._networkEngine.Init();
-            this._korabliFileHub.Load();
-
-            this._autoUpdate = this._korabliFileHub.AutoUpdate;
-            this._selectedUpdateMirror = this._korabliFileHub.Mirror.ToString();
+            this._modInstaller = modInstaller.Value;
 
             var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
             _ = Version.TryParse(fullVersion.Split('+')[0], out var version);
@@ -272,24 +370,58 @@ namespace Xanadu.KorabliChsMod.ViewModels
             this.AppVersion = version ?? Version.Parse("0.0.0");
             this.Message += $"考拉比汉社厂 v{this.AppVersion}\r\n";
 
+            this._lgcIntegrator.ServiceEvent += this.SyncServiceMessage;
+            this._networkEngine.ServiceEvent += this.SyncServiceMessage;
+            this._korabliFileHub.ServiceEvent += this.SyncServiceMessage;
+            this._updateHelper.ServiceEvent += this.SyncServiceMessage;
+            this._gameDetector.ServiceEvent += this.SyncServiceMessage;
+            this._modInstaller.ServiceEvent += this.SyncServiceMessage;
+
+            this._lgcIntegrator.Load();
+            this._networkEngine.Init();
+            this._korabliFileHub.Load();
+
+            this._selectedUpdateMirror = this._korabliFileHub.Mirror.ToString();
+            this._autoUpdate = this._korabliFileHub.AutoUpdate;
+            this._proxyEnabled = this._korabliFileHub.Proxy.Enabled;
+            this._proxyAddress = this._korabliFileHub.Proxy.Address;
+            this._proxyUsername = this._korabliFileHub.Proxy.Username;
+            this._proxyPassword = this._korabliFileHub.Proxy.Password;
+            
             var thread = new Thread(async void () =>
             {
                 try
                 {
-                    var available = await this._updateHelper.UpdateAvailable(this.AppVersion);
-                    if (available && this._korabliFileHub.AutoUpdate)
+                    this.UpdateEnabled = await this._updateHelper.UpdateAvailable(this.AppVersion);
+                    if (!this._updateEnabled || !this._korabliFileHub.AutoUpdate)
                     {
-                        await this._updateHelper.Update();
+                        return;
                     }
+
+                    var result = await this._updateHelper.Update();
+                    if (!result)
+                    {
+                        this.SyncServiceMessage(this, new ServiceEventArg
+                        {
+                            Message = "更新失败！"
+                        });
+                    }
+
                 }
                 catch (Exception exception)
                 {
-                    this._logger.LogError(exception, string.Empty);
+                    this.SyncServiceMessage(this, new ServiceEventArg
+                    {
+                        Exception = exception
+                    });
+
                 }
 
             });
 
             thread.Start();
+
+            this._coreEnabled = true;
         }
 
         /// <summary>
@@ -316,18 +448,9 @@ namespace Xanadu.KorabliChsMod.ViewModels
 
         }
 
-        #region Command
+        #region Action
 
-        private void RefreshViews()
-        {
-            RaisePropertyChanged(nameof(this.SelectedGameFolder));
-            RaisePropertyChanged(nameof(this.GameServer));
-            RaisePropertyChanged(nameof(this.GameVersion));
-            RaisePropertyChanged(nameof(this.GameTest));
-            RaisePropertyChanged(nameof(this.ChsModInstalled));
-        }
-
-        public DelegateCommand WindowLoadCommand => new(async void () =>
+        public async void Reload()
         {
             try
             {
@@ -347,13 +470,48 @@ namespace Xanadu.KorabliChsMod.ViewModels
             }
             catch (Exception e)
             {
-                this.Message += $"读取游戏信息失败！ 详细信息：{e.Message}\r\n";
-                this._logger.LogError(e.Message, string.Empty);
-            }
-        });
+                this.SyncServiceMessage(this, new ServiceEventArg
+                {
+                    Message = "读取游戏信息失败！",
+                    Exception = e,
+                    AppendException = false
+                });
 
+            }
+        }
+
+        #endregion
+
+        #region Command
+
+        #region Core
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void RefreshViews()
+        {
+            RaisePropertyChanged(nameof(this.SelectedGameFolder));
+            RaisePropertyChanged(nameof(this.GameServer));
+            RaisePropertyChanged(nameof(this.GameVersion));
+            RaisePropertyChanged(nameof(this.GameTest));
+            RaisePropertyChanged(nameof(this.ChsModInstalled));
+            RaisePropertyChanged(nameof(this.CoreEnabled));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DelegateCommand WindowLoadCommand => new(Reload);
+
+        /// <summary>
+        /// 
+        /// </summary>
         public DelegateCommand RefreshViewsCommand => new(RefreshViews);
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DelegateCommand ReloadGameFolderCommand => new(() =>
         {
             if (string.IsNullOrEmpty(this._selectedGameFolder))
@@ -372,6 +530,9 @@ namespace Xanadu.KorabliChsMod.ViewModels
             }
         });
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DelegateCommand GameFolderSelectionChangedCommand => new(async void () =>
         {
             try
@@ -418,11 +579,163 @@ namespace Xanadu.KorabliChsMod.ViewModels
             }
             catch (Exception e)
             {
-                this.Message += $"读取游戏信息失败！ 详细信息：{e.Message}\r\n";
-                this._logger.LogError(e.Message, string.Empty);
+                this.SyncServiceMessage(this, new ServiceEventArg
+                {
+                    Message = "读取游戏信息失败！",
+                    Exception = e
+                });
             }
 
         });
+
+        public DelegateCommand InstallChsModCommand => new(async void () =>
+        {
+            try
+            {
+                this.CoreEnabled = false;
+                var result = await this._modInstaller.Install();
+                if (!result)
+                {
+                    this.SyncServiceMessage(this, new ServiceEventArg
+                    {
+                        Message = "安装汉化失败！"
+                    });
+                    return;
+                }
+                this.SyncServiceMessage(this, new ServiceEventArg
+                {
+                    Message = "安装汉化成功！"
+                });
+
+                this.Reload();
+                this.CoreEnabled = true;
+                this.RefreshViews();
+            }
+            catch (Exception e)
+            {
+                this.SyncServiceMessage(this, new ServiceEventArg
+                {
+                    Message = "安装汉化失败！",
+                    Exception = e
+                });
+            }
+        });
+
+        public DelegateCommand UninstallChsModCommand => new(async void () =>
+        {
+            try
+            {
+                this.CoreEnabled = false;
+                await IOExtension.DeleteDirectory(this._gameDetector.ModFolder);
+                this.Reload();
+                this.SyncServiceMessage(this, new ServiceEventArg
+                {
+                    Message = "移除Mod完成！"
+                });
+
+                this.CoreEnabled = true;
+                this.RefreshViews();
+            }
+            catch (Exception e)
+            {
+                this.SyncServiceMessage(this, new ServiceEventArg
+                {
+                    Message = "卸载汉化失败！",
+                    Exception = e
+                });
+            }
+        });
+
+        #endregion
+
+        #region Settings
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DelegateCommand SaveSettingsCommand => new(async void () =>
+        {
+            try
+            {
+                if (this._proxyEnabled)
+                {
+                    var proxy = this._korabliFileHub.UpdateEngineProxy(true);
+                    if (!proxy)
+                    {
+                        this.SyncServiceMessage(this, new ServiceEventArg
+                        {
+                            Message = "代理设置失败！"
+                        });
+
+                        return;
+                    }
+
+                }
+
+                var result = await this._korabliFileHub.SaveAsync();
+                if (!result)
+                {
+                    this.SyncServiceMessage(this, new ServiceEventArg
+                    {
+                        Message = "保存设置失败！"
+                    });
+
+                    return;
+                }
+
+                this.SyncServiceMessage(this, new ServiceEventArg
+                {
+                    Message = "保存设置成功！"
+                });
+
+            }
+            catch (Exception e)
+            {
+                this.SyncServiceMessage(this, new ServiceEventArg
+                {
+                    Message = "保存设置失败！",
+                    Exception = e
+                });
+            }
+        });
+
+        #endregion
+
+        #region About
+
+        public DelegateCommand UpdateCommand => new(async void () =>
+        {
+            try
+            {
+                this._updateEnabled = false;
+                var result = await this._updateHelper.Update();
+                if (!result)
+                {
+                    this.SyncServiceMessage(this, new ServiceEventArg
+                    {
+                        Message = "更新失败！"
+                    });
+                    return;
+                }
+
+                this.SyncServiceMessage(this, new ServiceEventArg
+                {
+                    Message = "更新完成！"
+                });
+
+                this.UpdateEnabled = true;
+            }
+            catch (Exception e)
+            {
+                this.SyncServiceMessage(this, new ServiceEventArg
+                {
+                    Message = "更新失败！",
+                    Exception = e
+                });
+            }
+        });
+
+        #endregion
 
         #endregion
     }

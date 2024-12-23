@@ -15,6 +15,7 @@ namespace Xanadu.KorabliChsMod.Core.Config
     /// </summary>
     public class KorabliFileHub(INetworkEngine networkEngine) : IKorabliFileHub
     {
+
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
@@ -47,6 +48,23 @@ namespace Xanadu.KorabliChsMod.Core.Config
         {
             try
             {
+                var saveThread = new Thread(async void () =>
+                {
+                    try
+                    {
+                        await this.SaveAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                        {
+                            Exception = e,
+                            Message = "配置文件写入失败！"
+                        });
+                    }
+                    
+                });
+
                 if (!Directory.Exists(IKorabliFileHub.BackupFolder))
                 {
                     Directory.CreateDirectory(IKorabliFileHub.BackupFolder);
@@ -58,17 +76,38 @@ namespace Xanadu.KorabliChsMod.Core.Config
 
                 if (!File.Exists(IKorabliFileHub.ConfigFilePath))
                 {
-                    this.SaveAsync().RunSynchronously();
+                    saveThread.Start();
                     return;
                 }
 
                 var config =
-                    JsonConvert.DeserializeObject<KorabliFileHub>(File.ReadAllText(IKorabliFileHub.ConfigFilePath, Encoding.UTF8))!;
+                    JsonConvert.DeserializeObject<KorabliFileHub>(File.ReadAllText(IKorabliFileHub.ConfigFilePath,
+                        Encoding.UTF8))!;
 
+                var updateConfig = false;
                 this.Proxy = config.Proxy;
+                if (string.Compare(this.Proxy.Username, IKorabliFileHub.DeprecatedHint,
+                        StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    this.Proxy.Username = string.Empty;
+                    updateConfig = true;
+                }
+
+                if (string.Compare(this.Proxy.Password, IKorabliFileHub.DeprecatedHint,
+                        StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    this.Proxy.Password = string.Empty;
+                    updateConfig = true;
+                }
+
                 this.AutoUpdate = config.AutoUpdate;
                 this.UpdateEngineProxy();
                 this.GameFolder = config.GameFolder;
+                if (updateConfig)
+                {
+                    saveThread.Start();
+                }
+
             }
             catch (Exception e)
             {
@@ -140,13 +179,18 @@ namespace Xanadu.KorabliChsMod.Core.Config
         }
 
         /// <inheritdoc />
-        public async Task SaveAsync()
+        public async Task<bool> SaveAsync()
         {
             try
             {
-                this.UpdateEngineProxy();
+                if (this.Proxy.Enabled)
+                {
+                    this.UpdateEngineProxy();
+                }
+
                 var json = JsonConvert.SerializeObject(this, Formatting.Indented);
                 await File.WriteAllTextAsync(IKorabliFileHub.ConfigFilePath, json, Encoding.UTF8);
+                return true;
             }
             catch (Exception e)
             {
@@ -155,27 +199,23 @@ namespace Xanadu.KorabliChsMod.Core.Config
                     Exception = e,
                     Message = $"配置文件保存失败！\r\n{e.Message}"
                 });
+                return false;
             }
 
         }
 
-        private void UpdateEngineProxy()
+        public bool UpdateEngineProxy(bool dry = false)
         {
-            if (string.IsNullOrEmpty(this.Proxy.Address))
-            {
-                return;
-            }
-
             try
             {
-                var uri = new Uri(this.Proxy.Address);
-                _ = networkEngine.SetProxy(uri);
+                return networkEngine.SetProxy(new Uri(this.Proxy.Address), this.Proxy.Username, this.Proxy.Password);
             }
             catch (Exception e)
             {
-                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Message = "代理设置错误，请检查配置" });
-                this.Proxy = new ProxyConfig();
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Message = "代理设置错误，请检查配置", Exception = e });
+                return false;
             }
+
         }
 
     }
