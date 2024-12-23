@@ -5,11 +5,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
 using System.Xml;
+using Xanadu.KorabliChsMod.Core;
 
 namespace Xanadu.KorabliChsMod.DI
 {
-    public class LgcIntegrator(ILogger<LgcIntegrator> logger) : ILgcIntegrator
+    public class LgcIntegrator : ILgcIntegrator
     {
+
+        public event EventHandler<ServiceEventArg>? ServiceEvent;
+
         public string? Folder { get; private set; }
 
         public string? PreferencesXmlPath => string.IsNullOrEmpty(this.Folder) ? null : Path.Combine(this.Folder, ILgcIntegrator.PreferencesXmlFileName);
@@ -23,7 +27,11 @@ namespace Xanadu.KorabliChsMod.DI
                 var openSubKey = Registry.CurrentUser.OpenSubKey(ILgcIntegrator.RegistrySubKey, RegistryRights.QueryValues);
                 if (openSubKey is null)
                 {
-                    logger.LogWarning("Lesta Game Center not found in registry");
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    {
+                        Exception = new KeyNotFoundException("未检测到Lesta Game Center")
+                    });
+
                     return;
                 }
 
@@ -31,14 +39,22 @@ namespace Xanadu.KorabliChsMod.DI
                 openSubKey.Close();
                 if (value is null)
                 {
-                    logger.LogWarning("Lesta Game Center not found in registry");
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    {
+                        Exception = new KeyNotFoundException("检测到Lesta Game Center，但未能读取Lesta Game Center安装路径")
+                    });
+
                     return;
                 }
 
                 this.Folder = Path.GetDirectoryName(value[..value.IndexOf(',')].Trim('\"').Trim());
                 if (string.IsNullOrEmpty(this.PreferencesXmlPath))
                 {
-                    logger.LogWarning("Lesta Game Center folder not found");
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    {
+                        Exception = new KeyNotFoundException("检测到Lesta Game Center，但无法访问Lesta Game Center配置文件")
+                    });
+
                     return;
                 }
 
@@ -47,7 +63,12 @@ namespace Xanadu.KorabliChsMod.DI
                 var games = preferencesXml.SelectNodes("/protocol/application/games_manager/games/game");
                 if (games is null)
                 {
-                    throw new KeyNotFoundException("找不到游戏路径");
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    {
+                        Exception = new KeyNotFoundException("检测到Lesta Game Center，但未检测到已安装游戏")
+                    });
+
+                    return;
                 }
 
                 foreach (XmlNode game in games)
@@ -60,12 +81,22 @@ namespace Xanadu.KorabliChsMod.DI
 
                     this.GameFolders.Add(gameFolder);
                 }
+
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                {
+                    Message = "已成功读取游戏安装目录"
+                });
             }
             catch (Exception e)
             {
-                logger.LogError(e, string.Empty);
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                {
+                    Exception = e
+                });
+
             }
 
         }
+
     }
 }

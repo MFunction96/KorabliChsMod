@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Net;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Xanadu.KorabliChsMod.Core
 {
-    public sealed class NetworkEngine(ILogger<NetworkEngine> logger) : INetworkEngine
+    public sealed class NetworkEngine : INetworkEngine
     {
         private bool _disposed;
 
@@ -34,7 +33,7 @@ namespace Xanadu.KorabliChsMod.Core
             this._init = true;
         }
 
-        public bool SetProxy(Uri? uri, string username = "", string password = "")
+        public bool SetProxy(Uri? uri, string username = "", string password = "", bool dry = false)
         {
             try
             {
@@ -48,25 +47,30 @@ namespace Xanadu.KorabliChsMod.Core
 
                     if (uri is not null)
                     {
-                        handler.Proxy = new WebProxy(uri);
+                        handler.Proxy = new WebProxy(uri, true, null, new NetworkCredential(username, password));
                     }
 
-                    this.Client = new HttpClient(handler, true)
+                    var client = new HttpClient(handler, true)
                     {
                         DefaultRequestVersion = Version.Parse("2.0"),
                         DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
                     };
 
+                    if (!dry)
+                    {
+                        this.Client = client;
+                    }
+
+                    return true;
                 }
-                
+
             }
             catch (Exception e)
             {
-                logger.LogError(e, string.Empty);
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Exception = e });
                 return false;
             }
 
-            return true;
         }
 
         public async Task<HttpResponseMessage?> SendAsync(HttpRequestMessage request, int retry = 0, CancellationToken cancellationToken = default)
@@ -85,7 +89,11 @@ namespace Xanadu.KorabliChsMod.Core
 
                 var res = await this.Client.SendAsync(request, cancellationToken);
 
-                logger.LogInformation($"{res.StatusCode} -> {request.RequestUri?.Host}");
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                {
+                    Message = $"{res.StatusCode} -> {request.RequestUri?.Host}"
+                });
+
                 this.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Message = $"结束单次请求：{res.StatusCode} {request.RequestUri?.Host}"
@@ -99,24 +107,28 @@ namespace Xanadu.KorabliChsMod.Core
             {
                 try
                 {
+                    var req = request.Clone();
                     this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
-                        Message = $"开始请求：{request.RequestUri?.Host}"
+                        Message = $"开始请求：{req.RequestUri?.Host}"
                     });
 
-                    response = await this.Client.SendAsync(request, cancellationToken);
+                    response = await this.Client.SendAsync(req, cancellationToken);
                     response.EnsureSuccessStatusCode();
-                    logger.LogInformation($"{response.StatusCode} -> {request.RequestUri?.AbsoluteUri}");
                     this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
-                        Message = $"结束请求：{response.StatusCode} {request.RequestUri?.Host}"
+                        Message = $"{response.StatusCode} -> {req.RequestUri?.Host}"
+                    });
+
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    {
+                        Message = $"结束请求：{response.StatusCode} {req.RequestUri?.Host}"
                     });
 
                     return response;
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, string.Empty);
                     this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
                         Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.Host}",
@@ -129,7 +141,7 @@ namespace Xanadu.KorabliChsMod.Core
 
             this.ServiceEvent?.Invoke(this, new ServiceEventArg
             {
-                Message = $"请求失败 {response?.StatusCode} {request.RequestUri?.Host}"
+                Exception = new HttpRequestException($"请求失败 {response?.StatusCode} {request.RequestUri?.Host}"),
             });
 
             return null;
@@ -156,7 +168,6 @@ namespace Xanadu.KorabliChsMod.Core
             }
             catch (Exception e)
             {
-                logger.LogError(e, string.Empty);
                 this.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.Host}",
@@ -197,7 +208,6 @@ namespace Xanadu.KorabliChsMod.Core
             {
                 // Dispose managed resources.
                 this.Client.Dispose();
-                logger.LogInformation($"{this.GetType().Name} disposing");
 
             }
             // Call the appropriate methods to clean up

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -14,11 +13,12 @@ namespace Xanadu.KorabliChsMod.Core.Config
     /// <summary>
     /// 
     /// </summary>
-    public class KorabliFileHub(ILogger<KorabliFileHub> logger, INetworkEngine networkEngine) : IKorabliFileHub
+    public class KorabliFileHub(INetworkEngine networkEngine) : IKorabliFileHub
     {
+
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -44,37 +44,79 @@ namespace Xanadu.KorabliChsMod.Core.Config
         public string GameFolder { get; set; } = string.Empty;
 
         /// <inheritdoc />
-        public async void Load(int reserve = 2)
+        public void Load(int reserve = 2)
         {
             try
             {
+                var saveThread = new Thread(async void () =>
+                {
+                    try
+                    {
+                        await this.SaveAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                        {
+                            Exception = e,
+                            Message = "配置文件写入失败！"
+                        });
+                    }
+                    
+                });
+
                 if (!Directory.Exists(IKorabliFileHub.BackupFolder))
                 {
                     Directory.CreateDirectory(IKorabliFileHub.BackupFolder);
                 }
 
                 this.Reserve = reserve;
-                await this.ReloadBackupInstance();
-                await this.TrimBackInstance();
+                //await this.ReloadBackupInstance();
+                //await this.TrimBackInstance();
 
                 if (!File.Exists(IKorabliFileHub.ConfigFilePath))
                 {
-                    await this.SaveAsync();
+                    saveThread.Start();
                     return;
                 }
 
                 var config =
-                    JsonConvert.DeserializeObject<KorabliFileHub>(
-                        await File.ReadAllTextAsync(IKorabliFileHub.ConfigFilePath, Encoding.UTF8))!;
+                    JsonConvert.DeserializeObject<KorabliFileHub>(File.ReadAllText(IKorabliFileHub.ConfigFilePath,
+                        Encoding.UTF8))!;
 
+                var updateConfig = false;
                 this.Proxy = config.Proxy;
+                if (string.Compare(this.Proxy.Username, IKorabliFileHub.DeprecatedHint,
+                        StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    this.Proxy.Username = string.Empty;
+                    updateConfig = true;
+                }
+
+                if (string.Compare(this.Proxy.Password, IKorabliFileHub.DeprecatedHint,
+                        StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    this.Proxy.Password = string.Empty;
+                    updateConfig = true;
+                }
+
                 this.AutoUpdate = config.AutoUpdate;
                 this.UpdateEngineProxy();
                 this.GameFolder = config.GameFolder;
+                if (updateConfig)
+                {
+                    saveThread.Start();
+                }
+
             }
             catch (Exception e)
             {
-                logger.LogError(e, string.Empty);
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                {
+                    Exception = e,
+                    Message = "配置文件加载失败！"
+                });
+
                 throw;
             }
 
@@ -137,13 +179,18 @@ namespace Xanadu.KorabliChsMod.Core.Config
         }
 
         /// <inheritdoc />
-        public async Task SaveAsync()
+        public async Task<bool> SaveAsync()
         {
             try
             {
-                this.UpdateEngineProxy();
+                if (this.Proxy.Enabled)
+                {
+                    this.UpdateEngineProxy();
+                }
+
                 var json = JsonConvert.SerializeObject(this, Formatting.Indented);
                 await File.WriteAllTextAsync(IKorabliFileHub.ConfigFilePath, json, Encoding.UTF8);
+                return true;
             }
             catch (Exception e)
             {
@@ -152,27 +199,23 @@ namespace Xanadu.KorabliChsMod.Core.Config
                     Exception = e,
                     Message = $"配置文件保存失败！\r\n{e.Message}"
                 });
+                return false;
             }
-            
+
         }
 
-        private void UpdateEngineProxy()
+        public bool UpdateEngineProxy(bool dry = false)
         {
-            if (string.IsNullOrEmpty(this.Proxy.Address))
-            {
-                return;
-            }
-
             try
             {
-                var uri = new Uri(this.Proxy.Address);
-                _ = networkEngine.SetProxy(uri);
+                return networkEngine.SetProxy(new Uri(this.Proxy.Address), this.Proxy.Username, this.Proxy.Password);
             }
             catch (Exception e)
             {
-                logger.LogError(e, string.Empty);
-                this.Proxy = new ProxyConfig();
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Message = "代理设置错误，请检查配置", Exception = e });
+                return false;
             }
+
         }
 
     }

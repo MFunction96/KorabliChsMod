@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<UseWPF>true</UseWPF>
-		<StartupObject>Xanadu.KorabliChsMod.Program</StartupObject>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<ApplicationIcon>pineapple.ico</ApplicationIcon>
+		<DefineConstants>TRACE;Core</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Include="pineapple.ico">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
+		<PackageReference Include="HandyControls" Version="3.5.3" />
+		<PackageReference Include="Prism.DryIoc" Version="9.0.537" />
+		<PackageReference Include="Serilog.Extensions.Hosting" Version="$(DotNetMajorVersion)" />
+		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -27,17 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="$(DotNetMajorVersion)" />
-		<PackageReference Include="Serilog.Extensions.Hosting" Version="$(DotNetMajorVersion)" />
-		<PackageReference Include="Serilog.Sinks.File" Version="*" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\KorabliChsMod.Core\KorabliChsMod.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Resource Include="pineapple.ico" />
 	</ItemGroup>
 
 </Project>

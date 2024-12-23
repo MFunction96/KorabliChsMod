@@ -25,6 +25,6 @@ namespace Xanadu.KorabliChsMod.Core
         /// 
         /// </summary>
         /// <returns></returns>
-        public Task Update();
+        public Task<bool> Update();
     }
 }

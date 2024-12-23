@@ -27,7 +27,8 @@ namespace Xanadu.KorabliChsMod.Core
         /// <param name="uri"></param>
         /// <param name="username"></param>
         /// <param name="password"></param>
-        public bool SetProxy(Uri? uri, string username = "", string password = "");
+        /// <param name="dry"></param>
+        public bool SetProxy(Uri? uri, string username = "", string password = "", bool dry = false);
 
         /// <summary>
         /// 

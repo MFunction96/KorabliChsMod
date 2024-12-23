@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using Xanadu.KorabliChsMod.Core;
 
 namespace Xanadu.KorabliChsMod.DI
 {
     /// <summary>
     /// 
     /// </summary>
-    public interface ILgcIntegrator
+    public interface ILgcIntegrator : IServiceEvent
     {
         /// <summary>
         /// 

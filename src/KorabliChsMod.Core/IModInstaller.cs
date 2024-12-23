@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Xanadu.KorabliChsMod.Core
 {
-    public interface IModInstaller
+    public interface IModInstaller : IServiceEvent
     {
-        public Task Install(CancellationToken cancellationToken = default);
+        public Task<bool> Install(CancellationToken cancellationToken = default);
     }
 }

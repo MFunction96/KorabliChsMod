@@ -7,5 +7,7 @@ namespace Xanadu.KorabliChsMod.Core
         public string Message { get; set; } = string.Empty;
 
         public Exception? Exception { get; set; }
+
+        public bool AppendException { get; set; } = true;
     }
 }

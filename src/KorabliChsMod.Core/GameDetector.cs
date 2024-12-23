@@ -10,8 +10,11 @@ using System.Xml;
 namespace Xanadu.KorabliChsMod.Core
 {
     /// <inheritdoc />
-    public sealed class GameDetector(ILogger<GameDetector> logger) : IGameDetector
+    public sealed class GameDetector : IGameDetector
     {
+        /// <inheritdoc />
+        public event EventHandler<ServiceEventArg>? ServiceEvent;
+
         /// <inheritdoc />
         public string Folder { get; private set; } = string.Empty;
 
@@ -58,14 +61,24 @@ namespace Xanadu.KorabliChsMod.Core
         public bool ChsMod { get; private set; }
 
         /// <inheritdoc />
-        public Task Load(string gameFolder, CancellationToken cancellationToken = default)
+        public Task<bool> Load(string gameFolder, CancellationToken cancellationToken = default)
         {
             return Task.Run(() =>
             {
                 try
                 {
-                    this.IsTest = false;
                     this.Folder = gameFolder;
+                    if (!File.Exists(this.GameInfoXmlPath))
+                    {
+                        this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                        {
+                            Exception = new FileNotFoundException("WOWS游戏信息文件不存在，请核对所选文件夹")
+                        });
+
+                        this.Clear();
+                        return false;
+                    }
+
                     var gameInfoXml = new XmlDocument();
                     gameInfoXml.Load(this.GameInfoXmlPath);
                     this.IsWows = gameInfoXml["protocol"]?["game"]?["id"]?.InnerText.Contains("WOWS", StringComparison.OrdinalIgnoreCase) ?? false;
@@ -103,10 +116,14 @@ namespace Xanadu.KorabliChsMod.Core
                         Directory.CreateDirectory(this.ModFolder);
                     }
 
+                    return true;
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, string.Empty);
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    {
+                        Exception = e
+                    });
                     this.Clear();
                     throw;
                 }
@@ -120,6 +137,13 @@ namespace Xanadu.KorabliChsMod.Core
         public void Clear()
         {
             this.Folder = string.Empty;
+            this.Server = string.Empty;
+            this.ServerVersion = string.Empty;
+            this.ClientVersion = string.Empty;
+            this.PreInstalled = false;
+            this.IsWows = false;
+            this.IsTest = false;
+            this.Locale = string.Empty;
         }
     }
 }

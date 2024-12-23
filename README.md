@@ -19,16 +19,13 @@
 
 ### 安装
 
-无论Github还是Gitee，均转去最新发布下载即可，或访问以下链接以下载安装包含.NET 8运行环境的安装包：
+在发布页选择最新发布下载即可，或访问以下链接以下载安装包含.NET 8运行环境的安装包：
 
-Github: [KorabliChsModInstallerWithRuntime.exe](https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstallerWithRuntime.exe)
+[KorabliChsModInstallerWithRuntime.exe](https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstallerWithRuntime.exe)
 
-Gitee: *待完善*
 > 如果确定本地已安装.NET 8运行环境，可选择以下安装包：
 >
-> Github: [KorabliChsModInstaller.exe](https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstaller.exe)
->
-> Gitee: *待完善*
+> [KorabliChsModInstaller.exe](https://github.com/MFunction96/KorabliChsMod/releases/latest/download/KorabliChsModInstaller.exe)
 
 按照安装说明及提示完成安装即可，默认安装位置为：`%AppData%\KorabliChsMod`，即`C:\Users\<用户名>\AppData\Roaming\KorabliChsMod`，安装过程中会自动在桌面创建快捷方式。
 
@@ -65,7 +62,7 @@ Gitee: *待完善*
 ### 阶段一
 
 - [x] 建立Azure DevOps全自动工作流
-- [x] Github, Gitee镜像仓库同步
+- ~~[x] Github, Gitee镜像仓库同步~~
 - [x] Github镜像仓库自动发布
 - [x] 主汉化程序自更新功能
 - [x] 主汉化更新程序核心功能，仅支持Github源的正式服汉化，包括汉化下载与更新、版本识别等核心功能
@@ -76,8 +73,8 @@ Gitee: *待完善*
 - [ ] 界面美化
 - [x] 支持自动定位莱服客户端安装位置
 - [x] 支持测试服汉化
-- [ ] Gitee镜像仓库自动发布
-- [ ] 支持多镜像选择
+- ~~[ ] Gitee镜像仓库自动发布~~
+- ~~[ ] 支持多镜像选择~~
 - [x] 傻瓜安装包
 - [ ] 降低殉爆频度
 
@@ -95,23 +92,10 @@ Gitee: *待完善*
 
 ## 链接
 
-### 汉化包源
-
-- https://github.com/DDFantasyV/Korabli_localization_chs
-
-### 主仓库
-
-- https://dev.azure.com/XanaCN/Lyoko/_git/KorabliChsMod
-
-### 镜像仓库
-
-- 国内：https://gitee.com/MFunction96/KorabliChsMod
-- 全球：https://github.com/MFunction96/KorabliChsMod
-
-## 发布
-
-- 国内：https://gitee.com/MFunction96/KorabliChsMod/releases
-- 全球：https://github.com/MFunction96/KorabliChsMod/releases
+- 汉化包源： https://github.com/DDFantasyV/Korabli_localization_chs
+- 主仓库：https://dev.azure.com/XanaCN/Lyoko/_git/KorabliChsMod
+- 镜像仓库：https://github.com/MFunction96/KorabliChsMod
+- 发布页：https://github.com/MFunction96/KorabliChsMod/releases
 
 ## 感谢
 

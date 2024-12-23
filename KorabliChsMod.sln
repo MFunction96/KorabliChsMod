@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KorabliChsMod", "src\KorabliChsMod\KorabliChsMod.csproj", "{564C6430-30FE-4278-BBE7-330482E111FD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{400A6D4D-C196-4597-9C0F-E89B8154CA8E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{98DDC1D1-0D08-434F-A09F-FAF8A4201C6C}"
@@ -21,16 +19,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KorabliChsMod.CoreTests", "test\KorabliChsMod.CoreTests\KorabliChsMod.CoreTests.csproj", "{E545D335-25C7-4139-953C-E90217452B13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KorabliChsMod", "src\KorabliChsMod\KorabliChsMod.csproj", "{65996D69-7224-4341-A1F6-95CAE714C165}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{564C6430-30FE-4278-BBE7-330482E111FD}.Debug|x64.ActiveCfg = Debug|x64
-		{564C6430-30FE-4278-BBE7-330482E111FD}.Debug|x64.Build.0 = Debug|x64
-		{564C6430-30FE-4278-BBE7-330482E111FD}.Release|x64.ActiveCfg = Release|x64
-		{564C6430-30FE-4278-BBE7-330482E111FD}.Release|x64.Build.0 = Release|x64
 		{432C5CC7-F538-4ED6-B711-A618CB7F4245}.Debug|x64.ActiveCfg = Debug|x64
 		{432C5CC7-F538-4ED6-B711-A618CB7F4245}.Debug|x64.Build.0 = Debug|x64
 		{432C5CC7-F538-4ED6-B711-A618CB7F4245}.Release|x64.ActiveCfg = Release|x64
@@ -43,15 +39,19 @@ Global
 		{E545D335-25C7-4139-953C-E90217452B13}.Debug|x64.Build.0 = Debug|x64
 		{E545D335-25C7-4139-953C-E90217452B13}.Release|x64.ActiveCfg = Release|x64
 		{E545D335-25C7-4139-953C-E90217452B13}.Release|x64.Build.0 = Release|x64
+		{65996D69-7224-4341-A1F6-95CAE714C165}.Debug|x64.ActiveCfg = Debug|x64
+		{65996D69-7224-4341-A1F6-95CAE714C165}.Debug|x64.Build.0 = Debug|x64
+		{65996D69-7224-4341-A1F6-95CAE714C165}.Release|x64.ActiveCfg = Release|x64
+		{65996D69-7224-4341-A1F6-95CAE714C165}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{564C6430-30FE-4278-BBE7-330482E111FD} = {400A6D4D-C196-4597-9C0F-E89B8154CA8E}
 		{432C5CC7-F538-4ED6-B711-A618CB7F4245} = {98DDC1D1-0D08-434F-A09F-FAF8A4201C6C}
 		{DF8C415C-1C56-44AF-80AD-C782D66F228D} = {400A6D4D-C196-4597-9C0F-E89B8154CA8E}
 		{E545D335-25C7-4139-953C-E90217452B13} = {98DDC1D1-0D08-434F-A09F-FAF8A4201C6C}
+		{65996D69-7224-4341-A1F6-95CAE714C165} = {400A6D4D-C196-4597-9C0F-E89B8154CA8E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54395B0A-7A5F-4D35-B282-E196590DA86F}

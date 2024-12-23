@@ -1,0 +1,188 @@
+﻿<hc:Window x:Class="Xanadu.KorabliChsMod.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        mc:Ignorable="d"
+        Title="{Binding Title}" 
+        WindowStartupLocation="CenterScreen"
+        ShowTitle="True"
+        Height="560" 
+        Width="450"
+        ResizeMode="NoResize">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <prism:InvokeCommandAction Command="{Binding WindowLoadCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <hc:Window.NonClientAreaContent>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button HorizontalAlignment="Right" Grid.Column="1" Click="ButtonConfig_OnClick" Name="ButtonConfig" Style="{StaticResource ButtonIcon}" Foreground="{DynamicResource PrimaryTextBrush}" hc:IconElement.Geometry="{StaticResource DropperGeometry}"/>
+            <Popup AllowsTransparency="True" Grid.Column="1" PlacementTarget="{Binding ElementName=ButtonConfig}" HorizontalOffset="-35" Name="PopupConfig" VerticalOffset="6" StaysOpen="False">
+                <Border Background="{DynamicResource SecondaryRegionBrush}" CornerRadius="4" Margin="16" Effect="{StaticResource EffectShadow2}">
+                    <StackPanel Button.Click="ButtonSkins_OnClick">
+                        <hc:Divider Width="200" Margin="0,10" Content="主题"/>
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                            <Button Tag="{x:Static hc:ApplicationTheme.Light}" Style="{StaticResource ButtonCustom}">
+                                <Border Background="White" Width="32" Height="21" CornerRadius="2" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}"/>
+                            </Button>
+                            <Button Tag="{x:Static hc:ApplicationTheme.Dark}" Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
+                                <Border Background="Black" Width="32" Height="21" CornerRadius="2" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}"/>
+                            </Button>
+                        </StackPanel>
+
+                        <hc:Divider Width="200" Margin="0,10" Content="显示颜色"/>
+                        <StackPanel Margin="0,0,0,10" HorizontalAlignment="Center" Orientation="Horizontal">
+                            <Button Tag="{Binding ElementName=primaryBorder, Path=Background}" Style="{StaticResource ButtonCustom}">
+                                <Border Name="primaryBorder" Background="#2196F3" Width="32" Height="21" CornerRadius="2" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}"/>
+                            </Button>
+                            <Button Tag="{Binding ElementName=warningBorder, Path=Background}" Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
+                                <Border Name="warningBorder" Background="{DynamicResource WarningBrush}" Width="32" Height="21" CornerRadius="2" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}"/>
+                            </Button>
+                            <Button Tag="{Binding ElementName=violetBorder, Path=Background}" Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
+                                <Border Name="violetBorder" Background="#9C27B0" Width="32" Height="21" CornerRadius="2" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}"/>
+                            </Button>
+                            <Button Tag="{Binding ElementName=successBorder, Path=Background}" Style="{StaticResource ButtonCustom}" Margin="10,0,0,0">
+                                <Border Name="successBorder" Background="{DynamicResource SuccessBrush}" Width="32" Height="21" CornerRadius="2" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}"/>
+                            </Button>
+                        </StackPanel>
+                        <Button HorizontalAlignment="Stretch" Tag="Picker" Content="更多颜色" Margin="10"/>
+                    </StackPanel>
+                </Border>
+            </Popup>
+        </Grid>
+    </hc:Window.NonClientAreaContent>
+    <Grid>
+        <hc:SimpleStackPanel>
+            <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+            <TabControl Style="{StaticResource TabControlInLine}" FontSize="16" Height="380">
+                <TabItem Header="功能">
+                    <hc:SimpleStackPanel>
+                        <ComboBox Style="{StaticResource ComboBoxExtend}" hc:InfoElement.TitleWidth="100" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="客户端位置" ItemsSource="{Binding GameFolders}" SelectedValue="{Binding SelectedGameFolder}" Margin="20 20 20 20" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <prism:InvokeCommandAction Command="{Binding GameFolderSelectionChangedCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                        <hc:SimpleStackPanel Orientation="Horizontal" Margin="110 15 0 0">
+                            <TextBlock Text="客户端区服" Margin="0 0 30 0"/>
+                            <TextBlock Text="{Binding GameServer}" Margin="30 0 0 0"/>
+                        </hc:SimpleStackPanel>
+                        <hc:SimpleStackPanel Orientation="Horizontal" Margin="110 15 0 0">
+                            <TextBlock Text="客户端版本" Margin="0 0 30 0"/>
+                            <TextBlock Text="{Binding GameVersion}" Margin="30 0 0 0"/>
+                        </hc:SimpleStackPanel>
+                        <hc:SimpleStackPanel Orientation="Horizontal" Margin="110 15 0 0">
+                            <TextBlock Text="客户端类型" Margin="0 0 30 0"/>
+                            <TextBlock Text="{Binding GameTest}" Margin="30 0 0 0"/>
+                        </hc:SimpleStackPanel>
+                        <hc:SimpleStackPanel Orientation="Horizontal" Margin="110 15 0 0">
+                            <TextBlock Text="汉化包状态" Margin="0 0 30 0"/>
+                            <TextBlock Text="{Binding ChsModInstalled}" Margin="30 0 0 0"/>
+                        </hc:SimpleStackPanel>
+                        <hc:SimpleStackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 40 0 0">
+                            <Button Style="{StaticResource ButtonPrimary}" Content="安装" FontSize="18" Height="36" Margin="0 0 30 0" IsEnabled="{Binding CoreEnabled}" Command="{Binding InstallChsModCommand}"></Button>
+                            <Button Style="{StaticResource ButtonDanger}" Content="删除所有Mod" FontSize="18" Height="36" Margin="30 0 0 0" IsEnabled="{Binding CoreEnabled}" Command="{Binding UninstallChsModCommand}"></Button>
+                        </hc:SimpleStackPanel>
+                    </hc:SimpleStackPanel>
+                </TabItem>
+                <TabItem Header="设置">
+                    <hc:SimpleStackPanel>
+                        <ComboBox Style="{StaticResource ComboBoxExtend}" hc:InfoElement.TitleWidth="90" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="更新源" ItemsSource="{Binding UpdateMirrors}" SelectedValue="{Binding SelectedUpdateMirror}" Margin="20" IsEnabled="False"/>
+                        <hc:SimpleStackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                            <TextBlock Text="自动更新" Margin="0 0 30 0"/>
+                            <ToggleButton Style="{StaticResource ToggleButtonSwitch}" IsChecked="{Binding AutoUpdate}"/>
+                        </hc:SimpleStackPanel>
+                        <hc:SimpleStackPanel Orientation="Horizontal" Margin="20 25 0 0">
+                            <TextBlock Text="代理服务" Margin="0 0 30 0"/>
+                            <ToggleButton Name="TbProxySwitch" Style="{StaticResource ToggleButtonSwitch}" IsChecked="{Binding ProxyEnabled}"/>
+                        </hc:SimpleStackPanel>
+                        <TextBox Name="TbProxyAddress" Style="{StaticResource TextBoxExtend}" hc:InfoElement.TitleWidth="90" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="代理地址" Width="405" Margin="20 15 20 0" Text="{Binding ProxyAddress}" IsEnabled="{Binding ProxyEnabled}"/>
+                        <TextBox Name="TbProxyUser" Style="{StaticResource TextBoxExtend}" hc:InfoElement.TitleWidth="90" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="代理用户" Width="405" Margin="20 15 20 0" Text="{Binding ProxyUsername}" IsEnabled="{Binding ProxyEnabled}"/>
+                        <hc:SimpleStackPanel Orientation="Horizontal" Margin="20 20 20 0">
+                            <TextBlock Text="代理密码" Margin="0 0 26 0"/>
+                            <hc:PasswordBox Name="PbProxyPassword" ShowEyeButton="True" UnsafePassword="{Binding ProxyPassword}" IsSafeEnabled="False" Width="315" IsEnabled="{Binding ProxyEnabled}"/>
+                        </hc:SimpleStackPanel>
+                        <hc:SimpleStackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 30 0 0">
+                            <Button Style="{StaticResource ButtonPrimary}" Content="保存并生效" FontSize="18" Height="36" Command="{Binding SaveSettingsCommand}"></Button>
+                        </hc:SimpleStackPanel>
+                    </hc:SimpleStackPanel>
+                </TabItem>
+                <TabItem Header="关于">
+                    <hc:SimpleStackPanel Margin="20">
+                        <hc:SimpleStackPanel Orientation="Horizontal">
+                            <TextBlock Text="软件版本"/>
+                            <TextBlock Text="{Binding AppVersion}" Margin="30 0 0 0"/>
+                            <Button Style="{StaticResource ButtonPrimary}" Content="更新" Margin="220 0 0 0" Command="{Binding UpdateCommand}" IsEnabled="{Binding UpdateEnabled}"></Button>
+                        </hc:SimpleStackPanel>
+                        <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 30 0 0">
+                            <TextBlock Text="软件许可"/>
+                            <TextBlock Margin="40 0 0 0">
+                                <Hyperlink NavigateUri="https://github.com/MFunction96/KorabliChsMod/blob/main/LICENSE" Click="HyperLink_OnClick">AGPL-3.0</Hyperlink>
+                            </TextBlock>
+                        </hc:SimpleStackPanel>
+                        <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                            <TextBlock Text="项目地址"/>
+                            <TextBlock Margin="40 0 0 0">
+                                <Hyperlink NavigateUri="https://dev.azure.com/XanaCN/Lyoko/_git/KorabliChsMod" Click="HyperLink_OnClick">(主)Azure DevOps</Hyperlink>
+                            </TextBlock>
+                            <TextBlock Margin="10 0 0 0">
+                                <Hyperlink NavigateUri="https://github.com/MFunction96/KorabliChsMod" Click="HyperLink_OnClick">(镜像)Github</Hyperlink>
+                            </TextBlock>
+                        </hc:SimpleStackPanel>
+                        <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 30 0 0">
+                            <TextBlock Text="汉化包源"/>
+                            <TextBlock Margin="40 0 0 0">
+                                <Hyperlink NavigateUri="https://github.com/DDFantasyV/Korabli_localization_chs" Click="HyperLink_OnClick">Korabli_localization_chs</Hyperlink>
+                            </TextBlock>
+                        </hc:SimpleStackPanel>
+                        <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                            <TextBlock Text="汉化包许可"/>
+                            <TextBlock Margin="24 0 0 0">
+                                <Hyperlink NavigateUri="https://github.com/DDFantasyV/Korabli_localization_chs/blob/main/LICENSE" Click="HyperLink_OnClick">Apache License 2.0</Hyperlink>
+                            </TextBlock>
+                        </hc:SimpleStackPanel>
+                        <hc:SimpleStackPanel Orientation="Vertical" Margin="0 30 0 0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="感谢及招募站（名称先后）" HorizontalAlignment="Center"/>
+                            <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 5 0 0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Margin="0 0 0 0" HorizontalAlignment="Center">
+                                    <Hyperlink NavigateUri="https://flot.ru/DDF_FantasyV" Click="HyperLink_OnClick">DDF_FantasyV</Hyperlink>
+                                </TextBlock>
+                                <TextBlock Margin="10 0 0 0" HorizontalAlignment="Center">
+                                    <Hyperlink NavigateUri="https://flot.ru/Kuonji_Alice_My_Waifu" Click="HyperLink_OnClick">Kuonji_Alice_My_Waifu</Hyperlink>
+                                </TextBlock>
+                                <TextBlock Margin="10 0 0 0" HorizontalAlignment="Center">
+                                    <Hyperlink NavigateUri="https://flot.ru/M_Function" Click="HyperLink_OnClick">MFunction</Hyperlink>
+                                </TextBlock>
+                            </hc:SimpleStackPanel>
+                            <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 5 0 0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Margin="0 0 0 0" HorizontalAlignment="Center">
+                                    <Hyperlink NavigateUri="https://flot.ru/nian__gao233" Click="HyperLink_OnClick">nian__gao233</Hyperlink>
+                                </TextBlock>
+                                <TextBlock Margin="10 0 0 0" HorizontalAlignment="Center">
+                                    <Hyperlink NavigateUri="https://flot.ru/walksQAQ" Click="HyperLink_OnClick">walksQAQ</Hyperlink>
+                                </TextBlock>
+                            </hc:SimpleStackPanel>
+                        </hc:SimpleStackPanel>
+                    </hc:SimpleStackPanel>
+                </TabItem>
+            </TabControl>
+            <Border Style="{StaticResource BorderRegion}" Height="140">
+                <hc:ScrollViewer Name="SvMessage" IsInertiaEnabled="True" >
+                    <TextBox Padding="5" Text="{Binding Message}" IsReadOnly="True" TextChanged="TbMessage_TextChanged"/>
+                </hc:ScrollViewer>
+            </Border>
+        </hc:SimpleStackPanel>
+
+    </Grid>
+</hc:Window>

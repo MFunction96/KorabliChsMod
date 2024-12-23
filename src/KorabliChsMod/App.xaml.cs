@@ -1,30 +1,39 @@
-﻿using System.Windows;
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+﻿using HandyControl.Themes;
+using Serilog;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Xanadu.KorabliChsMod
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
-        private readonly MainWindow _mainWindow;
-
-        public App()
-        {
-            
-        }
-        
-        public App(MainWindow mainWindow)
-        {
-            this._mainWindow = mainWindow;
-        }
-
         protected override void OnStartup(StartupEventArgs e)
         {
-            this._mainWindow.Show();
             base.OnStartup(e);
+            var boot = new Bootstrapper();
+            boot.Run();
+        }
+
+        internal void UpdateTheme(ApplicationTheme theme)
+        {
+            if (ThemeManager.Current.ApplicationTheme != theme)
+            {
+                ThemeManager.Current.ApplicationTheme = theme;
+            }
+        }
+
+        internal void UpdateAccent(Brush accent)
+        {
+            if (ThemeManager.Current.AccentColor != accent)
+            {
+                ThemeManager.Current.AccentColor = accent;
+            }
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            Log.CloseAndFlush();
+            base.OnExit(e);
         }
     }
-
 }
