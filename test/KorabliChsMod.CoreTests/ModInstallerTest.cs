@@ -12,8 +12,6 @@ namespace Xanadu.Test.KorabliChsMod.Core
     [TestClass]
     public class ModInstallerTest
     {
-        private readonly Mock<ILogger<GameDetector>> _mockGameDetectorLogger = new();
-        private readonly Mock<ILogger<NetworkEngine>> _mockNetworkEngineLogger = new();
         private readonly Mock<ILogger<FileCachePool>> _mockFileCachePoolLogger = new();
 
         [TestMethod]
@@ -22,9 +20,9 @@ namespace Xanadu.Test.KorabliChsMod.Core
             var tempPath = Path.GetFullPath(Path.GetRandomFileName());
             Directory.CreateDirectory(tempPath);
             IOExtension.CopyDirectory(Path.Combine(Environment.CurrentDirectory, "assets"), tempPath);
-            var gameDetector = new GameDetector(this._mockGameDetectorLogger.Object);
+            var gameDetector = new GameDetector();
             await gameDetector.Load(tempPath);
-            var networkEngine = new NetworkEngine(this._mockNetworkEngineLogger.Object);
+            var networkEngine = new NetworkEngine();
             networkEngine.Init();
             var fileCachePool = new FileCachePool(this._mockFileCachePoolLogger.Object);
             var modInstaller = new ModInstaller(networkEngine, fileCachePool, gameDetector);
