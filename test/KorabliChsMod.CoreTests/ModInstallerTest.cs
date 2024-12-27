@@ -21,7 +21,7 @@ namespace Xanadu.Test.KorabliChsMod.Core
             Directory.CreateDirectory(tempPath);
             IOExtension.CopyDirectory(Path.Combine(Environment.CurrentDirectory, "assets"), tempPath);
             var gameDetector = new GameDetector();
-            await gameDetector.Load(tempPath);
+            gameDetector.Load(tempPath);
             var networkEngine = new NetworkEngine();
             networkEngine.Init();
             var fileCachePool = new FileCachePool(this._mockFileCachePoolLogger.Object);

@@ -31,7 +31,7 @@ namespace Xanadu.KorabliChsMod.Core
         /// <summary>
         /// 
         /// </summary>
-        public bool IsWows { get; }
+        public bool IsWarship { get; }
 
         /// <summary>
         /// 
@@ -62,7 +62,7 @@ namespace Xanadu.KorabliChsMod.Core
         /// 
         /// </summary>
         public string LocaleInfoXmlPath { get; }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -77,7 +77,7 @@ namespace Xanadu.KorabliChsMod.Core
         /// 
         /// </summary>
         public string ClientVersion { get; }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -92,7 +92,7 @@ namespace Xanadu.KorabliChsMod.Core
         /// 
         /// </summary>
         public bool IsTest { get; }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -107,9 +107,8 @@ namespace Xanadu.KorabliChsMod.Core
         /// 
         /// </summary>
         /// <param name="gameInfoXmlPath"></param>
-        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task<bool> Load(string gameInfoXmlPath, CancellationToken cancellationToken = default);
+        public bool Load(string gameInfoXmlPath);
 
         /// <summary>
         /// 

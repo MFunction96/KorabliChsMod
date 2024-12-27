@@ -4,9 +4,9 @@ using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Xanadu.KorabliChsMod.Core;
@@ -80,6 +80,11 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 
         /// </summary>
+        private readonly HashSet<string> _gameFolders;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private string _selectedGameFolder = string.Empty;
 
         /// <summary>
@@ -145,15 +150,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 
         /// </summary>
-        public ISet<string> GameFolders
-        {
-            get
-            {
-                var list = this._lgcIntegrator.GameFolders.ToHashSet();
-                list.Add(MainWindowViewModel.ManualSelectionHint);
-                return list;
-            }
-        }
+        public ObservableCollection<string> GameFolders => new(this._gameFolders);
 
         /// <summary>
         /// 
@@ -381,13 +378,14 @@ namespace Xanadu.KorabliChsMod.ViewModels
             this._networkEngine.Init();
             this._korabliFileHub.Load();
 
+            this._gameFolders = [];
             this._selectedUpdateMirror = this._korabliFileHub.Mirror.ToString();
             this._autoUpdate = this._korabliFileHub.AutoUpdate;
             this._proxyEnabled = this._korabliFileHub.Proxy.Enabled;
             this._proxyAddress = this._korabliFileHub.Proxy.Address;
             this._proxyUsername = this._korabliFileHub.Proxy.Username;
             this._proxyPassword = this._korabliFileHub.Proxy.Password;
-            
+
             var thread = new Thread(async void () =>
             {
                 try
@@ -454,10 +452,24 @@ namespace Xanadu.KorabliChsMod.ViewModels
         {
             try
             {
-                this._selectedGameFolder = this._lgcIntegrator.GameFolders.Contains(this._korabliFileHub.GameFolder) ? this._korabliFileHub.GameFolder : string.Empty;
+                this._gameFolders.Clear();
+                this._gameDetector.Clear();
+                foreach (var gameFolder in this._lgcIntegrator.GameFolders)
+                {
+                    var result = this._gameDetector.Load(gameFolder);
+                    if (result && this._gameDetector.IsWarship)
+                    {
+                        this._gameFolders.Add(gameFolder);
+                    }
+
+                    this._gameDetector.Clear();
+                }
+                this._gameFolders.Add(MainWindowViewModel.ManualSelectionHint);
+
+                this._selectedGameFolder = this._gameFolders.Contains(this._korabliFileHub.GameFolder) ? this._korabliFileHub.GameFolder : string.Empty;
                 if (!string.IsNullOrEmpty(this._selectedGameFolder))
                 {
-                    var result = await this._gameDetector.Load(this._selectedGameFolder);
+                    var result = this._gameDetector.Load(this._selectedGameFolder);
                     if (!result)
                     {
                         this._selectedGameFolder = string.Empty;
@@ -491,6 +503,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// </summary>
         private void RefreshViews()
         {
+            RaisePropertyChanged(nameof(this.GameFolders));
             RaisePropertyChanged(nameof(this.SelectedGameFolder));
             RaisePropertyChanged(nameof(this.GameServer));
             RaisePropertyChanged(nameof(this.GameVersion));
@@ -563,7 +576,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
                     this._lgcIntegrator.GameFolders.Add(this._selectedGameFolder);
                 }
 
-                var loadResult = await this._gameDetector.Load(this._selectedGameFolder);
+                var loadResult = this._gameDetector.Load(this._selectedGameFolder);
                 if (!loadResult)
                 {
                     this._selectedGameFolder = string.Empty;

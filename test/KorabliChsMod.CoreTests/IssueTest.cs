@@ -8,13 +8,13 @@ namespace Xanadu.Test.KorabliChsMod.Core
     public class IssueTest
     {
         [TestMethod]
-        public async Task GameDetectorTest()
+        public void GameDetectorTest()
         {
             var issueFolders = Directory.GetDirectories("Issue");
             foreach (var folder in issueFolders)
             {
                 var gameDetector = new GameDetector();
-                await gameDetector.Load(folder);
+                gameDetector.Load(folder);
             }
         }
     }

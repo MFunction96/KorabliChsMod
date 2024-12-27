@@ -1,10 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Xanadu.KorabliChsMod.Core
@@ -49,7 +46,7 @@ namespace Xanadu.KorabliChsMod.Core
         public string BuildNumber => this.PreInstalled && !string.IsNullOrEmpty(this.ServerVersion) ? this.ServerVersion[(this.ServerVersion.LastIndexOf('.') + 1)..] : this.ClientVersion[(this.ClientVersion.LastIndexOf('.') + 1)..];
 
         /// <inheritdoc />
-        public bool IsWows { get; private set; }
+        public bool IsWarship { get; private set; }
 
         /// <inheritdoc />
         public bool IsTest { get; private set; }
@@ -61,74 +58,71 @@ namespace Xanadu.KorabliChsMod.Core
         public bool ChsMod { get; private set; }
 
         /// <inheritdoc />
-        public Task<bool> Load(string gameFolder, CancellationToken cancellationToken = default)
+        public bool Load(string gameFolder)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    this.Folder = gameFolder;
-                    if (!File.Exists(this.GameInfoXmlPath))
-                    {
-                        this.ServiceEvent?.Invoke(this, new ServiceEventArg
-                        {
-                            Exception = new FileNotFoundException("WOWS游戏信息文件不存在，请核对所选文件夹")
-                        });
-
-                        this.Clear();
-                        return false;
-                    }
-
-                    var gameInfoXml = new XmlDocument();
-                    gameInfoXml.Load(this.GameInfoXmlPath);
-                    this.IsWows = gameInfoXml["protocol"]?["game"]?["id"]?.InnerText.Contains("WOWS", StringComparison.OrdinalIgnoreCase) ?? false;
-                    this.Server = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
-                    this.ClientVersion = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
-                    this.PreInstalled = !(gameInfoXml["protocol"]?["game"]?["accepted_preinstalls"]?.IsEmpty ?? true);
-                    if (File.Exists(this.PreferencesXmlPath))
-                    {
-                        var preferenceLines = File.ReadLines(this.PreferencesXmlPath, Encoding.UTF8);
-                        var serverVersion = preferenceLines.FirstOrDefault(q => q.Contains("last_server_version"));
-                        if (!string.IsNullOrEmpty(serverVersion))
-                        {
-                            this.ServerVersion = serverVersion.Replace("<last_server_version>", string.Empty).Replace("</last_server_version>", string.Empty).Trim('\t').Trim().Replace(",", ".");
-                        }
-                    }
-
-                    var metadataXml = new XmlDocument();
-                    metadataXml.Load(this.MetaDataXmlPath);
-                    this.IsTest = string.Compare(metadataXml["protocol"]?["predefined_section"]?["app_id"]?.InnerText, "WOWS.RU.PRODUCTION", StringComparison.OrdinalIgnoreCase) != 0;
-                    if (!File.Exists(this.LocaleInfoXmlPath))
-                    {
-                        this.Locale = "RU";
-                        this.ChsMod = false;
-                    }
-                    else
-                    {
-                        var localeXml = new XmlDocument();
-                        localeXml.Load(this.LocaleInfoXmlPath);
-                        this.Locale = localeXml["locale_config"]?["lang_mapping"]?["lang"]?.Attributes["full"]?.Value ?? string.Empty;
-                        this.ChsMod = string.Compare(this.Locale, "schinese", StringComparison.OrdinalIgnoreCase) == 0;
-                    }
-
-                    if (!Directory.Exists(this.ModFolder))
-                    {
-                        Directory.CreateDirectory(this.ModFolder);
-                    }
-
-                    return true;
-                }
-                catch (Exception e)
+                this.Folder = gameFolder;
+                if (!File.Exists(this.GameInfoXmlPath))
                 {
                     this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
-                        Exception = e
+                        Exception = new FileNotFoundException("WOWS游戏信息文件不存在，请核对所选文件夹")
                     });
+
                     this.Clear();
-                    throw;
+                    return false;
                 }
 
-            }, cancellationToken);
+                var gameInfoXml = new XmlDocument();
+                gameInfoXml.Load(this.GameInfoXmlPath);
+                this.IsWarship = gameInfoXml["protocol"]?["game"]?["id"]?.InnerText.Contains("WOWS", StringComparison.OrdinalIgnoreCase) ?? false;
+                this.Server = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
+                this.ClientVersion = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
+                this.PreInstalled = !(gameInfoXml["protocol"]?["game"]?["accepted_preinstalls"]?.IsEmpty ?? true);
+                if (File.Exists(this.PreferencesXmlPath))
+                {
+                    var preferenceLines = File.ReadLines(this.PreferencesXmlPath, Encoding.UTF8);
+                    var serverVersion = preferenceLines.FirstOrDefault(q => q.Contains("last_server_version"));
+                    if (!string.IsNullOrEmpty(serverVersion))
+                    {
+                        this.ServerVersion = serverVersion.Replace("<last_server_version>", string.Empty).Replace("</last_server_version>", string.Empty).Trim('\t').Trim().Replace(",", ".");
+                    }
+                }
+
+                var metadataXml = new XmlDocument();
+                metadataXml.Load(this.MetaDataXmlPath);
+                this.IsTest = string.Compare(metadataXml["protocol"]?["predefined_section"]?["app_id"]?.InnerText, "WOWS.RU.PRODUCTION", StringComparison.OrdinalIgnoreCase) != 0;
+                if (!File.Exists(this.LocaleInfoXmlPath))
+                {
+                    this.Locale = "RU";
+                    this.ChsMod = false;
+                }
+                else
+                {
+                    var localeXml = new XmlDocument();
+                    localeXml.Load(this.LocaleInfoXmlPath);
+                    this.Locale = localeXml["locale_config"]?["lang_mapping"]?["lang"]?.Attributes["full"]?.Value ?? string.Empty;
+                    this.ChsMod = string.Compare(this.Locale, "schinese", StringComparison.OrdinalIgnoreCase) == 0;
+                }
+
+                if (!Directory.Exists(this.ModFolder))
+                {
+                    Directory.CreateDirectory(this.ModFolder);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                {
+                    Exception = e
+                });
+
+                this.Clear();
+                return false;
+            }
         }
 
         /// <summary>
@@ -141,7 +135,7 @@ namespace Xanadu.KorabliChsMod.Core
             this.ServerVersion = string.Empty;
             this.ClientVersion = string.Empty;
             this.PreInstalled = false;
-            this.IsWows = false;
+            this.IsWarship = false;
             this.IsTest = false;
             this.Locale = string.Empty;
         }
