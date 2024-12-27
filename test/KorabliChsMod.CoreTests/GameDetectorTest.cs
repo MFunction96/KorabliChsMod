@@ -11,10 +11,10 @@ namespace Xanadu.Test.KorabliChsMod.Core
     public class GameDetectorTest
     {
         [TestMethod]
-        public async Task VersionDetectTest()
+        public void VersionDetectTest()
         {
             var gameDetector = new GameDetector();
-            await gameDetector.Load(Path.Combine(Environment.CurrentDirectory, "assets"));
+            gameDetector.Load(Path.Combine(Environment.CurrentDirectory, "assets"));
             Assert.AreEqual("13.6.0.0.8601080", gameDetector.ClientVersion);
         }
     }
