@@ -66,7 +66,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 
         /// </summary>
-        private readonly IModInstaller _modInstaller;
+        private readonly IChsModInstaller _chsModInstaller;
 
         #endregion
 
@@ -347,7 +347,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             Lazy<INetworkEngine> networkEngine,
             Lazy<IKorabliFileHub> korabliFileHub,
             Lazy<IUpdateHelper> updateHelper,
-            Lazy<IModInstaller> modInstaller)
+            Lazy<IChsModInstaller> modInstaller)
         {
             this._logger = logger.Value;
             this._lgcIntegrator = lgcIntegrator.Value;
@@ -355,7 +355,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             this._networkEngine = networkEngine.Value;
             this._korabliFileHub = korabliFileHub.Value;
             this._updateHelper = updateHelper.Value;
-            this._modInstaller = modInstaller.Value;
+            this._chsModInstaller = modInstaller.Value;
 
             var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
             _ = Version.TryParse(fullVersion.Split('+')[0], out var version);
@@ -372,7 +372,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             this._korabliFileHub.ServiceEvent += this.SyncServiceMessage;
             this._updateHelper.ServiceEvent += this.SyncServiceMessage;
             this._gameDetector.ServiceEvent += this.SyncServiceMessage;
-            this._modInstaller.ServiceEvent += this.SyncServiceMessage;
+            this._chsModInstaller.ServiceEvent += this.SyncServiceMessage;
 
             this._lgcIntegrator.Load();
             this._networkEngine.Init();
@@ -606,7 +606,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             try
             {
                 this.CoreEnabled = false;
-                var result = await this._modInstaller.Install();
+                var result = await this._chsModInstaller.Install();
                 if (!result)
                 {
                     this.SyncServiceMessage(this, new ServiceEventArg

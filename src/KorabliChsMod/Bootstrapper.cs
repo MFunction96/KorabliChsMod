@@ -48,7 +48,7 @@ namespace Xanadu.KorabliChsMod
             // 注册更新助理服务
             containerRegistry.RegisterSingleton<IUpdateHelper, UpdateHelper>();
             // 注册Mod安装服务
-            containerRegistry.RegisterSingleton<IModInstaller, ModInstaller>();
+            containerRegistry.RegisterSingleton<IChsModInstaller, ChsModInstaller>();
             // 注册主窗口日志服务
             containerRegistry.RegisterSingleton<ILogger<MainWindowViewModel>, Logger<MainWindowViewModel>>();
             containerRegistry.RegisterSingleton<ILogger<FileCachePool>, Logger<FileCachePool>>();

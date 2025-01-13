@@ -13,7 +13,7 @@ using Xanadu.Skidbladnir.IO.File.Cache;
 
 namespace Xanadu.KorabliChsMod.Core
 {
-    public class ModInstaller(INetworkEngine networkEngine, IFileCachePool fileCachePool, IGameDetector gameDetector) : IModInstaller
+    public class ChsModInstaller(INetworkEngine networkEngine, IFileCachePool fileCachePool, IGameDetector gameDetector) : IChsModInstaller
     {
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 

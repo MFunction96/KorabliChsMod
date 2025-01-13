@@ -10,7 +10,7 @@ using Xanadu.Skidbladnir.IO.File.Cache;
 namespace Xanadu.Test.KorabliChsMod.Core
 {
     [TestClass]
-    public class ModInstallerTest
+    public class ChsModInstallerTest
     {
         private readonly Mock<ILogger<FileCachePool>> _mockFileCachePoolLogger = new();
 
@@ -25,7 +25,7 @@ namespace Xanadu.Test.KorabliChsMod.Core
             var networkEngine = new NetworkEngine();
             networkEngine.Init();
             var fileCachePool = new FileCachePool(this._mockFileCachePoolLogger.Object);
-            var modInstaller = new ModInstaller(networkEngine, fileCachePool, gameDetector);
+            var modInstaller = new ChsModInstaller(networkEngine, fileCachePool, gameDetector);
             await modInstaller.Install();
             Assert.IsTrue(Directory.Exists(Path.Combine(gameDetector.ModFolder, "texts")));
             Assert.IsTrue(File.Exists(Path.Combine(gameDetector.ModFolder, "locale_config.xml")));

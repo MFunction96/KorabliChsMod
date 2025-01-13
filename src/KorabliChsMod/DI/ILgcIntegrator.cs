@@ -36,6 +36,8 @@ namespace Xanadu.KorabliChsMod.DI
         /// <summary>
         /// 
         /// </summary>
-        public void Load();
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public bool Load(string path = "");
     }
 }
