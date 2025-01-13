@@ -9,6 +9,6 @@ namespace Xanadu.KorabliChsMod.Core
 {
     public interface IChsModInstaller : IServiceEvent
     {
-        public Task<bool> Install(CancellationToken cancellationToken = default);
+        public Task<bool> Install(MirrorList mirror, CancellationToken cancellationToken = default);
     }
 }

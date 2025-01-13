@@ -17,7 +17,7 @@ namespace Xanadu.KorabliChsMod.Core
     {
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
-        public async Task<bool> Install(CancellationToken cancellationToken = default)
+        public async Task<bool> Install(MirrorList mirror, CancellationToken cancellationToken = default)
         {
             try
             {

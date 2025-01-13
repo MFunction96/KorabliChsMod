@@ -79,6 +79,11 @@ Copy-Item -Path ".\.azurepipelines\publish\KorabliChsModInstallerWithRuntime.exe
 Invoke-Signing "$OutputFolder\KorabliChsModInstallerWithRuntime.exe" "D:\Certificate\Xanadu_CodeSign_RSA_ICA1-PKCS8.pfx" $env:PFX_PASSWORD
 Invoke-Hashing "$OutputFolder\KorabliChsModInstallerWithRuntime.exe"
 
+aws s3api put-object --bucket warshipmod --key "korablichsmod/KorabliChsModInstaller.exe" --body "$OutputFolder\KorabliChsModInstaller.exe"
+aws s3api put-object --bucket warshipmod --key "korablichsmod/KorabliChsModInstaller.exe.sha256" --body "$OutputFolder\KorabliChsModInstaller.exe.sha256"
+aws s3api put-object --bucket warshipmod --key "korablichsmod/KorabliChsModInstallerWithRuntime.exe" --body "$OutputFolder\KorabliChsModInstallerWithRuntime.exe"
+aws s3api put-object --bucket warshipmod --key "korablichsmod/KorabliChsModInstallerWithRuntime.exe.sha256" --body "$OutputFolder\KorabliChsModInstallerWithRuntime.exe.sha256"
+
 try {
     Remove-Item -Path $workFolder -Force -Recurse
 } catch {}

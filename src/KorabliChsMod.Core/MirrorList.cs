@@ -2,6 +2,7 @@
 {
     public enum MirrorList
     {
-        Github = 0
+        Github = 0,
+        Cloudflare = 1
     }
 }
