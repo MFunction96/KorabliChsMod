@@ -8,31 +8,53 @@ using System.Threading.Tasks;
 
 namespace Xanadu.KorabliChsMod.Core
 {
+    /// <summary>
+    /// 网络引擎
+    /// </summary>
     public sealed class NetworkEngine : INetworkEngine
     {
+        /// <summary>
+        /// 是否析构标记
+        /// </summary>
         private bool _disposed;
 
-        private bool _init;
-
+        /// <summary>
+        /// HTTP客户端
+        /// </summary>
         private HttpClient Client { get; set; } = new();
 
+        /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
+        /// <inheritdoc />
         public ConcurrentDictionary<string, string> Headers { get; } = new();
 
-        public void Init()
+        /// <inheritdoc />
+        public bool Init(MirrorList mirrorList)
         {
-            if (this._init)
+            try
             {
-                return;
-            }
+                this.Headers.Clear();
+                if (mirrorList != MirrorList.Github)
+                {
+                    return true;
+                }
 
-            this.Headers.TryAdd("Accept", "application/vnd.github+json");
-            this.Headers.TryAdd("X-GitHub-Api-Version", "2022-11-28");
-            this.Headers.TryAdd("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0");
-            this._init = true;
+                this.Headers.TryAdd("Accept", "application/vnd.github+json");
+                this.Headers.TryAdd("X-GitHub-Api-Version", "2022-11-28");
+                this.Headers.TryAdd("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0");
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Exception = e });
+                return false;
+            }
         }
 
+        /// <inheritdoc />
         public bool SetProxy(Uri? uri, string username = "", string password = "", bool dry = false)
         {
             try
@@ -73,6 +95,7 @@ namespace Xanadu.KorabliChsMod.Core
 
         }
 
+        /// <inheritdoc />
         public async Task<HttpResponseMessage?> SendAsync(HttpRequestMessage request, int retry = 0, CancellationToken cancellationToken = default)
         {
             foreach (var header in this.Headers)
@@ -147,6 +170,7 @@ namespace Xanadu.KorabliChsMod.Core
             return null;
         }
 
+        /// <inheritdoc />
         public async Task DownloadAsync(HttpRequestMessage request, string filePath, int retry = 0,
             CancellationToken cancellationToken = default)
         {

@@ -125,9 +125,7 @@ namespace Xanadu.KorabliChsMod.Core
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <inheritdoc />
         public void Clear()
         {
             this.Folder = string.Empty;

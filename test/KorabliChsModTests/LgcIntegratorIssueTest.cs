@@ -4,9 +4,15 @@ using Xanadu.KorabliChsMod.DI;
 
 namespace Xanadu.Test.KorabliChsMod
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestClass]
     public class LgcIntegratorIssueTest
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [TestMethod]
         public void GameDetectorTest()
         {

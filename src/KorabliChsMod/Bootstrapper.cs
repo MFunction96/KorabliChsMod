@@ -13,13 +13,24 @@ using Xanadu.Skidbladnir.IO.File.Cache;
 
 namespace Xanadu.KorabliChsMod
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Bootstrapper : PrismBootstrapper
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected override DependencyObject CreateShell()
         {
             return Container.Resolve<MainWindow>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="containerRegistry"></param>
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // 注册日志服务
@@ -43,6 +54,8 @@ namespace Xanadu.KorabliChsMod
             containerRegistry.RegisterSingleton<ILgcIntegrator, LgcIntegrator>();
             // 注册网络引擎服务
             containerRegistry.RegisterSingleton<INetworkEngine, NetworkEngine>();
+            // 注册元数据获取服务
+            containerRegistry.RegisterSingleton<IMetadataFetcher, MetadataFetcher>();
             // 注册缓存池服务
             containerRegistry.RegisterSingleton<IFileCachePool, FileCachePool>();
             // 注册更新助理服务

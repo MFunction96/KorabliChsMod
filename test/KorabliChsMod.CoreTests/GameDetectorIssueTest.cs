@@ -1,13 +1,18 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.IO;
 using Xanadu.KorabliChsMod.Core;
 
 namespace Xanadu.Test.KorabliChsMod.Core
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestClass]
     public class GameDetectorIssueTest
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [TestMethod]
         public void GameDetectorTest()
         {

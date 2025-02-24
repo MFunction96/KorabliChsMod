@@ -8,17 +8,24 @@ using Xanadu.KorabliChsMod.Core;
 
 namespace Xanadu.KorabliChsMod.DI
 {
+    /// <summary>
+    /// Lesta Game Center探查器实现
+    /// </summary>
     public class LgcIntegrator : ILgcIntegrator
     {
-
+        /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
+        /// <inheritdoc />
         public string? Folder { get; private set; }
 
+        /// <inheritdoc />
         public string? PreferencesXmlPath => string.IsNullOrEmpty(this.Folder) ? null : Path.Combine(this.Folder, ILgcIntegrator.PreferencesXmlFileName);
 
-        public ICollection<string> GameFolders { get; } = new List<string>();
+        /// <inheritdoc />
+        public ICollection<string> GameFolders { get; } = [];
 
+        /// <inheritdoc />
         public bool Load(string path = "")
         {
             try
@@ -36,9 +43,7 @@ namespace Xanadu.KorabliChsMod.DI
                         return false;
                     }
 
-                    var value = openSubKey.GetValue("DisplayIcon") as string;
-                    openSubKey.Close();
-                    if (value is null)
+                    if (openSubKey.GetValue("DisplayIcon") is not string value)
                     {
                         this.ServiceEvent?.Invoke(this, new ServiceEventArg
                         {
@@ -48,6 +53,7 @@ namespace Xanadu.KorabliChsMod.DI
                         return false;
                     }
 
+                    openSubKey.Close();
                     this.Folder = Path.GetDirectoryName(value[..value.IndexOf(',')].Trim('\"').Trim());
                 }
                 else

@@ -4,9 +4,15 @@ using Xanadu.KorabliChsMod.Core;
 
 namespace Xanadu.Test.KorabliChsMod.Core
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestClass]
     public class GameDetectorTest
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [TestMethod]
         public void VersionDetectTest()
         {
