@@ -397,7 +397,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
 
             this._lgcIntegrator.Load();
             this._korabliFileHub.Load();
-            this._networkEngine.Init(this._korabliFileHub.Mirror);
+            this._networkEngine.Init();
 
             this._gameFolders = [];
             this._selectedUpdateMirror = this._korabliFileHub.Mirror.ToString();
@@ -723,16 +723,6 @@ namespace Xanadu.KorabliChsMod.ViewModels
                         Message = "保存设置失败！"
                     });
 
-                    return;
-                }
-
-                var init = this._networkEngine.Init(this._korabliFileHub.Mirror);
-                if (!init)
-                {
-                    this.SyncServiceMessage(this, new ServiceEventArg
-                    {
-                        Message = "切换源失败！"
-                    });
                     return;
                 }
 

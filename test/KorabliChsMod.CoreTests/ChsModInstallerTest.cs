@@ -34,9 +34,10 @@ namespace Xanadu.Test.KorabliChsMod.Core
             var gameDetector = new GameDetector();
             gameDetector.Load(tempPath);
             var networkEngine = new NetworkEngine();
-            networkEngine.Init(mirror);
+            networkEngine.Init();
+            var metadataFetcher = new MetadataFetcher(networkEngine);
             var fileCachePool = new FileCachePool(this._mockFileCachePoolLogger.Object);
-            var modInstaller = new ChsModInstaller(networkEngine, fileCachePool, gameDetector);
+            var modInstaller = new ChsModInstaller(networkEngine, fileCachePool, gameDetector, metadataFetcher);
             await modInstaller.Install(mirror);
             Assert.IsTrue(Directory.Exists(Path.Combine(gameDetector.ModFolder, "texts")));
             Assert.IsTrue(File.Exists(Path.Combine(gameDetector.ModFolder, "locale_config.xml")));

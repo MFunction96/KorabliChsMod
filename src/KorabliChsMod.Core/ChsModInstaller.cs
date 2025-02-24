@@ -31,7 +31,7 @@ namespace Xanadu.KorabliChsMod.Core
             var zipTempFolder = Path.Combine(zipFile.Pool.BasePath, Path.GetRandomFileName());
             try
             {
-                var latest = await metadataFetcher.GetLatestJToken(mirror, gameDetector.IsTest, true) ?? throw new DataException("获取元信息失败！请检查网络连接。");
+                var latest = await metadataFetcher.GetLatestJToken(mirror, true, gameDetector.IsTest, true) ?? throw new DataException("获取元信息失败！请检查网络连接。");
                 var downloadFile = latest["zipball_url"]!.Value<string>();
                 await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
                     zipFile.FullPath, 5, cancellationToken);

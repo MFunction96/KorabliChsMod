@@ -19,7 +19,7 @@ namespace Xanadu.KorabliChsMod.Core
         /// <summary>
         /// 初始化网络引擎
         /// </summary>
-        public bool Init(MirrorList mirrorList);
+        public bool Init();
 
         /// <summary>
         /// 设置代理

@@ -30,20 +30,14 @@ namespace Xanadu.KorabliChsMod.Core
         public ConcurrentDictionary<string, string> Headers { get; } = new();
 
         /// <inheritdoc />
-        public bool Init(MirrorList mirrorList)
+        public bool Init()
         {
             try
             {
                 this.Headers.Clear();
-                if (mirrorList != MirrorList.Github)
-                {
-                    return true;
-                }
-
                 this.Headers.TryAdd("Accept", "application/vnd.github+json");
                 this.Headers.TryAdd("X-GitHub-Api-Version", "2022-11-28");
-                this.Headers.TryAdd("User-Agent",
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0");
+                this.Headers.TryAdd("User-Agent", "C#/.NET 8.0");
                 return true;
 
             }

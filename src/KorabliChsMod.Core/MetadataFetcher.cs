@@ -18,12 +18,14 @@ namespace Xanadu.KorabliChsMod.Core
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
         /// <inheritdoc />
-        public async Task<JToken?> GetLatestJToken(MirrorList mirrorList, bool preRelease = false, bool forcePre = false)
+        public async Task<JToken?> GetLatestJToken(MirrorList mirrorList, bool mod, bool preRelease = false, bool forcePre = false)
         {
             try
             {
-                var response = await networkEngine.SendAsync(new HttpRequestMessage(HttpMethod.Get,
-                    IKorabliFileHub.Links[mirrorList].UpdateMetadata), 5);
+                var link = mod
+                    ? IKorabliFileHub.Links[mirrorList].ModMetadata
+                    : IKorabliFileHub.Links[mirrorList].UpdateMetadata;
+                var response = await networkEngine.SendAsync(new HttpRequestMessage(HttpMethod.Get, link), 5);
                 _ = response!.EnsureSuccessStatusCode();
                 var releases = await response.Content.ReadAsStringAsync();
                 var jArray = JsonConvert.DeserializeObject<JArray>(releases) ?? [];
