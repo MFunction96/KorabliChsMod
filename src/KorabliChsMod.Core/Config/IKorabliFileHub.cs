@@ -62,6 +62,18 @@ namespace Xanadu.KorabliChsMod.Core.Config
         public static string ConfigFilePath { get; set; } = Path.Combine(IOExtension.AppDataFolder, IKorabliFileHub.ConfigFileName);
 
         /// <summary>
+        /// 已安装文件名
+        /// </summary>
+        [JsonIgnore]
+        public const string InstalledFileName = "installed.json";
+
+        /// <summary>
+        /// 已安装文件路径
+        /// </summary>
+        [JsonIgnore]
+        public static string InstalledFilePath { get; set; } = Path.Combine(IOExtension.AppDataFolder, IKorabliFileHub.InstalledFileName);
+
+        /// <summary>
         /// 代理设置
         /// </summary>
         public ProxyConfig Proxy { get; set; }

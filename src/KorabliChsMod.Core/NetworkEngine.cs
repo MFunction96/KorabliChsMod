@@ -21,7 +21,11 @@ namespace Xanadu.KorabliChsMod.Core
         /// <summary>
         /// HTTP客户端
         /// </summary>
-        private HttpClient Client { get; set; } = new();
+        private HttpClient Client { get; set; } = new()
+        {
+            DefaultRequestVersion = Version.Parse("2.0"),
+            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
+        };
 
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
@@ -37,7 +41,7 @@ namespace Xanadu.KorabliChsMod.Core
                 this.Headers.Clear();
                 this.Headers.TryAdd("Accept", "application/vnd.github+json");
                 this.Headers.TryAdd("X-GitHub-Api-Version", "2022-11-28");
-                this.Headers.TryAdd("User-Agent", "C#/.NET 8.0");
+                this.Headers.TryAdd("User-Agent", "C#/.NET 8.0 KorabliChsMod");
                 return true;
 
             }

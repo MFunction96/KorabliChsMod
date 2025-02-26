@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xanadu.KorabliChsMod.Core
@@ -8,6 +9,14 @@ namespace Xanadu.KorabliChsMod.Core
     /// </summary>
     public interface IChsModInstaller : IServiceEvent
     {
+        /// <summary>
+        /// 文件相对路径，bool值表示是否为文件夹
+        /// </summary>
+        public static IEnumerable<(string FilePath, bool IsDirectory)> RelativeFilePath =>
+        [
+            ("texts", true), ("locale_config.xml", false), ("LICENSE", false)
+        ];
+
         /// <summary>
         /// 安装汉化模组
         /// </summary>
