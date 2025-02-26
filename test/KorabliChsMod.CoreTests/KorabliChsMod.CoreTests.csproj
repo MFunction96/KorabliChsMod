@@ -12,6 +12,9 @@
 	  <None Update="assets\bin\8601080\.gitkeep">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
+	  <None Update="assets\config_test.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	  <None Update="assets\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>

@@ -386,7 +386,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
 
             this.AppVersion = version ?? Version.Parse("0.0.0");
             this.Message += $"考拉比汉社厂 v{this.AppVersion}\r\n";
-
+            this._selectedUpdateMirror = this._korabliFileHub.Mirror.ToString();
             this._lgcIntegrator.ServiceEvent += this.SyncServiceMessage;
             this._networkEngine.ServiceEvent += this.SyncServiceMessage;
             this._korabliFileHub.ServiceEvent += this.SyncServiceMessage;
@@ -400,7 +400,6 @@ namespace Xanadu.KorabliChsMod.ViewModels
             this._networkEngine.Init();
 
             this._gameFolders = [];
-            this._selectedUpdateMirror = this._korabliFileHub.Mirror.ToString();
             this._autoUpdate = this._korabliFileHub.AutoUpdate;
             this._proxyEnabled = this._korabliFileHub.Proxy.Enabled;
             this._proxyAddress = this._korabliFileHub.Proxy.Address;
@@ -478,6 +477,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             {
                 this._gameFolders.Clear();
                 this._gameDetector.Clear();
+                this._selectedUpdateMirror = this._korabliFileHub.Mirror.ToString();
                 foreach (var gameFolder in this._lgcIntegrator.GameFolders)
                 {
                     var result = this._gameDetector.Load(gameFolder);
@@ -534,6 +534,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             RaisePropertyChanged(nameof(this.GameTest));
             RaisePropertyChanged(nameof(this.ChsModInstalled));
             RaisePropertyChanged(nameof(this.CoreEnabled));
+            RaisePropertyChanged(nameof(this.SelectedUpdateMirror));
         }
 
         /// <summary>
@@ -642,14 +643,12 @@ namespace Xanadu.KorabliChsMod.ViewModels
                     });
                     return;
                 }
+
                 this.SyncServiceMessage(this, new ServiceEventArg
                 {
                     Message = "安装汉化成功！"
                 });
 
-                this.Reload();
-                this.CoreEnabled = true;
-                this.RefreshViews();
             }
             catch (Exception e)
             {
@@ -659,17 +658,23 @@ namespace Xanadu.KorabliChsMod.ViewModels
                     Exception = e
                 });
             }
+            finally
+            {
+                this.Reload();
+                this.CoreEnabled = true;
+                this.RefreshViews();
+            }
         });
 
         /// <summary>
         /// 绑定卸载汉化Mod
         /// </summary>
-        public DelegateCommand UninstallChsModCommand => new(async void () =>
+        public DelegateCommand UninstallChsModCommand => new(void () =>
         {
             try
             {
                 this.CoreEnabled = false;
-                await IOExtension.DeleteDirectory(this._gameDetector.ModFolder);
+                IOExtension.DeleteDirectory(this._gameDetector.ModFolder);
                 this.Reload();
                 this.SyncServiceMessage(this, new ServiceEventArg
                 {

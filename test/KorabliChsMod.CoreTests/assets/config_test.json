@@ -1,0 +1,12 @@
+﻿{
+  "Proxy": {
+    "Enabled": true,
+    "Address": "http://192.168.144.254:23333",
+    "Username": "User",
+    "Password": "Password"
+  },
+  "Mirror": 1,
+  "AutoUpdate": true,
+  "AllowPrerelease": true,
+  "GameFolder": "C:\\Test"
+}

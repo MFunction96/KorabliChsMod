@@ -21,10 +21,10 @@ namespace Xanadu.KorabliChsMod.Core.Config
         public ProxyConfig Proxy { get; set; } = new();
 
         /// <inheritdoc />
-        public MirrorList Mirror { get; set; } = MirrorList.Github;
+        public MirrorList Mirror { get; set; }
 
         /// <inheritdoc />
-        public bool AllowPreRelease { get; set; } = false;
+        public bool AllowPreRelease { get; set; }
 
         /// <inheritdoc />
         public bool AutoUpdate { get; set; } = true;
@@ -65,6 +65,8 @@ namespace Xanadu.KorabliChsMod.Core.Config
                         Encoding.UTF8))!;
 
                 var updateConfig = false;
+                this.Mirror = config.Mirror;
+                this.AllowPreRelease = config.AllowPreRelease;
                 this.Proxy = config.Proxy;
                 if (string.Compare(this.Proxy.Username, IKorabliFileHub.DeprecatedHint,
                         StringComparison.OrdinalIgnoreCase) == 0)
@@ -148,5 +150,14 @@ namespace Xanadu.KorabliChsMod.Core.Config
 
         }
 
+        /// <inheritdoc />
+        public bool ConfigEquals(IKorabliFileHub other)
+        {
+            return this.Mirror == other.Mirror 
+                && this.Proxy.Equals(other.Proxy)
+                && this.AllowPreRelease == other.AllowPreRelease
+                && this.AutoUpdate == other.AutoUpdate
+                && string.Compare(this.GameFolder, other.GameFolder, StringComparison.OrdinalIgnoreCase) == 0;
+        }
     }
 }

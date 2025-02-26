@@ -98,7 +98,7 @@
                 </TabItem>
                 <TabItem Header="设置">
                     <hc:SimpleStackPanel>
-                        <ComboBox Style="{StaticResource ComboBoxExtend}" hc:InfoElement.TitleWidth="90" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="更新源" ItemsSource="{Binding UpdateMirrors}" SelectedValue="{Binding SelectedUpdateMirror}" Margin="20" IsEnabled="False"/>
+                        <ComboBox Style="{StaticResource ComboBoxExtend}" hc:InfoElement.TitleWidth="90" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="更新源" ItemsSource="{Binding UpdateMirrors}" SelectedValue="{Binding SelectedUpdateMirror}" Margin="20" IsEnabled="{Binding CoreEnabled}"/>
                         <hc:SimpleStackPanel Orientation="Horizontal" Margin="20 0 0 0">
                             <TextBlock Text="自动更新" Margin="0 0 30 0"/>
                             <ToggleButton Style="{StaticResource ToggleButtonSwitch}" IsChecked="{Binding AutoUpdate}"/>

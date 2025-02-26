@@ -27,7 +27,7 @@ namespace Xanadu.KorabliChsMod.Core
         /// <inheritdoc />
         public async Task<bool> Install(MirrorList mirror, CancellationToken cancellationToken = default)
         {
-            using var zipFile = fileCachePool.Register("Korabli_localization_chs.zip", "download");
+            var zipFile = fileCachePool.Register("Korabli_localization_chs.zip", "download");
             var zipTempFolder = Path.Combine(zipFile.Pool.BasePath, Path.GetRandomFileName());
             try
             {
@@ -37,8 +37,7 @@ namespace Xanadu.KorabliChsMod.Core
                     zipFile.FullPath, 5, cancellationToken);
 
                 using var zip = ZipFile.OpenRead(zipFile.FullPath);
-                var entry = zip.Entries[0].FullName;
-                var extractFolder = Path.Combine(zipTempFolder, entry);
+                var extractFolder = Path.Combine(zipTempFolder, zip.Entries[0].FullName.Split('/')[0]);
                 ZipFile.ExtractToDirectory(zipFile.FullPath, zipTempFolder, Encoding.UTF8, true);
                 IOExtension.CopyDirectory(Path.Combine(extractFolder, "texts"),
                     Path.Combine(gameDetector.ModFolder, "texts"));
@@ -59,7 +58,8 @@ namespace Xanadu.KorabliChsMod.Core
             }
             finally
             {
-                //await IOExtension.DeleteDirectory(zipTempFolder);
+                zipFile.Dispose();
+                IOExtension.DeleteDirectory(zipTempFolder);
             }
         }
 

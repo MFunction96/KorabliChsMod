@@ -59,7 +59,7 @@ namespace Xanadu.KorabliChsMod.Core.Config
         /// 配置文件路径
         /// </summary>
         [JsonIgnore]
-        public static string ConfigFilePath => Path.Combine(IOExtension.AppDataFolder, IKorabliFileHub.ConfigFileName);
+        public static string ConfigFilePath { get; set; } = Path.Combine(IOExtension.AppDataFolder, IKorabliFileHub.ConfigFileName);
 
         /// <summary>
         /// 代理设置
@@ -103,5 +103,12 @@ namespace Xanadu.KorabliChsMod.Core.Config
         /// </summary>
         /// <returns>true为加载成功，false为加载失败</returns>
         public Task<bool> SaveAsync();
+
+        /// <summary>
+        /// 比较两个配置信息是否相等
+        /// </summary>
+        /// <param name="other">另一个对象</param>
+        /// <returns>true为相等，false为不等</returns>
+        public bool ConfigEquals(IKorabliFileHub other);
     }
 }

@@ -35,6 +35,7 @@ namespace Xanadu.Test.KorabliChsMod.Core
             gameDetector.Load(tempPath);
             var networkEngine = new NetworkEngine();
             networkEngine.Init();
+            networkEngine.SetProxy(new Uri("http://192.168.144.254:23333"));
             var metadataFetcher = new MetadataFetcher(networkEngine);
             var fileCachePool = new FileCachePool(this._mockFileCachePoolLogger.Object);
             var modInstaller = new ChsModInstaller(networkEngine, fileCachePool, gameDetector, metadataFetcher);
@@ -42,7 +43,33 @@ namespace Xanadu.Test.KorabliChsMod.Core
             Assert.IsTrue(Directory.Exists(Path.Combine(gameDetector.ModFolder, "texts")));
             Assert.IsTrue(File.Exists(Path.Combine(gameDetector.ModFolder, "locale_config.xml")));
             Assert.IsTrue(File.Exists(Path.Combine(gameDetector.ModFolder, "LICENSE")));
-            await IOExtension.DeleteDirectory(tempPath, force: true);
+            IOExtension.DeleteDirectory(tempPath, force: true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task CdnInstallTest()
+        {
+            var mirror = MirrorList.Cloudflare;
+            var tempPath = Path.GetFullPath(Path.GetRandomFileName());
+            Directory.CreateDirectory(tempPath);
+            IOExtension.CopyDirectory(Path.Combine(Environment.CurrentDirectory, "assets"), tempPath);
+            var gameDetector = new GameDetector();
+            gameDetector.Load(tempPath);
+            var networkEngine = new NetworkEngine();
+            networkEngine.Init();
+            var metadataFetcher = new MetadataFetcher(networkEngine);
+            var fileCachePool = new FileCachePool(this._mockFileCachePoolLogger.Object);
+            var modInstaller = new ChsModInstaller(networkEngine, fileCachePool, gameDetector, metadataFetcher);
+            var result = await modInstaller.Install(mirror);
+            Assert.IsTrue(result);
+            Assert.IsTrue(Directory.Exists(Path.Combine(gameDetector.ModFolder, "texts")));
+            Assert.IsTrue(File.Exists(Path.Combine(gameDetector.ModFolder, "locale_config.xml")));
+            Assert.IsTrue(File.Exists(Path.Combine(gameDetector.ModFolder, "LICENSE")));
+            IOExtension.DeleteDirectory(tempPath, force: true);
         }
     }
 }
