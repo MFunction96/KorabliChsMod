@@ -237,6 +237,8 @@ namespace Xanadu.KorabliChsMod.ViewModels
             set { SetProperty(ref this._message, value); }
         }
 
+        public bool RemoveEnabled => !this._gameDetector.IsTest && this._coreEnabled;
+
         #endregion
 
         #region Settings
@@ -535,6 +537,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             RaisePropertyChanged(nameof(this.ChsModInstalled));
             RaisePropertyChanged(nameof(this.CoreEnabled));
             RaisePropertyChanged(nameof(this.SelectedUpdateMirror));
+            RaisePropertyChanged(nameof(this.RemoveEnabled));
         }
 
         /// <summary>

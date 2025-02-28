@@ -92,7 +92,7 @@
                         </hc:SimpleStackPanel>
                         <hc:SimpleStackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 40 0 0">
                             <Button Style="{StaticResource ButtonPrimary}" Content="安装" FontSize="18" Height="36" Margin="0 0 30 0" IsEnabled="{Binding CoreEnabled}" Command="{Binding InstallChsModCommand}"></Button>
-                            <Button Style="{StaticResource ButtonDanger}" Content="删除所有Mod" FontSize="18" Height="36" Margin="30 0 0 0" IsEnabled="{Binding CoreEnabled}" Command="{Binding UninstallChsModCommand}"></Button>
+                            <Button Style="{StaticResource ButtonDanger}" Content="删除所有Mod" FontSize="18" Height="36" Margin="30 0 0 0" IsEnabled="{Binding RemoveEnabled}" Command="{Binding UninstallChsModCommand}"></Button>
                         </hc:SimpleStackPanel>
                     </hc:SimpleStackPanel>
                 </TabItem>
