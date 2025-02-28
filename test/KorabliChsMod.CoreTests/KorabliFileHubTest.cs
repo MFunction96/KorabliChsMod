@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Threading;
-using Newtonsoft.Json;
 using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Config;
 using Xanadu.Skidbladnir.IO.File;
@@ -113,6 +113,8 @@ namespace Xanadu.Test.KorabliChsMod.Core
                 fileHub.Proxy = expected.Proxy;
                 var task = fileHub.SaveAsync();
                 task.Wait();
+                _ = task.Result;
+                Thread.Sleep(1000);
                 var actual = new KorabliFileHub(networkEngine);
                 actual.Load();
                 this.TestContext.WriteLine($"Expected: {JsonConvert.SerializeObject(expected, Formatting.None)}");
