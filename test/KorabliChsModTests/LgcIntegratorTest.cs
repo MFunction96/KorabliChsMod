@@ -4,11 +4,20 @@ using Xanadu.KorabliChsMod.DI;
 
 namespace Xanadu.Test.KorabliChsMod
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [TestClass]
     public class LgcIntegratorTest
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public TestContext TestContext { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [TestMethod]
         public void LgcTest()
         {

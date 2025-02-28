@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace Xanadu.KorabliChsMod.Core
+﻿namespace Xanadu.KorabliChsMod.Core
 {
     /// <summary>
     /// 

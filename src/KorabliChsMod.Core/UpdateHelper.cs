@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,25 +11,44 @@ using Xanadu.Skidbladnir.IO.File.Cache;
 
 namespace Xanadu.KorabliChsMod.Core
 {
-    public class UpdateHelper(IKorabliFileHub korabliFileHub, INetworkEngine networkEngine, IFileCachePool fileCachePool) : IUpdateHelper
+    /// <summary>
+    /// 更新助手实现
+    /// </summary>
+    /// <param name="korabliFileHub">考拉比配置中心</param>
+    /// <param name="networkEngine">网络引擎</param>
+    /// <param name="fileCachePool">缓存服务</param>
+    /// <param name="metadataFetcher">元信息获取器</param>
+    public class UpdateHelper(
+        IKorabliFileHub korabliFileHub,
+        INetworkEngine networkEngine,
+        IFileCachePool fileCachePool,
+        IMetadataFetcher metadataFetcher)
+        : IUpdateHelper
     {
-        private JToken? _latestJToken;
-        public MirrorList Mirror { get; set; } = MirrorList.Github;
+        /// <summary>
+        /// 镜像元信息
+        /// </summary>
+        private readonly Dictionary<MirrorList, JToken> _latestJToken = [];
+
+        /// <inheritdoc />
         public Version? LatestVersion { get; private set; }
 
+        /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
-        public async Task<bool> UpdateAvailable(Version appVersion)
+        /// <inheritdoc />
+        public async Task<bool> Check(MirrorList mirrorList, Version appVersion)
         {
             try
             {
-                this._latestJToken = await this.GetLatestJToken();
-                if (this._latestJToken is null)
+                var jToken = await metadataFetcher.GetLatestJToken(mirrorList, false, korabliFileHub.AllowPreRelease);
+                if (jToken is null)
                 {
                     return false;
                 }
 
-                var name = this._latestJToken["name"]!.Value<string>()!;
+                this._latestJToken[mirrorList] = jToken;
+                var name = this._latestJToken[mirrorList]["name"]!.Value<string>()!;
                 var version = name[name.IndexOf(" ", StringComparison.OrdinalIgnoreCase)..].Trim();
                 this.LatestVersion = Version.Parse(version);
                 var result = this.LatestVersion > appVersion;
@@ -47,7 +66,8 @@ namespace Xanadu.KorabliChsMod.Core
             }
         }
 
-        public async Task<bool> Update()
+        /// <inheritdoc />
+        public async Task<bool> Update(MirrorList mirrorList)
         {
             var downloadFolder = Path.Combine(fileCachePool.BasePath, "download");
             if (!Directory.Exists(downloadFolder))
@@ -58,7 +78,9 @@ namespace Xanadu.KorabliChsMod.Core
             var exeFile = Path.Combine(fileCachePool.BasePath, "download", "KorabliChsModInstaller.exe");
             try
             {
-                var latest = this._latestJToken ?? await this.GetLatestJToken();
+                var latest = this._latestJToken.TryGetValue(mirrorList, out var jToken)
+                    ? jToken
+                    : await metadataFetcher.GetLatestJToken(mirrorList, false, korabliFileHub.AllowPreRelease);
                 var assets = latest!["assets"]! as JArray;
                 var downloadFile = assets!.First(q =>
                     string.Compare(q["name"]!.Value<string>(), "KorabliChsModInstaller.exe",
@@ -85,33 +107,5 @@ namespace Xanadu.KorabliChsMod.Core
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        private async Task<JToken?> GetLatestJToken()
-        {
-            try
-            {
-                var response = await networkEngine.SendAsync(new HttpRequestMessage(HttpMethod.Get,
-                    "https://api.github.com/repos/MFunction96/KorabliChsMod/releases"), 5);
-                _ = response!.EnsureSuccessStatusCode();
-                var releases = await response.Content.ReadAsStringAsync();
-                var jArray = JsonConvert.DeserializeObject<JArray>(releases) ?? [];
-                return korabliFileHub.AllowPreRelease ? jArray.First() : jArray.First(q => !q["prerelease"]!.Value<bool>());
-            }
-            catch (Exception e)
-            {
-                this.ServiceEvent?.Invoke(this, new ServiceEventArg
-                {
-                    Message = "获取版本信息失败！",
-                    Exception = e,
-                    AppendException = false
-                });
-
-                return null;
-            }
-
-        }
     }
 }

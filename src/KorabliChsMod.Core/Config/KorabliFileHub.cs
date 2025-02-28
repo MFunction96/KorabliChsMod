@@ -1,50 +1,39 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Xanadu.Skidbladnir.IO.File;
 
 namespace Xanadu.KorabliChsMod.Core.Config
 {
     /// <summary>
-    /// 
+    /// 考拉比配置中心
     /// </summary>
+    /// <param name="networkEngine">网络引擎</param>
     public class KorabliFileHub(INetworkEngine networkEngine) : IKorabliFileHub
     {
 
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [JsonIgnore]
-        protected ConcurrentQueue<ulong> BackupInstances { get; } = new();
-
         /// <inheritdoc />
         public ProxyConfig Proxy { get; set; } = new();
 
         /// <inheritdoc />
-        public MirrorList Mirror { get; set; } = MirrorList.Github;
+        public MirrorList Mirror { get; set; }
 
         /// <inheritdoc />
-        public bool AllowPreRelease { get; set; } = false;
+        public bool AllowPreRelease { get; set; }
 
         /// <inheritdoc />
         public bool AutoUpdate { get; set; } = true;
 
         /// <inheritdoc />
-        public int Reserve { get; protected set; } = 2;
-
-        /// <inheritdoc />
         public string GameFolder { get; set; } = string.Empty;
 
         /// <inheritdoc />
-        public void Load(int reserve = 2)
+        public void Load()
         {
             try
             {
@@ -65,15 +54,6 @@ namespace Xanadu.KorabliChsMod.Core.Config
                     
                 });
 
-                if (!Directory.Exists(IKorabliFileHub.BackupFolder))
-                {
-                    Directory.CreateDirectory(IKorabliFileHub.BackupFolder);
-                }
-
-                this.Reserve = reserve;
-                //await this.ReloadBackupInstance();
-                //await this.TrimBackInstance();
-
                 if (!File.Exists(IKorabliFileHub.ConfigFilePath))
                 {
                     saveThread.Start();
@@ -85,6 +65,8 @@ namespace Xanadu.KorabliChsMod.Core.Config
                         Encoding.UTF8))!;
 
                 var updateConfig = false;
+                this.Mirror = config.Mirror;
+                this.AllowPreRelease = config.AllowPreRelease;
                 this.Proxy = config.Proxy;
                 if (string.Compare(this.Proxy.Username, IKorabliFileHub.DeprecatedHint,
                         StringComparison.OrdinalIgnoreCase) == 0)
@@ -101,7 +83,11 @@ namespace Xanadu.KorabliChsMod.Core.Config
                 }
 
                 this.AutoUpdate = config.AutoUpdate;
-                this.UpdateEngineProxy();
+                if (this.Proxy.Enabled)
+                {
+                    this.UpdateEngineProxy();
+                }
+                
                 this.GameFolder = config.GameFolder;
                 if (updateConfig)
                 {
@@ -123,69 +109,13 @@ namespace Xanadu.KorabliChsMod.Core.Config
         }
 
         /// <inheritdoc />
-        public Task ReloadBackupInstance(CancellationToken cancellationToken = default)
-        {
-            return Task.Run(() =>
-            {
-                this.BackupInstances.Clear();
-                var backups = Directory.GetDirectories(IKorabliFileHub.BackupFolder).Select(q => ulong.Parse(Path.GetFileName(q)));
-                foreach (var backup in backups)
-                {
-                    this.BackupInstances.Enqueue(backup);
-                }
-
-            }, cancellationToken);
-        }
-
-        /// <inheritdoc />
-        public async Task TrimBackInstance(bool reload = true, CancellationToken cancellationToken = default)
-        {
-            while (this.BackupInstances.Count > this.Reserve)
-            {
-                _ = this.BackupInstances.TryDequeue(out var backup);
-                await IOExtension.DeleteDirectory(Path.Combine(IKorabliFileHub.BackupFolder, backup.ToString()), true, true);
-            }
-
-            if (reload)
-            {
-                await this.ReloadBackupInstance(cancellationToken);
-            }
-
-        }
-
-        /// <inheritdoc />
-        public async Task<string> EnqueueBackup(bool trim = false)
-        {
-            var now = (ulong)DateTime.Now.ToBinary();
-            var folder = Path.Combine(IKorabliFileHub.BackupFolder, now.ToString());
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-
-            this.BackupInstances.Enqueue(now);
-            if (trim)
-            {
-                await this.TrimBackInstance();
-            }
-
-            return folder;
-        }
-
-        /// <inheritdoc />
-        public string PeekLatestBackup()
-        {
-            return Path.Combine(IKorabliFileHub.BackupFolder, this.BackupInstances.Last().ToString());
-        }
-
-        /// <inheritdoc />
         public async Task<bool> SaveAsync()
         {
             try
             {
                 if (this.Proxy.Enabled)
                 {
-                    this.UpdateEngineProxy();
+                    _ = this.UpdateEngineProxy();
                 }
 
                 var json = JsonConvert.SerializeObject(this, Formatting.Indented);
@@ -204,6 +134,7 @@ namespace Xanadu.KorabliChsMod.Core.Config
 
         }
 
+        /// <inheritdoc />
         public bool UpdateEngineProxy(bool dry = false)
         {
             try
@@ -212,11 +143,21 @@ namespace Xanadu.KorabliChsMod.Core.Config
             }
             catch (Exception e)
             {
-                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Message = "代理设置错误，请检查配置", Exception = e });
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Message = "代理设置错误，已关闭代理", Exception = e });
+                this.Proxy.Enabled = false;
                 return false;
             }
 
         }
 
+        /// <inheritdoc />
+        public bool ConfigEquals(IKorabliFileHub other)
+        {
+            return this.Mirror == other.Mirror 
+                && this.Proxy.Equals(other.Proxy)
+                && this.AllowPreRelease == other.AllowPreRelease
+                && this.AutoUpdate == other.AutoUpdate
+                && string.Compare(this.GameFolder, other.GameFolder, StringComparison.OrdinalIgnoreCase) == 0;
+        }
     }
 }

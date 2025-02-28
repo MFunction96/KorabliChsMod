@@ -92,13 +92,13 @@
                         </hc:SimpleStackPanel>
                         <hc:SimpleStackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 40 0 0">
                             <Button Style="{StaticResource ButtonPrimary}" Content="安装" FontSize="18" Height="36" Margin="0 0 30 0" IsEnabled="{Binding CoreEnabled}" Command="{Binding InstallChsModCommand}"></Button>
-                            <Button Style="{StaticResource ButtonDanger}" Content="删除所有Mod" FontSize="18" Height="36" Margin="30 0 0 0" IsEnabled="{Binding CoreEnabled}" Command="{Binding UninstallChsModCommand}"></Button>
+                            <Button Style="{StaticResource ButtonDanger}" Content="删除所有Mod" FontSize="18" Height="36" Margin="30 0 0 0" IsEnabled="{Binding RemoveEnabled}" Command="{Binding UninstallChsModCommand}"></Button>
                         </hc:SimpleStackPanel>
                     </hc:SimpleStackPanel>
                 </TabItem>
                 <TabItem Header="设置">
                     <hc:SimpleStackPanel>
-                        <ComboBox Style="{StaticResource ComboBoxExtend}" hc:InfoElement.TitleWidth="90" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="更新源" ItemsSource="{Binding UpdateMirrors}" SelectedValue="{Binding SelectedUpdateMirror}" Margin="20" IsEnabled="False"/>
+                        <ComboBox Style="{StaticResource ComboBoxExtend}" hc:InfoElement.TitleWidth="90" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="更新源" ItemsSource="{Binding UpdateMirrors}" SelectedValue="{Binding SelectedUpdateMirror}" Margin="20" IsEnabled="{Binding CoreEnabled}"/>
                         <hc:SimpleStackPanel Orientation="Horizontal" Margin="20 0 0 0">
                             <TextBlock Text="自动更新" Margin="0 0 30 0"/>
                             <ToggleButton Style="{StaticResource ToggleButtonSwitch}" IsChecked="{Binding AutoUpdate}"/>

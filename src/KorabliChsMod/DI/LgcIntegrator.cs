@@ -8,45 +8,59 @@ using Xanadu.KorabliChsMod.Core;
 
 namespace Xanadu.KorabliChsMod.DI
 {
+    /// <summary>
+    /// Lesta Game Center探查器实现
+    /// </summary>
     public class LgcIntegrator : ILgcIntegrator
     {
-
+        /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
+        /// <inheritdoc />
         public string? Folder { get; private set; }
 
+        /// <inheritdoc />
         public string? PreferencesXmlPath => string.IsNullOrEmpty(this.Folder) ? null : Path.Combine(this.Folder, ILgcIntegrator.PreferencesXmlFileName);
 
-        public ICollection<string> GameFolders { get; } = new List<string>();
+        /// <inheritdoc />
+        public ICollection<string> GameFolders { get; } = [];
 
-        public void Load()
+        /// <inheritdoc />
+        public bool Load(string path = "")
         {
             try
             {
-                var openSubKey = Registry.CurrentUser.OpenSubKey(ILgcIntegrator.RegistrySubKey, RegistryRights.QueryValues);
-                if (openSubKey is null)
+                if (string.IsNullOrEmpty(path))
                 {
-                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    var openSubKey = Registry.CurrentUser.OpenSubKey(ILgcIntegrator.RegistrySubKey, RegistryRights.QueryValues);
+                    if (openSubKey is null)
                     {
-                        Exception = new KeyNotFoundException("未检测到Lesta Game Center")
-                    });
+                        this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                        {
+                            Exception = new KeyNotFoundException("未检测到Lesta Game Center")
+                        });
 
-                    return;
+                        return false;
+                    }
+
+                    if (openSubKey.GetValue("DisplayIcon") is not string value)
+                    {
+                        this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                        {
+                            Exception = new KeyNotFoundException("检测到Lesta Game Center，但未能读取Lesta Game Center安装路径")
+                        });
+
+                        return false;
+                    }
+
+                    openSubKey.Close();
+                    this.Folder = Path.GetDirectoryName(value[..value.IndexOf(',')].Trim('\"').Trim());
+                }
+                else
+                {
+                    this.Folder = path;
                 }
 
-                var value = openSubKey.GetValue("DisplayIcon") as string;
-                openSubKey.Close();
-                if (value is null)
-                {
-                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
-                    {
-                        Exception = new KeyNotFoundException("检测到Lesta Game Center，但未能读取Lesta Game Center安装路径")
-                    });
-
-                    return;
-                }
-
-                this.Folder = Path.GetDirectoryName(value[..value.IndexOf(',')].Trim('\"').Trim());
                 if (string.IsNullOrEmpty(this.PreferencesXmlPath))
                 {
                     this.ServiceEvent?.Invoke(this, new ServiceEventArg
@@ -54,7 +68,7 @@ namespace Xanadu.KorabliChsMod.DI
                         Exception = new KeyNotFoundException("检测到Lesta Game Center，但无法访问Lesta Game Center配置文件")
                     });
 
-                    return;
+                    return false;
                 }
 
                 var preferencesXml = new XmlDocument();
@@ -67,7 +81,7 @@ namespace Xanadu.KorabliChsMod.DI
                         Exception = new KeyNotFoundException("检测到Lesta Game Center，但未检测到已安装游戏")
                     });
 
-                    return;
+                    return true;
                 }
 
                 foreach (XmlNode game in games)
@@ -85,6 +99,8 @@ namespace Xanadu.KorabliChsMod.DI
                 {
                     Message = "已成功读取游戏安装目录"
                 });
+
+                return true;
             }
             catch (Exception e)
             {
@@ -93,6 +109,7 @@ namespace Xanadu.KorabliChsMod.DI
                     Exception = e
                 });
 
+                return false;
             }
 
         }
