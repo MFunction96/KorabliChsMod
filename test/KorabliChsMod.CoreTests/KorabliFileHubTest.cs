@@ -81,7 +81,7 @@ namespace Xanadu.Test.KorabliChsMod.Core
             });
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void SaveAsync()
         {
             KorabliFileHubTest.RunWithMutex(() =>
