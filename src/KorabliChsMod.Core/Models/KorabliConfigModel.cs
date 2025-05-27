@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Xanadu.Skidbladnir.IO.File;
-// ReSharper disable NonReadonlyMemberInGetHashCode
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 
 namespace Xanadu.KorabliChsMod.Core.Models
@@ -13,6 +12,16 @@ namespace Xanadu.KorabliChsMod.Core.Models
     /// </summary>
     public class KorabliConfigModel
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        private static string? _testFolder;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string BaseFolder => string.IsNullOrEmpty(KorabliConfigModel._testFolder) ? IOExtension.AppDataFolder : KorabliConfigModel._testFolder;
+
         /// <summary>
         /// 功能未开放提示
         /// </summary>
@@ -41,19 +50,19 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// 配置文件路径
         /// </summary>
         [JsonIgnore]
-        public static readonly string ConfigFilePath = Path.Combine(IOExtension.AppDataFolder, KorabliConfigModel.ConfigFileName);
+        public static string ConfigFilePath => Path.Combine(KorabliConfigModel.BaseFolder, KorabliConfigModel.ConfigFileName);
 
         /// <summary>
         /// 日志文件路径
         /// </summary>
         [JsonIgnore]
-        public static readonly string LogFilePath = Path.Combine(IOExtension.AppDataFolder, KorabliConfigModel.LogFileName);
+        public static string LogFilePath => Path.Combine(KorabliConfigModel.BaseFolder, KorabliConfigModel.LogFileName);
 
         /// <summary>
         /// 已安装文件路径
         /// </summary>
         [JsonIgnore]
-        public static readonly string InstalledFilePath = Path.Combine(IOExtension.AppDataFolder, KorabliConfigModel.InstalledFileName);
+        public static string InstalledFilePath => Path.Combine(KorabliConfigModel.BaseFolder, KorabliConfigModel.InstalledFileName);
 
         /// <summary>
         /// 链接字典
@@ -114,5 +123,13 @@ namespace Xanadu.KorabliChsMod.Core.Models
                    string.Equals(this.GameFolder, otherModel.GameFolder, StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// 测试文件夹设置
+        /// </summary>
+        /// <param name="testFolder">测试文件夹</param>
+        internal static void SetTestFolder(string testFolder)
+        {
+            KorabliConfigModel._testFolder = testFolder;
+        }
     }
 }

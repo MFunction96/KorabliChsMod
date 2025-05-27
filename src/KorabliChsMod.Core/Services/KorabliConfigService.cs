@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Xanadu.KorabliChsMod.Core.Models;
 
@@ -26,7 +25,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <summary>
         /// 默认配置
         /// </summary>
-        public static KorabliConfigModel DefaultKorabliConfigModel => new()
+        private static KorabliConfigModel DefaultKorabliConfigModel => new()
         {
             Mirror = MirrorList.Cloudflare,
             Proxy = new ProxyConfigModel(),
@@ -38,7 +37,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <summary>
         /// 当前考拉比配置模型
         /// </summary>
-        public volatile KorabliConfigModel CurrentConfig = KorabliConfigService.DefaultKorabliConfigModel;
+        public KorabliConfigModel CurrentConfig { get; private set; } = KorabliConfigService.DefaultKorabliConfigModel;
 
         /// <summary>
         /// 加载配置文件
@@ -48,29 +47,12 @@ namespace Xanadu.KorabliChsMod.Core.Services
         {
             try
             {
-                var saveThread = new Thread(async void () =>
-                {
-                    try
-                    {
-                        _ = await this.SaveAsync();
-                    }
-                    catch (Exception e)
-                    {
-                        this.ServiceEvent?.Invoke(this, new ServiceEventArg
-                        {
-                            Exception = e,
-                            Message = "配置文件写入失败！"
-                        });
-                    }
-
-                });
-
                 if (!File.Exists(KorabliConfigModel.ConfigFilePath))
                 {
-                    saveThread.Start();
+                    this.SaveAsync().ConfigureAwait(false);
                     return this.CurrentConfig;
                 }
-                
+
                 this.CurrentConfig = JsonConvert.DeserializeObject<KorabliConfigModel>(File.ReadAllText(KorabliConfigModel.ConfigFilePath, Encoding.UTF8))!;
 
                 var updateConfig = false;
@@ -85,19 +67,14 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     updateConfig = true;
                 }
 
-                if (this.CurrentConfig.Proxy.Enabled)
+                if (this.CurrentConfig.Proxy.Enabled && !this.UpdateEngineProxy())
                 {
-                    var updateProxy = this.UpdateEngineProxy();
-                    if (!updateProxy)
-                    {
-                        updateConfig = true;
-                    }
-
+                    updateConfig = true;
                 }
 
                 if (updateConfig)
                 {
-                    saveThread.Start();
+                    this.SaveAsync().ConfigureAwait(false);
                 }
 
                 return this.CurrentConfig;
@@ -128,7 +105,12 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     _ = this.UpdateEngineProxy();
                 }
 
-                var json = JsonConvert.SerializeObject(this, Formatting.Indented);
+                var json = JsonConvert.SerializeObject(this.CurrentConfig, Formatting.Indented);
+                if (!Directory.Exists(KorabliConfigModel.BaseFolder))
+                {
+                    Directory.CreateDirectory(KorabliConfigModel.BaseFolder);
+                }
+
                 await File.WriteAllTextAsync(KorabliConfigModel.ConfigFilePath, json, Encoding.UTF8);
                 return true;
             }
