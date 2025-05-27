@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
-using Xanadu.KorabliChsMod.Core;
+using Xanadu.KorabliChsMod.Core.Services;
 
 namespace Xanadu.Test.KorabliChsMod.Core
 {
@@ -20,7 +20,7 @@ namespace Xanadu.Test.KorabliChsMod.Core
             foreach (var folder in issueFolders)
             {
                 var expected = File.ReadAllText(Path.Combine(folder, "Expected.json"));
-                var gameDetector = new GameDetector();
+                var gameDetector = new GameDetectorService();
                 var result = gameDetector.Load(folder);
                 var actual = JsonConvert.SerializeObject(new { Result = result, Detector = gameDetector }, Formatting.Indented);
                 Assert.AreEqual(expected, actual);

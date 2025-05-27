@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using System.Net.Http;
+using System.Threading.Tasks;
 
-namespace Xanadu.KorabliChsMod.Core
+namespace Xanadu.KorabliChsMod.Core.Extensions
 {
     /// <summary>
     /// HTTP消息扩展
@@ -13,11 +14,11 @@ namespace Xanadu.KorabliChsMod.Core
         /// </summary>
         /// <param name="request">HTTP请求</param>
         /// <returns>HTTP请求新实例</returns>
-        public static HttpRequestMessage Clone(this HttpRequestMessage request)
+        public static async Task<HttpRequestMessage> CloneAsync(this HttpRequestMessage request)
         {
             var clone = new HttpRequestMessage(request.Method, request.RequestUri)
             {
-                Content = request.Content.Clone(),
+                Content = await request.Content.CloneAsync(),
                 Version = request.Version
             };
             foreach (var prop in request.Options)
@@ -37,19 +38,22 @@ namespace Xanadu.KorabliChsMod.Core
         /// </summary>
         /// <param name="content">HTTP内容</param>
         /// <returns>HTTP内容新实例</returns>
-        public static HttpContent? Clone(this HttpContent? content)
+        public static async Task<HttpContent?> CloneAsync(this HttpContent? content)
         {
-            if (content == null) return null;
+            if (content is null)
+            {
+                return null;
+            }
 
             var ms = new MemoryStream();
-            content.CopyToAsync(ms).Wait();
+            await content.CopyToAsync(ms);
             ms.Position = 0;
-
             var clone = new StreamContent(ms);
             foreach (var header in content.Headers)
             {
                 clone.Headers.Add(header.Key, header.Value);
             }
+
             return clone;
         }
     }

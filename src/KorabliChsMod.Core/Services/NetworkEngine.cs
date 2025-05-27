@@ -1,18 +1,21 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Xanadu.KorabliChsMod.Core.Extensions;
 
-namespace Xanadu.KorabliChsMod.Core
+namespace Xanadu.KorabliChsMod.Core.Services
 {
     /// <summary>
     /// 网络引擎
     /// </summary>
-    public sealed class NetworkEngine : INetworkEngine
+    public sealed class NetworkEngine : IServiceEvent, IDisposable
     {
+        /// <inheritdoc />
+        public event EventHandler<ServiceEventArg>? ServiceEvent;
+
         /// <summary>
         /// 是否析构标记
         /// </summary>
@@ -21,86 +24,65 @@ namespace Xanadu.KorabliChsMod.Core
         /// <summary>
         /// HTTP客户端
         /// </summary>
-        private HttpClient Client { get; set; } = new()
+        private readonly HttpClient _httpClient;
+
+        /// <summary>
+        /// 网络引擎构造函数
+        /// </summary>
+        /// <param name="korabliConfigService">考拉比配置服务</param>
+        public NetworkEngine(KorabliConfigService korabliConfigService)
         {
-            DefaultRequestVersion = Version.Parse("2.0"),
-            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
-        };
+            var handler = new HttpClientHandler
+            {
+                AllowAutoRedirect = true,
+                AutomaticDecompression = DecompressionMethods.All
+            };
 
-        /// <inheritdoc />
-        public event EventHandler<ServiceEventArg>? ServiceEvent;
-
-        /// <inheritdoc />
-        public ConcurrentDictionary<string, string> Headers { get; } = new();
-
-        /// <inheritdoc />
-        public bool Init()
-        {
             try
             {
-                this.Headers.Clear();
-                this.Headers.TryAdd("Accept", "application/vnd.github+json");
-                this.Headers.TryAdd("X-GitHub-Api-Version", "2022-11-28");
-                this.Headers.TryAdd("User-Agent", "C#/.NET 8.0 KorabliChsMod");
-                return true;
-
-            }
-            catch (Exception e)
-            {
-                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Exception = e });
-                return false;
-            }
-        }
-
-        /// <inheritdoc />
-        public bool SetProxy(Uri? uri, string username = "", string password = "", bool dry = false)
-        {
-            try
-            {
-                lock (this.Client)
+                if (korabliConfigService.CurrentConfig.Proxy.Enabled &&
+                    !string.IsNullOrEmpty(korabliConfigService.CurrentConfig.Proxy.Address))
                 {
-                    var handler = new HttpClientHandler
-                    {
-                        AllowAutoRedirect = true,
-                        AutomaticDecompression = DecompressionMethods.All
-                    };
-
-                    if (uri is not null)
-                    {
-                        handler.Proxy = new WebProxy(uri, true, null, new NetworkCredential(username, password));
-                    }
-
-                    var client = new HttpClient(handler, true)
-                    {
-                        DefaultRequestVersion = Version.Parse("2.0"),
-                        DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
-                    };
-
-                    if (!dry)
-                    {
-                        this.Client = client;
-                    }
-
-                    return true;
+                    handler.Proxy = new WebProxy(korabliConfigService.CurrentConfig.Proxy.Address,
+                        true, null,
+                        new NetworkCredential(korabliConfigService.CurrentConfig.Proxy.Username,
+                            korabliConfigService.CurrentConfig.Proxy.Password));
                 }
-
             }
             catch (Exception e)
             {
-                this.ServiceEvent?.Invoke(this, new ServiceEventArg { Exception = e });
-                return false;
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                {
+                    Exception = e,
+                    Message = "代理设置错误，已禁用代理。"
+                });
+
+                throw;
             }
 
+            this._httpClient = new HttpClient(handler, true)
+            {
+                DefaultRequestVersion = Version.Parse("2.0"),
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+                DefaultRequestHeaders =
+                {
+                    { "Accept", "application/vnd.github+json" },
+                    { "X-GitHub-Api-Version", "2022-11-28" },
+                    { "User-Agent", "C#/.NET 8.0 KorabliChsMod" }
+                },
+                Timeout = TimeSpan.FromSeconds(30)
+            };
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 发送HTTP请求
+        /// </summary>
+        /// <param name="request">请求信息</param>
+        /// <param name="retry">重试次数</param>
+        /// <param name="cancellationToken">取消句柄</param>
+        /// <returns>HTTP响应</returns>
         public async Task<HttpResponseMessage?> SendAsync(HttpRequestMessage request, int retry = 0, CancellationToken cancellationToken = default)
         {
-            foreach (var header in this.Headers)
-            {
-                request.Headers.Add(header.Key, header.Value);
-            }
-
             if (retry == 0)
             {
                 this.ServiceEvent?.Invoke(this, new ServiceEventArg
@@ -108,7 +90,7 @@ namespace Xanadu.KorabliChsMod.Core
                     Message = $"开始单次请求：{request.RequestUri?.Host}"
                 });
 
-                var res = await this.Client.SendAsync(request, cancellationToken);
+                var res = await this._httpClient.SendAsync(request, cancellationToken);
 
                 this.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
@@ -128,13 +110,13 @@ namespace Xanadu.KorabliChsMod.Core
             {
                 try
                 {
-                    var req = request.Clone();
+                    var req = await request.CloneAsync();
                     this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
                         Message = $"开始请求：{req.RequestUri?.Host}"
                     });
 
-                    response = await this.Client.SendAsync(req, cancellationToken);
+                    response = await this._httpClient.SendAsync(req, cancellationToken);
                     response.EnsureSuccessStatusCode();
                     this.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
@@ -157,7 +139,7 @@ namespace Xanadu.KorabliChsMod.Core
                     });
                 }
 
-                Thread.Sleep(1000);
+                await Task.Delay(1000, cancellationToken);
             }
 
             this.ServiceEvent?.Invoke(this, new ServiceEventArg
@@ -168,7 +150,14 @@ namespace Xanadu.KorabliChsMod.Core
             return null;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 下载文件
+        /// </summary>
+        /// <param name="request">HTTP请求</param>
+        /// <param name="filePath">下载路径</param>
+        /// <param name="retry">重试次数</param>
+        /// <param name="cancellationToken">取消句柄</param>
+        /// <returns>下载任务</returns>
         public async Task DownloadAsync(HttpRequestMessage request, string filePath, int retry = 0,
             CancellationToken cancellationToken = default)
         {
@@ -184,9 +173,6 @@ namespace Xanadu.KorabliChsMod.Core
                 await using var fsb = new BufferedStream(fs);
                 await using var nsb = new BufferedStream(await response.Content.ReadAsStreamAsync(cancellationToken));
                 await nsb.CopyToAsync(fsb, cancellationToken);
-                nsb.Close();
-                fsb.Close();
-                fs.Close();
             }
             catch (Exception e)
             {
@@ -229,7 +215,7 @@ namespace Xanadu.KorabliChsMod.Core
             if (disposing)
             {
                 // Dispose managed resources.
-                this.Client.Dispose();
+                this._httpClient.Dispose();
 
             }
             // Call the appropriate methods to clean up

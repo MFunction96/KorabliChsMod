@@ -4,8 +4,8 @@ using Prism.Ioc;
 using Serilog;
 using System.Text;
 using System.Windows;
-using Xanadu.KorabliChsMod.Core;
-using Xanadu.KorabliChsMod.Core.Config;
+using Xanadu.KorabliChsMod.Core.Models;
+using Xanadu.KorabliChsMod.Core.Services;
 using Xanadu.KorabliChsMod.DI;
 using Xanadu.KorabliChsMod.ViewModels;
 using Xanadu.KorabliChsMod.Views;
@@ -38,7 +38,7 @@ namespace Xanadu.KorabliChsMod
             {
                 builder.AddSerilog(new LoggerConfiguration()
                     .Enrich.FromLogContext()
-                    .WriteTo.File(IKorabliFileHub.LogFilePath,
+                    .WriteTo.File(KorabliConfigModel.LogFilePath,
                         encoding: Encoding.UTF8,
                         fileSizeLimitBytes: 50331648)
                     .CreateLogger());
@@ -47,24 +47,23 @@ namespace Xanadu.KorabliChsMod
             containerRegistry.RegisterInstance(loggerFactory);
 
             // 注册配置文件
-            containerRegistry.RegisterSingleton<IKorabliFileHub, KorabliFileHub>();
+            containerRegistry.RegisterSingleton<KorabliConfigService>();
             // 注册游戏探查服务
-            containerRegistry.RegisterSingleton<IGameDetector, GameDetector>();
+            containerRegistry.RegisterScoped<GameDetectorService>();
             // 注册Lesta Game Center探查服务
             containerRegistry.RegisterSingleton<ILgcIntegrator, LgcIntegrator>();
             // 注册网络引擎服务
-            containerRegistry.RegisterSingleton<INetworkEngine, NetworkEngine>();
+            containerRegistry.RegisterScoped<NetworkEngine>();
             // 注册元数据获取服务
-            containerRegistry.RegisterSingleton<IMetadataFetcher, MetadataFetcher>();
+            containerRegistry.RegisterScoped<MetadataService>();
             // 注册缓存池服务
-            containerRegistry.RegisterSingleton<IFileCachePool, FileCachePool>();
+            containerRegistry.RegisterSingleton<FileCachePool>();
             // 注册更新助理服务
-            containerRegistry.RegisterSingleton<IUpdateHelper, UpdateHelper>();
+            containerRegistry.RegisterScoped<UpdateService>();
             // 注册Mod安装服务
-            containerRegistry.RegisterSingleton<IChsModInstaller, ChsModInstaller>();
+            containerRegistry.RegisterScoped<ChsModService>();
             // 注册主窗口日志服务
             containerRegistry.RegisterSingleton<ILogger<MainWindowViewModel>, Logger<MainWindowViewModel>>();
-            containerRegistry.RegisterSingleton<ILogger<FileCachePool>, Logger<FileCachePool>>();
             containerRegistry.RegisterForNavigation<MainWindowViewModel>();
         }
     }

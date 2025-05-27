@@ -1,9 +1,9 @@
-﻿namespace Xanadu.KorabliChsMod.Core.Config
+﻿namespace Xanadu.KorabliChsMod.Core.Models
 {
     /// <summary>
     /// 资源链接
     /// </summary>
-    public class ResourceLink
+    public class ResourceLinkModel
     {
         /// <summary>
         /// 镜像

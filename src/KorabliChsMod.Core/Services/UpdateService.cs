@@ -6,49 +6,55 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Xanadu.KorabliChsMod.Core.Config;
 using Xanadu.Skidbladnir.IO.File.Cache;
 
-namespace Xanadu.KorabliChsMod.Core
+namespace Xanadu.KorabliChsMod.Core.Services
 {
     /// <summary>
     /// 更新助手实现
     /// </summary>
-    /// <param name="korabliFileHub">考拉比配置中心</param>
+    /// <param name="korabliConfigService">考拉比配置中心</param>
     /// <param name="networkEngine">网络引擎</param>
     /// <param name="fileCachePool">缓存服务</param>
-    /// <param name="metadataFetcher">元信息获取器</param>
-    public class UpdateHelper(
-        IKorabliFileHub korabliFileHub,
-        INetworkEngine networkEngine,
-        IFileCachePool fileCachePool,
-        IMetadataFetcher metadataFetcher)
-        : IUpdateHelper
+    /// <param name="metadataService">元信息获取器</param>
+    public class UpdateService(
+        KorabliConfigService korabliConfigService,
+        NetworkEngine networkEngine,
+        FileCachePool fileCachePool,
+        MetadataService metadataService)
+        : IServiceEvent
     {
         /// <summary>
         /// 镜像元信息
         /// </summary>
         private readonly Dictionary<MirrorList, JToken> _latestJToken = [];
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 
+        /// </summary>
         public Version? LatestVersion { get; private set; }
 
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
-        /// <inheritdoc />
-        public async Task<bool> Check(MirrorList mirrorList, Version appVersion)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="appVersion"></param>
+        /// <returns></returns>
+        public async Task<bool> Check(Version appVersion)
         {
             try
             {
-                var jToken = await metadataFetcher.GetLatestJToken(mirrorList, false, korabliFileHub.AllowPreRelease);
+                var mirror = korabliConfigService.CurrentConfig.Mirror;
+                var jToken = await metadataService.GetLatestJToken(false);
                 if (jToken is null)
                 {
                     return false;
                 }
 
-                this._latestJToken[mirrorList] = jToken;
-                var name = this._latestJToken[mirrorList]["name"]!.Value<string>()!;
+                this._latestJToken[mirror] = jToken;
+                var name = this._latestJToken[mirror]["name"]!.Value<string>()!;
                 var version = name[name.IndexOf(" ", StringComparison.OrdinalIgnoreCase)..].Trim();
                 this.LatestVersion = Version.Parse(version);
                 var result = this.LatestVersion > appVersion;
@@ -66,7 +72,11 @@ namespace Xanadu.KorabliChsMod.Core
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mirrorList"></param>
+        /// <returns></returns>
         public async Task<bool> Update(MirrorList mirrorList)
         {
             var downloadFolder = Path.Combine(fileCachePool.BasePath, "download");
@@ -80,7 +90,7 @@ namespace Xanadu.KorabliChsMod.Core
             {
                 var latest = this._latestJToken.TryGetValue(mirrorList, out var jToken)
                     ? jToken
-                    : await metadataFetcher.GetLatestJToken(mirrorList, false, korabliFileHub.AllowPreRelease);
+                    : await metadataService.GetLatestJToken(false);
                 var assets = latest!["assets"]! as JArray;
                 var downloadFile = assets!.First(q =>
                     string.Compare(q["name"]!.Value<string>(), "KorabliChsModInstaller.exe",
