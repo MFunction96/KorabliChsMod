@@ -384,6 +384,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             this._selectedUpdateMirror = this._korabliConfigService.CurrentConfig.Mirror.ToString();
             this._lgcIntegratorService.ServiceEvent += this.SyncServiceMessage;
             this._korabliConfigService.ServiceEvent += this.SyncServiceMessage;
+            this._updateService.ServiceEvent += this.SyncServiceMessage;
 
             _ = this._korabliConfigService.Load();
 

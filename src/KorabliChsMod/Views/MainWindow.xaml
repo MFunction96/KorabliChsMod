@@ -179,7 +179,7 @@
             </TabControl>
             <Border Style="{StaticResource BorderRegion}" Height="140">
                 <hc:ScrollViewer Name="SvMessage" IsInertiaEnabled="True" >
-                    <TextBox Padding="5" Text="{Binding Message}" IsReadOnly="True" TextChanged="TbMessage_TextChanged"/>
+                    <TextBox Padding="5" Text="{Binding Message}" IsReadOnly="True" TextChanged="TbMessage_TextChanged" VerticalContentAlignment="Top"/>
                 </hc:ScrollViewer>
             </Border>
         </hc:SimpleStackPanel>
