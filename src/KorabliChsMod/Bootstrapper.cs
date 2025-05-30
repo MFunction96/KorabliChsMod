@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows;
 using Xanadu.KorabliChsMod.Core.Models;
 using Xanadu.KorabliChsMod.Core.Services;
-using Xanadu.KorabliChsMod.DI;
+using Xanadu.KorabliChsMod.Services;
 using Xanadu.KorabliChsMod.ViewModels;
 using Xanadu.KorabliChsMod.Views;
 using Xanadu.Skidbladnir.IO.File.Cache;
@@ -51,7 +51,7 @@ namespace Xanadu.KorabliChsMod
             // 注册游戏探查服务
             containerRegistry.RegisterScoped<GameDetectorService>();
             // 注册Lesta Game Center探查服务
-            containerRegistry.RegisterSingleton<ILgcIntegrator, LgcIntegrator>();
+            containerRegistry.RegisterSingleton<LgcIntegratorService>();
             // 注册网络引擎服务
             containerRegistry.RegisterScoped<NetworkEngine>();
             // 注册元数据获取服务

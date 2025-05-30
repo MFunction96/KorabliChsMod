@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -8,11 +7,10 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Models;
 using Xanadu.KorabliChsMod.Core.Services;
-using Xanadu.KorabliChsMod.DI;
+using Xanadu.KorabliChsMod.Services;
 using Xanadu.Skidbladnir.IO.File;
 
 namespace Xanadu.KorabliChsMod.ViewModels
@@ -42,7 +40,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// LGC探查器
         /// </summary>
-        private readonly ILgcIntegrator _lgcIntegrator;
+        private readonly LgcIntegratorService _lgcIntegratorService;
 
         /// <summary>
         /// 考拉比配置中心
@@ -338,11 +336,11 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <param name="korabliConfigService">LGC探查器</param>
         public MainWindowViewModel(
             Lazy<ILogger<MainWindowViewModel>> logger,
-            Lazy<ILgcIntegrator> lgcIntegrator,
+            Lazy<LgcIntegratorService> lgcIntegrator,
             Lazy<KorabliConfigService> korabliConfigService)
         {
             this._logger = logger.Value;
-            this._lgcIntegrator = lgcIntegrator.Value;
+            this._lgcIntegratorService = lgcIntegrator.Value;
             this._korabliConfigService = korabliConfigService.Value;
 
             var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
@@ -355,10 +353,10 @@ namespace Xanadu.KorabliChsMod.ViewModels
             this.AppVersion = version ?? Version.Parse("0.0.0");
             this.Message += $"考拉比汉社厂 v{this.AppVersion}\r\n";
             this._selectedUpdateMirror = this._korabliConfigService.CurrentConfig.Mirror.ToString();
-            this._lgcIntegrator.ServiceEvent += this.SyncServiceMessage;
+            this._lgcIntegratorService.ServiceEvent += this.SyncServiceMessage;
             this._korabliConfigService.ServiceEvent += this.SyncServiceMessage;
 
-            this._lgcIntegrator.Load();
+            this._lgcIntegratorService.Load();
             this._korabliConfigService.Load();
 
             this._gameFolders = [];
@@ -440,7 +438,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             //{
             //    this._gameFolders.Clear();
             //    this._selectedUpdateMirror = this._korabliConfigService.CurrentConfig.Mirror.ToString();
-            //    foreach (var gameFolder in this._lgcIntegrator.GameFolders)
+            //    foreach (var gameFolder in this._lgcIntegratorService.GameFolders)
             //    {
             //        var detectModel = this._gameDetectorService.Load(gameFolder);
             //        if (detectModel?.IsWarship ?? false)
@@ -560,7 +558,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             //        }
 
             //        this._selectedGameFolder = dialog.FolderName;
-            //        this._lgcIntegrator.GameFolders.Add(this._selectedGameFolder);
+            //        this._lgcIntegratorService.GameFolders.Add(this._selectedGameFolder);
             //    }
 
             //    var detectModel = this._gameDetectorService.Load(this._selectedGameFolder);

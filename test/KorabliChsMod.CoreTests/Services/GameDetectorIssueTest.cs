@@ -17,10 +17,10 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         [TestMethod]
         public void GameDetectorTest()
         {
-            var issueFolders = Directory.GetDirectories("GameDetector");
+            var issueFolders = Directory.GetDirectories(Path.Combine("Services", "GameDetector"));
             foreach (var folder in issueFolders)
             {
-                var expected = JsonConvert.DeserializeObject<GameDetectModel>(File.ReadAllText(Path.Combine(folder, "expected.json")))!;
+                var expected = JsonConvert.DeserializeObject<GameDetectModel>(File.ReadAllText(Path.Combine(folder, "Expected.json")))!;
                 var gameDetector = new GameDetectorService();
                 var actual = gameDetector.Load(folder);
                 Assert.AreEqual(expected, actual);
