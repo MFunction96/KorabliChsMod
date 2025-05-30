@@ -22,10 +22,12 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         [TestInitialize]
         public void Setup()
         {
-            if (File.Exists(TestConfigPath))
-                File.Delete(TestConfigPath);
+            if (File.Exists(KorabliConfigServiceTests.TestConfigPath))
+            {
+                File.Delete(KorabliConfigServiceTests.TestConfigPath);
+            }
 
-            KorabliConfigModel.SetTestFolder(TestFolder);
+            KorabliConfigModel.SetTestFolder(KorabliConfigServiceTests.TestFolder);
         }
 
         [TestMethod]
@@ -41,7 +43,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
 
             Assert.IsNotNull(config);
             Assert.AreEqual(KorabliConfigService.CurrentVersion, config.Version);
-            Assert.IsTrue(File.Exists(TestConfigPath));
+            Assert.IsTrue(File.Exists(KorabliConfigServiceTests.TestConfigPath));
         }
 
         [TestMethod]
@@ -57,17 +59,19 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             var result = await configService.SaveAsync();
 
             Assert.IsTrue(result);
-            Assert.IsTrue(File.Exists(TestConfigPath));
+            Assert.IsTrue(File.Exists(KorabliConfigServiceTests.TestConfigPath));
 
-            var json = File.ReadAllText(TestConfigPath);
+            var json = File.ReadAllText(KorabliConfigServiceTests.TestConfigPath);
             Assert.IsTrue(json.Contains("TestGame"));
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            if (File.Exists(TestConfigPath))
-                File.Delete(TestConfigPath);
+            if (File.Exists(KorabliConfigServiceTests.TestConfigPath))
+            {
+                File.Delete(KorabliConfigServiceTests.TestConfigPath);
+            }
         }
     }
 

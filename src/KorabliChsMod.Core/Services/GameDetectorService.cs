@@ -8,7 +8,7 @@ using Xanadu.KorabliChsMod.Core.Models;
 namespace Xanadu.KorabliChsMod.Core.Services
 {
     /// <summary>
-    /// 
+    /// 游戏探查服务
     /// </summary>
     public sealed class GameDetectorService : IServiceEvent
     {
@@ -16,10 +16,10 @@ namespace Xanadu.KorabliChsMod.Core.Services
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
         /// <summary>
-        /// 
+        /// 加载游戏信息
         /// </summary>
-        /// <param name="gameFolder"></param>
-        /// <returns></returns>
+        /// <param name="gameFolder">游戏文件夹</param>
+        /// <returns>游戏探查模型</returns>
         public GameDetectModel? Load(string gameFolder)
         {
             try
@@ -48,7 +48,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 if (File.Exists(gameDetectModel.PreferencesXmlPath))
                 {
                     var preferenceLines = File.ReadLines(gameDetectModel.PreferencesXmlPath, Encoding.UTF8);
-                    var serverVersion = preferenceLines.FirstOrDefault(q => q.Contains("last_server_version"));
+                    var serverVersion = preferenceLines.FirstOrDefault(q => q.Contains("last_server_version", StringComparison.OrdinalIgnoreCase));
                     if (!string.IsNullOrEmpty(serverVersion))
                     {
                         gameDetectModel.ServerVersion = serverVersion.Replace("<last_server_version>", string.Empty).Replace("</last_server_version>", string.Empty).Trim('\t').Trim().Replace(",", ".");

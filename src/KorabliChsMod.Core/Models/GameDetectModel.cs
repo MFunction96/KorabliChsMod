@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using Newtonsoft.Json;
+
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 
 namespace Xanadu.KorabliChsMod.Core.Models
 {
@@ -10,22 +14,26 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// <summary>
         /// game_info.xml
         /// </summary>
-        public const string GameInfoXmlFileName = "game_info.xml";
+        [JsonIgnore]
+        private const string GameInfoXmlFileName = "game_info.xml";
 
         /// <summary>
         /// locale_config.xml
         /// </summary>
-        public const string LocaleInfoXmlFileName = "locale_config.xml";
+        [JsonIgnore]
+        private const string LocaleInfoXmlFileName = "locale_config.xml";
 
         /// <summary>
         /// metadata.xml
         /// </summary>
-        public const string MetaDataXmlFileName = "metadata.xml";
+        [JsonIgnore]
+        private const string MetaDataXmlFileName = "metadata.xml";
 
         /// <summary>
         /// preferences.xml
         /// </summary>
-        public const string PreferencesXmlFileName = "preferences.xml";
+        [JsonIgnore]
+        private const string PreferencesXmlFileName = "preferences.xml";
 
         /// <summary>
         /// 是否为战舰世界
@@ -35,11 +43,12 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// <summary>
         /// 游戏文件夹路径
         /// </summary>
-        public string Folder { get; set; } = string.Empty;
+        public required string Folder { get; init; }
 
         /// <summary>
         /// Mod文件夹路径
         /// </summary>
+        [JsonIgnore]
         public string ModFolder
             => string.IsNullOrEmpty(this.Folder)
                 ? string.Empty
@@ -50,21 +59,25 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// <summary>
         /// game_info.xml路径
         /// </summary>
+        [JsonIgnore]
         public string GameInfoXmlPath => string.IsNullOrEmpty(this.Folder) ? string.Empty : Path.Combine(this.Folder, GameDetectModel.GameInfoXmlFileName);
 
         /// <summary>
         /// metadata.xml路径
         /// </summary>
+        [JsonIgnore]
         public string MetaDataXmlPath => string.IsNullOrEmpty(this.Folder) ? string.Empty : Path.Combine(this.Folder, "game_metadata", GameDetectModel.MetaDataXmlFileName);
 
         /// <summary>
         /// preferences.xml路径
         /// </summary>
+        [JsonIgnore]
         public string PreferencesXmlPath => string.IsNullOrEmpty(this.Folder) ? string.Empty : Path.Combine(this.Folder, GameDetectModel.PreferencesXmlFileName);
 
         /// <summary>
         /// locale_config.xml路径
         /// </summary>
+        [JsonIgnore]
         public string LocaleInfoXmlPath => string.IsNullOrEmpty(this.Folder) ? string.Empty : Path.Combine(this.ModFolder, GameDetectModel.LocaleInfoXmlFileName);
 
         /// <summary>
@@ -85,7 +98,8 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// <summary>
         /// 编译版本号
         /// </summary>
-        public string BuildNumber
+        [JsonIgnore]
+        private string BuildNumber
             => string.IsNullOrEmpty(this.Folder)
                 ? string.Empty
                 : this.PreInstalled && !string.IsNullOrEmpty(this.ServerVersion)
@@ -111,5 +125,24 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// 汉化模组状态
         /// </summary>
         public bool ChsMod { get; set; } = false;
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            if (obj is not GameDetectModel other)
+            {
+                return false;
+            }
+
+            return string.Equals(this.Folder, other.Folder, StringComparison.OrdinalIgnoreCase) &&
+                   string.Equals(this.Server, other.Server, StringComparison.OrdinalIgnoreCase) &&
+                   string.Equals(this.ClientVersion, other.ClientVersion, StringComparison.OrdinalIgnoreCase) &&
+                   string.Equals(this.ServerVersion, other.ServerVersion, StringComparison.OrdinalIgnoreCase) &&
+                   this.IsWarship == other.IsWarship &&
+                   this.PreInstalled == other.PreInstalled &&
+                   this.IsTest == other.IsTest &&
+                   string.Equals(this.Locale, other.Locale, StringComparison.OrdinalIgnoreCase) &&
+                   this.ChsMod == other.ChsMod;
+        }
     }
 }

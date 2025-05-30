@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -29,7 +30,11 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// </summary>
         private static readonly IEnumerable<(string FilePath, bool IsDirectory)> RelativeFilePath =
         [
-            ("texts", true), ("locale_config.xml", false), ("LICENSE", false)
+            ("texts", true),
+            ("locale_config.xml", false),
+            ("LICENSE", false),
+            ("thanks.md", false),
+            ("change.log",false)
         ];
 
         /// <summary>
@@ -49,17 +54,17 @@ namespace Xanadu.KorabliChsMod.Core.Services
         public async Task<bool> Install(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
         {
             using var zipFile = fileCachePool.Register("Korabli_localization_chs.zip", "download");
-            var zipTempFolder = Path.Combine(zipFile.Pool.BasePath, Path.GetRandomFileName());
+            var extractFolder = Path.Combine(zipFile.Pool.BasePath, Path.GetRandomFileName());
             try
             {
-                var latest = await metadataService.GetLatestJToken(gameDetectModel.IsTest) ?? throw new DataException("获取元信息失败！请检查网络连接。");
-                var downloadFile = latest["zipball_url"]!.Value<string>();
+                var latest = await metadataService.GetLatestJToken(true, gameDetectModel.IsTest) ?? throw new DataException("获取元信息失败！请检查网络连接。");
+                var assets = (latest["assets"] as JArray)!;
+                var downloadFile = assets.First(q => q["name"]!.Value<string>() == "Korabli_localization_chs.zip")["browser_download_url"]!.Value<string>()!;
                 await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
                     zipFile.FullPath, 5, cancellationToken);
                 var installedFiles = await LoadInstalledFile();
                 using var zip = ZipFile.OpenRead(zipFile.FullPath);
-                var extractFolder = Path.Combine(zipTempFolder, zip.Entries[0].FullName.Split('/')[0]);
-                ZipFile.ExtractToDirectory(zipFile.FullPath, zipTempFolder, Encoding.UTF8, true);
+                ZipFile.ExtractToDirectory(zipFile.FullPath, extractFolder, Encoding.UTF8, true);
                 foreach (var item in ChsModService.RelativeFilePath)
                 {
                     if (item.IsDirectory)
@@ -69,14 +74,14 @@ namespace Xanadu.KorabliChsMod.Core.Services
                         var textFolderFiles = Directory.GetFiles(textFolder, "*.*", SearchOption.AllDirectories);
                         foreach (var textFolderFile in textFolderFiles)
                         {
-                            installedFiles[textFolderFile] = await _checksum.GetFileHashAsync(textFolderFile, BinaryFormatting.Base64, cancellationToken);
+                            installedFiles[textFolderFile] = await this._checksum.GetFileHashAsync(textFolderFile, BinaryFormatting.Base64, cancellationToken);
                         }
                     }
                     else
                     {
                         var file = Path.Combine(gameDetectModel.ModFolder, item.FilePath);
                         File.Copy(Path.Combine(extractFolder, item.FilePath), file, true);
-                        installedFiles[file] = await _checksum.GetFileHashAsync(file, BinaryFormatting.Base64, cancellationToken);
+                        installedFiles[file] = await this._checksum.GetFileHashAsync(file, BinaryFormatting.Base64, cancellationToken);
                     }
                 }
 
@@ -94,7 +99,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
             }
             finally
             {
-                IOExtension.DeleteDirectory(zipTempFolder);
+                IOExtension.DeleteDirectory(extractFolder);
             }
         }
 
@@ -102,7 +107,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// 加载已安装文件
         /// </summary>
         /// <returns>已安装文件目录</returns>
-        public static async Task<Dictionary<string, string>> LoadInstalledFile()
+        private static async Task<Dictionary<string, string>> LoadInstalledFile()
         {
             if (!File.Exists(KorabliConfigModel.InstalledFilePath))
             {
