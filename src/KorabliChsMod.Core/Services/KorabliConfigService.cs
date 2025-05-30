@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
@@ -11,8 +10,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
     /// <summary>
     /// 考拉比配置服务
     /// </summary>
-    /// <param name="serviceProvider">服务提供者</param>
-    public class KorabliConfigService(IServiceProvider serviceProvider) : IServiceEvent
+    public class KorabliConfigService : IServiceEvent
     {
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
@@ -67,11 +65,6 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     updateConfig = true;
                 }
 
-                if (this.CurrentConfig.Proxy.Enabled && !this.UpdateEngineProxy())
-                {
-                    updateConfig = true;
-                }
-
                 if (updateConfig)
                 {
                     this.SaveAsync().ConfigureAwait(false);
@@ -100,11 +93,6 @@ namespace Xanadu.KorabliChsMod.Core.Services
         {
             try
             {
-                if (this.CurrentConfig.Proxy.Enabled)
-                {
-                    _ = this.UpdateEngineProxy();
-                }
-
                 var json = JsonConvert.SerializeObject(this.CurrentConfig, Formatting.Indented);
                 if (!Directory.Exists(KorabliConfigModel.BaseFolder))
                 {
@@ -122,26 +110,6 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     Message = $"配置文件保存失败！\r\n{e.Message}"
                 });
 
-                return false;
-            }
-
-        }
-
-        /// <summary>
-        /// 更新网络引擎的代理设置
-        /// </summary>
-        /// <returns>成功为true，失败为false。</returns>
-        public bool UpdateEngineProxy()
-        {
-            try
-            {
-                using var scope = serviceProvider.CreateScope();
-                using var networkEngine = scope.ServiceProvider.GetRequiredService<NetworkEngine>();
-                return true;
-            }
-            catch (Exception)
-            {
-                this.CurrentConfig.Proxy.Enabled = false;
                 return false;
             }
 

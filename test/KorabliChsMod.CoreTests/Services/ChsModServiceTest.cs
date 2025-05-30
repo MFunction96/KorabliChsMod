@@ -1,12 +1,7 @@
-﻿using Moq;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
-using System.IO.Compression;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Models;
 using Xanadu.KorabliChsMod.Core.Services;
@@ -28,9 +23,9 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             var services = new ServiceCollection();
             services.AddSingleton<KorabliConfigService>();
             services.AddSingleton<FileCachePool>();
-            services.AddScoped<NetworkEngine>();
-            services.AddScoped<MetadataService>();
-            services.AddScoped<ChsModService>();
+            services.AddTransient<NetworkEngine>();
+            services.AddTransient<MetadataService>();
+            services.AddTransient<ChsModService>();
             this._serviceProvider = services.BuildServiceProvider();
         }
 

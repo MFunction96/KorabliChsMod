@@ -8,7 +8,7 @@ using Xanadu.KorabliChsMod.Core.Models;
 namespace Xanadu.KorabliChsMod.Core.Services
 {
     /// <summary>
-    /// 游戏探查服务
+    /// 游戏探查服务，Transient 生命周期
     /// </summary>
     public sealed class GameDetectorService : IServiceEvent
     {

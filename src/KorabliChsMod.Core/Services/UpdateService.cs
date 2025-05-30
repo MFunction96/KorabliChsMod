@@ -11,7 +11,7 @@ using Xanadu.Skidbladnir.IO.File.Cache;
 namespace Xanadu.KorabliChsMod.Core.Services
 {
     /// <summary>
-    /// 更新助手实现
+    /// 更新服务，Singleton 生命周期
     /// </summary>
     /// <param name="korabliConfigService">考拉比配置中心</param>
     /// <param name="networkEngine">网络引擎</param>
@@ -30,9 +30,9 @@ namespace Xanadu.KorabliChsMod.Core.Services
         private readonly Dictionary<MirrorList, JToken> _latestJToken = [];
 
         /// <summary>
-        /// 
+        /// 最新版本版本号
         /// </summary>
-        public Version? LatestVersion { get; private set; }
+        private Version? LatestVersion { get; set; }
 
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
@@ -73,11 +73,10 @@ namespace Xanadu.KorabliChsMod.Core.Services
         }
 
         /// <summary>
-        /// 
+        /// 更新考拉比
         /// </summary>
-        /// <param name="mirrorList"></param>
-        /// <returns></returns>
-        public async Task<bool> Update(MirrorList mirrorList)
+        /// <returns>true表示成功，false表示失败。</returns>
+        public async Task<bool> Update()
         {
             var downloadFolder = Path.Combine(fileCachePool.BasePath, "download");
             if (!Directory.Exists(downloadFolder))
@@ -88,7 +87,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
             var exeFile = Path.Combine(fileCachePool.BasePath, "download", "KorabliChsModInstaller.exe");
             try
             {
-                var latest = this._latestJToken.TryGetValue(mirrorList, out var jToken)
+                var latest = this._latestJToken.TryGetValue(korabliConfigService.CurrentConfig.Mirror, out var jToken)
                     ? jToken
                     : await metadataService.GetLatestJToken(false);
                 var assets = latest!["assets"]! as JArray;
@@ -108,6 +107,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 };
 
                 Process.Start(processInfo);
+                Environment.Exit(0);
                 return true;
             }
             catch (Exception e)

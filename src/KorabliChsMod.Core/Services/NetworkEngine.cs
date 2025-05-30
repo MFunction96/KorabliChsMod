@@ -9,7 +9,7 @@ using Xanadu.KorabliChsMod.Core.Extensions;
 namespace Xanadu.KorabliChsMod.Core.Services
 {
     /// <summary>
-    /// 网络引擎
+    /// 网络引擎，Transient 生命周期
     /// </summary>
     public sealed class NetworkEngine : IServiceEvent, IDisposable
     {
@@ -56,8 +56,12 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     Exception = e,
                     Message = "代理设置错误，已禁用代理。"
                 });
-
-                throw;
+                
+                lock (korabliConfigService.CurrentConfig.Proxy)
+                {
+                    korabliConfigService.CurrentConfig.Proxy.Enabled = false;
+                    korabliConfigService.SaveAsync().ConfigureAwait(false);
+                }
             }
 
             this._httpClient = new HttpClient(handler, true)
@@ -184,6 +188,14 @@ namespace Xanadu.KorabliChsMod.Core.Services
 
                 throw;
             }
+
+        }
+
+        /// <summary>
+        /// 空方法
+        /// </summary>
+        public void Dry()
+        {
 
         }
 

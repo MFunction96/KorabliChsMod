@@ -1,13 +1,14 @@
-﻿<Application x:Class="Xanadu.KorabliChsMod.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:hc="https://handyorg.github.io/handycontrol"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Application.Resources>
+﻿<dryIoc:PrismApplication x:Class="Xanadu.KorabliChsMod.App"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:hc="https://handyorg.github.io/handycontrol"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:dryIoc="http://prismlibrary.com/">
+    <dryIoc:PrismApplication.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <hc:ThemeResources/>
                 <hc:Theme/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </Application.Resources>
-</Application>
+    </dryIoc:PrismApplication.Resources>
+</dryIoc:PrismApplication>

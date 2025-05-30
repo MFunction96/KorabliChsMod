@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Xanadu.KorabliChsMod.Core.Models;
 using Xanadu.KorabliChsMod.Core.Services;
 
@@ -33,12 +34,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         [TestMethod]
         public void Load_WhenConfigDoesNotExist_ShouldUseDefaultConfig()
         {
-            var services = new ServiceCollection();
-            services.AddScoped<NetworkEngine>();
-            services.AddSingleton<KorabliConfigService>();
-            var provider = services.BuildServiceProvider();
-            var configService = provider.GetRequiredService<KorabliConfigService>();
-
+            var configService = new KorabliConfigService();
             var config = configService.Load();
 
             Assert.IsNotNull(config);
@@ -49,12 +45,13 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         [TestMethod]
         public async Task SaveAsync_ShouldWriteFile()
         {
-            var services = new ServiceCollection();
-            services.AddScoped<NetworkEngine>();
-            services.AddSingleton<KorabliConfigService>();
-            var provider = services.BuildServiceProvider();
-            var configService = provider.GetRequiredService<KorabliConfigService>();
-            configService.CurrentConfig.GameFolder = "TestGame";
+            var configService = new KorabliConfigService
+            {
+                CurrentConfig =
+                {
+                    GameFolder = "TestGame"
+                }
+            };
 
             var result = await configService.SaveAsync();
 
@@ -63,6 +60,30 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
 
             var json = File.ReadAllText(KorabliConfigServiceTests.TestConfigPath);
             Assert.IsTrue(json.Contains("TestGame"));
+        }
+
+        [TestMethod]
+        public async Task ErrorProxy_ShouldDisableProxy()
+        {
+            var configService = new KorabliConfigService
+            {
+                CurrentConfig =
+                {
+                    GameFolder = "TestGame",
+                    Proxy = new()
+                    {
+                        Enabled = true,
+                        Address = "invalid:proxy:address", // Invalid proxy address to trigger error
+                    }
+                }
+            };
+
+            var networkEngine = new NetworkEngine(configService);
+            networkEngine.Dry();
+            Assert.IsTrue(File.Exists(KorabliConfigServiceTests.TestConfigPath));
+
+            var model = JsonConvert.DeserializeObject<KorabliConfigModel>(await File.ReadAllTextAsync(KorabliConfigServiceTests.TestConfigPath, System.Text.Encoding.UTF8))!;
+            Assert.IsFalse(model.Proxy.Enabled, "Proxy should be disabled due to error.");
         }
 
         [TestCleanup]

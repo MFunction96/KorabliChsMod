@@ -20,7 +20,7 @@ namespace Xanadu.Test.KorabliChsMod.Services
         {
             var service = new ServiceCollection();
             service.AddSingleton<LgcIntegratorService>();
-            service.AddScoped<GameDetectorService>();
+            service.AddTransient<GameDetectorService>();
             var serviceProvider = service.BuildServiceProvider();
             var lgcIntegrator = serviceProvider.GetRequiredService<LgcIntegratorService>();
             var lgcIntegratorModel = lgcIntegrator.Load();

@@ -18,7 +18,7 @@ using Xanadu.Skidbladnir.IO.File.Cache;
 namespace Xanadu.KorabliChsMod.Core.Services
 {
     /// <summary>
-    /// 汉化安装实现
+    /// 汉化安装实现，Transient 生命周期
     /// </summary>
     /// <param name="networkEngine">网络引擎</param>
     /// <param name="fileCachePool">文件缓存</param>

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,8 +13,8 @@ namespace Xanadu.KorabliChsMod.Services
     /// <summary>
     /// Lesta Game Center探查器实现
     /// </summary>
-    /// <param name="serviceProvider"></param>
-    public class LgcIntegratorService(IServiceProvider serviceProvider) : IServiceEvent
+    /// <param name="gameDetectorService"></param>
+    public class LgcIntegratorService(GameDetectorService gameDetectorService) : IServiceEvent
     {
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
@@ -96,8 +95,6 @@ namespace Xanadu.KorabliChsMod.Services
                     return lgcIntegratorModel;
                 }
 
-                using var scope = serviceProvider.CreateScope();
-                var gameDetectorService = scope.ServiceProvider.GetRequiredService<GameDetectorService>();
                 foreach (XmlNode game in games)
                 {
                     var gameFolder = game["working_dir"]?.InnerText;
@@ -107,7 +104,7 @@ namespace Xanadu.KorabliChsMod.Services
                     }
 
                     var gameDetectModel = gameDetectorService.Load(gameFolder);
-                    if (gameDetectModel is not null)
+                    if (gameDetectModel is not null && gameDetectModel.IsWarship)
                     {
                         lgcIntegratorModel.GameDetectModels.Add(gameDetectModel);
                     }

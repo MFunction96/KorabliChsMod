@@ -9,7 +9,7 @@ using Xanadu.KorabliChsMod.Core.Models;
 namespace Xanadu.KorabliChsMod.Core.Services
 {
     /// <summary>
-    /// 元信息获取实现
+    /// 元信息获取实现，Transient 生命周期
     /// </summary>
     /// <param name="korabliConfigService"></param>
     /// <param name="networkEngine"></param>
