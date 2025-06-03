@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -7,11 +6,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Xanadu.KorabliChsMod.Core;
-using Xanadu.KorabliChsMod.Core.Config;
-using Xanadu.KorabliChsMod.DI;
+using Xanadu.KorabliChsMod.Core.Models;
+using Xanadu.KorabliChsMod.Core.Services;
+using Xanadu.KorabliChsMod.Models;
+using Xanadu.KorabliChsMod.Services;
 using Xanadu.Skidbladnir.IO.File;
 
 namespace Xanadu.KorabliChsMod.ViewModels
@@ -21,11 +23,6 @@ namespace Xanadu.KorabliChsMod.ViewModels
     /// </summary>
     public class MainWindowViewModel : BindableBase
     {
-        /// <summary>
-        /// 控制信息常量
-        /// </summary>
-        private const string ManualSelectionHint = "手动选择客户端位置";
-
         /// <summary>
         /// 控制信息常量
         /// </summary>
@@ -41,37 +38,22 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// LGC探查器
         /// </summary>
-        private readonly ILgcIntegrator _lgcIntegrator;
-
-        /// <summary>
-        /// 游戏探查器
-        /// </summary>
-        private readonly IGameDetector _gameDetector;
-
-        /// <summary>
-        /// 网络引擎
-        /// </summary>
-        private readonly INetworkEngine _networkEngine;
+        private readonly LgcIntegratorService _lgcIntegratorService;
 
         /// <summary>
         /// 考拉比配置中心
         /// </summary>
-        private readonly IKorabliFileHub _korabliFileHub;
+        private readonly KorabliConfigService _korabliConfigService;
 
         /// <summary>
-        /// 更新助手
+        /// 升级服务
         /// </summary>
-        private readonly IUpdateHelper _updateHelper;
+        private readonly UpdateService _updateService;
 
         /// <summary>
-        /// 汉化安装器
+        /// 汉化Mod服务
         /// </summary>
-        private readonly IChsModInstaller _chsModInstaller;
-
-        /// <summary>
-        /// 元数据获取器
-        /// </summary>
-        private readonly IMetadataFetcher _metadataFetcher;
+        private readonly ChsModService _chsModService;
 
         #endregion
 
@@ -85,7 +67,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 游戏文件夹
         /// </summary>
-        private readonly HashSet<string> _gameFolders;
+        private HashSet<string> _gameFolders = new();
 
         /// <summary>
         /// 选中的游戏文件夹
@@ -163,13 +145,18 @@ namespace Xanadu.KorabliChsMod.ViewModels
         public string SelectedGameFolder
         {
             get { return this._selectedGameFolder; }
-            set { SetProperty(ref this._selectedGameFolder, value); }
+            set
+            {
+                this._selectedGameDetectModel = this._lgcIntegratorModel.GameDetectModels.First(x => x.Folder == value);
+                this._korabliConfigService.CurrentConfig.GameFolder = value;
+                SetProperty(ref this._selectedGameFolder, value);
+            }
         }
 
         /// <summary>
         /// 绑定游戏服务器
         /// </summary>
-        public string GameServer => string.IsNullOrEmpty(this._gameDetector.Server) ? MainWindowViewModel.SelectedGameFolderHint : this._gameDetector.Server;
+        public string GameServer => string.IsNullOrEmpty(this._selectedGameDetectModel?.Server) ? MainWindowViewModel.SelectedGameFolderHint : this._selectedGameDetectModel.Server;
 
         /// <summary>
         /// 绑定游戏版本
@@ -178,12 +165,14 @@ namespace Xanadu.KorabliChsMod.ViewModels
         {
             get
             {
-                if (string.IsNullOrEmpty(this._gameDetector.ClientVersion))
+                if (string.IsNullOrEmpty(this._selectedGameDetectModel?.ClientVersion))
                 {
                     return MainWindowViewModel.SelectedGameFolderHint;
                 }
 
-                return this._gameDetector.PreInstalled && !string.IsNullOrEmpty(this._gameDetector.ServerVersion) ? this._gameDetector.ServerVersion : this._gameDetector.ClientVersion;
+                return this._selectedGameDetectModel.PreInstalled && !string.IsNullOrEmpty(this._selectedGameDetectModel.ServerVersion)
+                    ? this._selectedGameDetectModel.ServerVersion
+                    : this._selectedGameDetectModel.ClientVersion;
             }
         }
 
@@ -194,12 +183,12 @@ namespace Xanadu.KorabliChsMod.ViewModels
         {
             get
             {
-                if (string.IsNullOrEmpty(this._gameDetector.Server))
+                if (string.IsNullOrEmpty(this._selectedGameDetectModel?.Server))
                 {
                     return MainWindowViewModel.SelectedGameFolderHint;
                 }
 
-                return this._gameDetector.IsTest ? "测试服" : "正式服";
+                return this._selectedGameDetectModel.IsTest ? "测试服" : "正式服";
             }
         }
 
@@ -210,12 +199,12 @@ namespace Xanadu.KorabliChsMod.ViewModels
         {
             get
             {
-                if (string.IsNullOrEmpty(this._gameDetector.Server))
+                if (string.IsNullOrEmpty(this._selectedGameDetectModel?.Server))
                 {
                     return MainWindowViewModel.SelectedGameFolderHint;
                 }
 
-                return this._gameDetector.ChsMod ? "已安装" : "未安装";
+                return this._selectedGameDetectModel.ChsMod ? "已安装" : "未安装";
             }
         }
 
@@ -237,7 +226,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             set { SetProperty(ref this._message, value); }
         }
 
-        public bool RemoveEnabled => !this._gameDetector.IsTest && this._coreEnabled;
+        public bool RemoveEnabled => !(this._selectedGameDetectModel?.IsTest ?? false) && this._coreEnabled;
 
         #endregion
 
@@ -256,7 +245,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             get { return this._selectedUpdateMirror; }
             set
             {
-                this._korabliFileHub.Mirror = Enum.Parse<MirrorList>(value);
+                this._korabliConfigService.CurrentConfig.Mirror = Enum.Parse<MirrorList>(value);
                 SetProperty(ref this._selectedUpdateMirror, value);
             }
         }
@@ -269,7 +258,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             get { return this._autoUpdate; }
             set
             {
-                this._korabliFileHub.AutoUpdate = value;
+                this._korabliConfigService.CurrentConfig.AutoUpdate = value;
                 SetProperty(ref this._autoUpdate, value);
             }
         }
@@ -282,7 +271,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             get { return this._proxyEnabled; }
             set
             {
-                this._korabliFileHub.Proxy.Enabled = value;
+                this._korabliConfigService.CurrentConfig.Proxy.Enabled = value;
                 SetProperty(ref this._proxyEnabled, value);
             }
         }
@@ -295,7 +284,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             get { return this._proxyAddress; }
             set
             {
-                this._korabliFileHub.Proxy.Address = value;
+                this._korabliConfigService.CurrentConfig.Proxy.Address = value;
                 SetProperty(ref this._proxyAddress, value);
             }
         }
@@ -308,7 +297,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             get { return this._proxyUsername; }
             set
             {
-                this._korabliFileHub.Proxy.Username = value;
+                this._korabliConfigService.CurrentConfig.Proxy.Username = value;
                 SetProperty(ref this._proxyUsername, value);
             }
         }
@@ -321,7 +310,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             get { return this._proxyPassword; }
             set
             {
-                this._korabliFileHub.Proxy.Password = value;
+                this._korabliConfigService.CurrentConfig.Proxy.Password = value;
                 SetProperty(ref this._proxyPassword, value);
             }
         }
@@ -348,36 +337,40 @@ namespace Xanadu.KorabliChsMod.ViewModels
 
         #endregion
 
+        #region Models
+
+        /// <summary>
+        /// LGC集成模型
+        /// </summary>
+        private LgcIntegratorModel _lgcIntegratorModel = new() { Folder = string.Empty };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private GameDetectModel? _selectedGameDetectModel;
+
+        #endregion
 
         /// <summary>
         /// 构造视图模型
         /// </summary>
         /// <param name="logger">日志</param>
         /// <param name="lgcIntegrator">LGC探查器</param>
-        /// <param name="gameDetector">游戏探查器</param>
-        /// <param name="networkEngine">网络引擎</param>
-        /// <param name="korabliFileHub">考拉比配置中心</param>
-        /// <param name="updateHelper">更新助手</param>
-        /// <param name="modInstaller">Mod安装器</param>
-        /// <param name="fetchMetadata">元信息获取器</param>
+        /// <param name="korabliConfigService">LGC探查器</param>
+        /// <param name="updateService">服务提供</param>
+        /// <param name="chsModService">汉化安装服务</param>
         public MainWindowViewModel(
             Lazy<ILogger<MainWindowViewModel>> logger,
-            Lazy<ILgcIntegrator> lgcIntegrator,
-            Lazy<IGameDetector> gameDetector,
-            Lazy<INetworkEngine> networkEngine,
-            Lazy<IKorabliFileHub> korabliFileHub,
-            Lazy<IUpdateHelper> updateHelper,
-            Lazy<IChsModInstaller> modInstaller,
-            Lazy<IMetadataFetcher> fetchMetadata)
+            Lazy<LgcIntegratorService> lgcIntegrator,
+            Lazy<KorabliConfigService> korabliConfigService,
+            Lazy<UpdateService> updateService,
+            Lazy<ChsModService> chsModService)
         {
             this._logger = logger.Value;
-            this._lgcIntegrator = lgcIntegrator.Value;
-            this._gameDetector = gameDetector.Value;
-            this._networkEngine = networkEngine.Value;
-            this._korabliFileHub = korabliFileHub.Value;
-            this._updateHelper = updateHelper.Value;
-            this._chsModInstaller = modInstaller.Value;
-            this._metadataFetcher = fetchMetadata.Value;
+            this._lgcIntegratorService = lgcIntegrator.Value;
+            this._korabliConfigService = korabliConfigService.Value;
+            this._updateService = updateService.Value;
+            this._chsModService = chsModService.Value;
 
             var fullVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion!;
             _ = Version.TryParse(fullVersion.Split('+')[0], out var version);
@@ -388,37 +381,29 @@ namespace Xanadu.KorabliChsMod.ViewModels
 
             this.AppVersion = version ?? Version.Parse("0.0.0");
             this.Message += $"考拉比汉社厂 v{this.AppVersion}\r\n";
-            this._selectedUpdateMirror = this._korabliFileHub.Mirror.ToString();
-            this._lgcIntegrator.ServiceEvent += this.SyncServiceMessage;
-            this._networkEngine.ServiceEvent += this.SyncServiceMessage;
-            this._korabliFileHub.ServiceEvent += this.SyncServiceMessage;
-            this._updateHelper.ServiceEvent += this.SyncServiceMessage;
-            this._gameDetector.ServiceEvent += this.SyncServiceMessage;
-            this._chsModInstaller.ServiceEvent += this.SyncServiceMessage;
-            this._metadataFetcher.ServiceEvent += this.SyncServiceMessage;
+            this._selectedUpdateMirror = this._korabliConfigService.CurrentConfig.Mirror.ToString();
+            this._lgcIntegratorService.ServiceEvent += this.SyncServiceMessage;
+            this._korabliConfigService.ServiceEvent += this.SyncServiceMessage;
+            this._updateService.ServiceEvent += this.SyncServiceMessage;
 
-            this._lgcIntegrator.Load();
-            this._korabliFileHub.Load();
-            this._networkEngine.Init();
+            _ = this._korabliConfigService.Load();
 
-            this._gameFolders = [];
-            this._autoUpdate = this._korabliFileHub.AutoUpdate;
-            this._proxyEnabled = this._korabliFileHub.Proxy.Enabled;
-            this._proxyAddress = this._korabliFileHub.Proxy.Address;
-            this._proxyUsername = this._korabliFileHub.Proxy.Username;
-            this._proxyPassword = this._korabliFileHub.Proxy.Password;
-
+            this._autoUpdate = this._korabliConfigService.CurrentConfig.AutoUpdate;
+            this._proxyEnabled = this._korabliConfigService.CurrentConfig.Proxy.Enabled;
+            this._proxyAddress = this._korabliConfigService.CurrentConfig.Proxy.Address;
+            this._proxyUsername = this._korabliConfigService.CurrentConfig.Proxy.Username;
+            this._proxyPassword = this._korabliConfigService.CurrentConfig.Proxy.Password;
             var thread = new Thread(async void () =>
             {
                 try
                 {
-                    this.UpdateEnabled = await this._updateHelper.Check(this._korabliFileHub.Mirror, this.AppVersion);
-                    if (!this._updateEnabled || !this._korabliFileHub.AutoUpdate)
+                    this.UpdateEnabled = await this._updateService.Check(this.AppVersion);
+                    if (!this._updateEnabled || !this._korabliConfigService.CurrentConfig.AutoUpdate)
                     {
                         return;
                     }
 
-                    var result = await this._updateHelper.Update(this._korabliFileHub.Mirror);
+                    var result = await this._updateService.Update();
                     if (!result)
                     {
                         this.SyncServiceMessage(this, new ServiceEventArg
@@ -473,37 +458,16 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 重载功能
         /// </summary>
-        public async void Reload()
+        private void Reload()
         {
             try
             {
-                this._gameFolders.Clear();
-                this._gameDetector.Clear();
-                this._selectedUpdateMirror = this._korabliFileHub.Mirror.ToString();
-                foreach (var gameFolder in this._lgcIntegrator.GameFolders)
-                {
-                    var result = this._gameDetector.Load(gameFolder);
-                    if (result && this._gameDetector.IsWarship)
-                    {
-                        this._gameFolders.Add(gameFolder);
-                    }
-
-                    this._gameDetector.Clear();
-                }
-                this._gameFolders.Add(MainWindowViewModel.ManualSelectionHint);
-
-                this._selectedGameFolder = this._gameFolders.Contains(this._korabliFileHub.GameFolder) ? this._korabliFileHub.GameFolder : string.Empty;
-                if (!string.IsNullOrEmpty(this._selectedGameFolder))
-                {
-                    var result = this._gameDetector.Load(this._selectedGameFolder);
-                    if (!result)
-                    {
-                        this._selectedGameFolder = string.Empty;
-                        this._korabliFileHub.GameFolder = string.Empty;
-                        await this._korabliFileHub.SaveAsync();
-                    }
-                }
-
+                this._lgcIntegratorModel = this._lgcIntegratorService.Load()!;
+                this._gameFolders = this._lgcIntegratorModel.GameDetectModels.Select(x => x.Folder)
+                    .Where(x => !string.IsNullOrEmpty(x)).Distinct().ToHashSet();
+                this._selectedUpdateMirror = this._korabliConfigService.CurrentConfig.Mirror.ToString();
+                this._selectedGameDetectModel = this._lgcIntegratorModel.GameDetectModels.FirstOrDefault(x => x.Folder == this._korabliConfigService.CurrentConfig.GameFolder);
+                this._selectedGameFolder = this._selectedGameDetectModel?.Folder ?? string.Empty;
                 this.RefreshViews();
             }
             catch (Exception e)
@@ -560,11 +524,6 @@ namespace Xanadu.KorabliChsMod.ViewModels
                 return;
             }
 
-            if (string.Compare(this._selectedGameFolder, MainWindowViewModel.ManualSelectionHint,
-                    StringComparison.OrdinalIgnoreCase) == 0)
-            {
-                return;
-            }
             if (Directory.Exists(this.SelectedGameFolder))
             {
                 _ = Process.Start(this.SelectedGameFolder);
@@ -578,44 +537,8 @@ namespace Xanadu.KorabliChsMod.ViewModels
         {
             try
             {
-                if (string.IsNullOrEmpty(this._selectedGameFolder))
-                {
-                    return;
-                }
-
-                if (string.Compare(this.SelectedGameFolder, MainWindowViewModel.ManualSelectionHint,
-                        StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    var dialog = new OpenFolderDialog
-                    {
-                        Multiselect = false,
-                        Title = "选择窝窝屎本体位置"
-                    };
-
-                    var result = dialog.ShowDialog();
-                    if (!(result ?? false))
-                    {
-                        this._selectedGameFolder = string.Empty;
-                        RaisePropertyChanged(nameof(this.SelectedGameFolder));
-                        return;
-                    }
-
-                    this._selectedGameFolder = dialog.FolderName;
-                    this._lgcIntegrator.GameFolders.Add(this._selectedGameFolder);
-                }
-
-                var loadResult = this._gameDetector.Load(this._selectedGameFolder);
-                if (!loadResult)
-                {
-                    this._selectedGameFolder = string.Empty;
-                    this._korabliFileHub.GameFolder = string.Empty;
-                }
-                else
-                {
-                    this._korabliFileHub.GameFolder = this._selectedGameFolder;
-                }
-
-                await this._korabliFileHub.SaveAsync();
+                this._korabliConfigService.CurrentConfig.GameFolder = this._selectedGameFolder;
+                _ = await this._korabliConfigService.SaveAsync();
                 this.RefreshViews();
             }
             catch (Exception e)
@@ -637,7 +560,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             try
             {
                 this.CoreEnabled = false;
-                var result = await this._chsModInstaller.Install(this._korabliFileHub.Mirror);
+                var result = await this._chsModService.Install(this._selectedGameDetectModel!);
                 if (!result)
                 {
                     this.SyncServiceMessage(this, new ServiceEventArg
@@ -677,7 +600,11 @@ namespace Xanadu.KorabliChsMod.ViewModels
             try
             {
                 this.CoreEnabled = false;
-                IOExtension.DeleteDirectory(this._gameDetector.ModFolder);
+                if (!string.IsNullOrEmpty(this._selectedGameDetectModel?.ModFolder))
+                {
+                    IOExtension.DeleteDirectory(this._selectedGameDetectModel.ModFolder);
+                }
+
                 this.Reload();
                 this.SyncServiceMessage(this, new ServiceEventArg
                 {
@@ -708,22 +635,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         {
             try
             {
-                if (this._proxyEnabled)
-                {
-                    var proxy = this._korabliFileHub.UpdateEngineProxy(true);
-                    if (!proxy)
-                    {
-                        this.SyncServiceMessage(this, new ServiceEventArg
-                        {
-                            Message = "代理设置失败！"
-                        });
-
-                        return;
-                    }
-
-                }
-
-                var result = await this._korabliFileHub.SaveAsync();
+                var result = await this._korabliConfigService.SaveAsync();
                 if (!result)
                 {
                     this.SyncServiceMessage(this, new ServiceEventArg
@@ -762,7 +674,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             try
             {
                 this._updateEnabled = false;
-                var result = await this._updateHelper.Update(this._korabliFileHub.Mirror);
+                var result = await this._updateService.Update();
                 if (!result)
                 {
                     this.SyncServiceMessage(this, new ServiceEventArg

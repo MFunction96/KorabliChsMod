@@ -4,4 +4,7 @@
 		<RootNamespace>Xanadu.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<AssemblyName>$(MSBuildProjectName.Replace(" ", "_"))</AssemblyName>
 	</PropertyGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="$(AssemblyName)Tests" />
+	</ItemGroup>
 </Project>

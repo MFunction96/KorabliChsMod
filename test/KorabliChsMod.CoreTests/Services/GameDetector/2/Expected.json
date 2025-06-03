@@ -1,0 +1,11 @@
+{
+  "Folder": "Services\\GameDetector\\2",
+  "Server": "RU",
+  "ServerVersion": "13.11.0.8796161",
+  "ClientVersion": "25.1.0.0.8798761",
+  "PreInstalled": true,
+  "IsWarship": true,
+  "IsTest": false,
+  "Locale": "RU",
+  "ChsMod": false
+}

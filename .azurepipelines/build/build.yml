@@ -14,11 +14,14 @@ steps:
     useGlobalJson: true
     performMultiLevelLookup: true
   
-- task: PowerShell@2
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
   inputs:
-    targetType: 'inline'
-    script: 'dotnet restore'
-    pwsh: true
+    command: restore
+    projects: '**/*.csproj'
+    feedsToUse: config
+    nugetConfigPath: nuget.config 
+    noCache: true
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build $(buildConfiguration)'
@@ -31,7 +34,7 @@ steps:
   inputs:
     command: test
     projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration)'
 
 - task: PublishPipelineArtifact@1
   inputs:
