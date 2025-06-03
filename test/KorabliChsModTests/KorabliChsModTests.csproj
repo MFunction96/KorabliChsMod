@@ -5,12 +5,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\KorabliChsMod\KorabliChsMod.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="LgcIntegrator\1\Expected.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="LgcIntegrator\1\preferences.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>

@@ -134,10 +134,10 @@
                         <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 5 0 0">
                             <TextBlock Text="项目地址"/>
                             <TextBlock Margin="40 0 0 0">
-                                <Hyperlink NavigateUri="https://dev.azure.com/XanaCN/Lyoko/_git/KorabliChsMod" Click="HyperLink_OnClick">(主)Azure DevOps</Hyperlink>
+                                <Hyperlink NavigateUri="https://dev.azure.com/XanaCN/Lyoko/_git/KorabliChsMod" Click="HyperLink_OnClick">Azure DevOps</Hyperlink>
                             </TextBlock>
                             <TextBlock Margin="10 0 0 0">
-                                <Hyperlink NavigateUri="https://github.com/MFunction96/KorabliChsMod" Click="HyperLink_OnClick">(镜像)Github</Hyperlink>
+                                <Hyperlink NavigateUri="https://github.com/MFunction96/KorabliChsMod" Click="HyperLink_OnClick">Github(镜像)</Hyperlink>
                             </TextBlock>
                         </hc:SimpleStackPanel>
                         <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 30 0 0">
@@ -153,7 +153,7 @@
                             </TextBlock>
                         </hc:SimpleStackPanel>
                         <hc:SimpleStackPanel Orientation="Vertical" Margin="0 30 0 0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="感谢及招募站（名称先后）" HorizontalAlignment="Center"/>
+                            <TextBlock Text="感谢及招募站（字母顺序）" HorizontalAlignment="Center"/>
                             <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 5 0 0" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock Margin="0 0 0 0" HorizontalAlignment="Center">
                                     <Hyperlink NavigateUri="https://flot.ru/DDF_FantasyV" Click="HyperLink_OnClick">DDF_FantasyV</Hyperlink>
@@ -167,6 +167,9 @@
                             </hc:SimpleStackPanel>
                             <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 5 0 0" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock Margin="0 0 0 0" HorizontalAlignment="Center">
+                                    <Hyperlink NavigateUri="https://flot.ru/Mochidzuki" Click="HyperLink_OnClick">Mochidzuki</Hyperlink>
+                                </TextBlock>
+                                <TextBlock Margin="10 0 0 0" HorizontalAlignment="Center">
                                     <Hyperlink NavigateUri="https://flot.ru/nian__gao233" Click="HyperLink_OnClick">nian__gao233</Hyperlink>
                                 </TextBlock>
                                 <TextBlock Margin="10 0 0 0" HorizontalAlignment="Center">
@@ -179,7 +182,7 @@
             </TabControl>
             <Border Style="{StaticResource BorderRegion}" Height="140">
                 <hc:ScrollViewer Name="SvMessage" IsInertiaEnabled="True" >
-                    <TextBox Padding="5" Text="{Binding Message}" IsReadOnly="True" TextChanged="TbMessage_TextChanged"/>
+                    <TextBox Padding="5" Text="{Binding Message}" IsReadOnly="True" TextChanged="TbMessage_TextChanged" VerticalContentAlignment="Top"/>
                 </hc:ScrollViewer>
             </Border>
         </hc:SimpleStackPanel>
