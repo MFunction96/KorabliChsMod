@@ -11,10 +11,12 @@ namespace Xanadu.KorabliChsMod.Core.Services
     /// <summary>
     /// 网络引擎，Transient 生命周期
     /// </summary>
-    public sealed class NetworkEngine : IServiceEvent, IDisposable
+    public sealed class NetworkEngine : IDisposable
     {
-        /// <inheritdoc />
-        public event EventHandler<ServiceEventArg>? ServiceEvent;
+        /// <summary>
+        /// 
+        /// </summary>
+        public static event EventHandler<ServiceEventArg>? ServiceEvent;
 
         /// <summary>
         /// 是否析构标记
@@ -51,7 +53,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
             }
             catch (Exception e)
             {
-                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                NetworkEngine.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Exception = e,
                     Message = "代理设置错误，已禁用代理。"
@@ -89,19 +91,19 @@ namespace Xanadu.KorabliChsMod.Core.Services
         {
             if (retry == 0)
             {
-                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                NetworkEngine.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Message = $"开始单次请求：{request.RequestUri?.Host}"
                 });
 
                 var res = await this._httpClient.SendAsync(request, cancellationToken);
 
-                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                NetworkEngine.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Message = $"{res.StatusCode} -> {request.RequestUri?.Host}"
                 });
 
-                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                NetworkEngine.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Message = $"结束单次请求：{res.StatusCode} {request.RequestUri?.Host}"
                 });
@@ -115,19 +117,19 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 try
                 {
                     var req = await request.CloneAsync();
-                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    NetworkEngine.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
                         Message = $"开始请求：{req.RequestUri?.Host}"
                     });
 
                     response = await this._httpClient.SendAsync(req, cancellationToken);
                     response.EnsureSuccessStatusCode();
-                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    NetworkEngine.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
                         Message = $"{response.StatusCode} -> {req.RequestUri?.Host}"
                     });
 
-                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    NetworkEngine.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
                         Message = $"结束请求：{response.StatusCode} {req.RequestUri?.Host}"
                     });
@@ -136,7 +138,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 }
                 catch (Exception e)
                 {
-                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    NetworkEngine.ServiceEvent?.Invoke(this, new ServiceEventArg
                     {
                         Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.Host}",
                         Exception = e
@@ -146,7 +148,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 await Task.Delay(1000, cancellationToken);
             }
 
-            this.ServiceEvent?.Invoke(this, new ServiceEventArg
+            NetworkEngine.ServiceEvent?.Invoke(this, new ServiceEventArg
             {
                 Exception = new HttpRequestException($"请求失败 {response?.StatusCode} {request.RequestUri?.Host}"),
             });
@@ -180,7 +182,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
             }
             catch (Exception e)
             {
-                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                NetworkEngine.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Message = $"请求失败，剩余尝试 {retry} 次数。{response?.StatusCode} {request.RequestUri?.Host}",
                     Exception = e
@@ -196,7 +198,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// </summary>
         public void Dry()
         {
-
+            // ignore
         }
 
         #region Disposing

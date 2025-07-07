@@ -45,8 +45,8 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             var model = new GameDetectModel
             {
                 Folder = Path.Combine(_testBasePath, "game"),
-                ServerVersion = "1.0.0.12345",
-                ClientVersion = "1.0.0.12345",
+                ServerVersion = "25.6.0.0",
+                ClientVersion = "25.6.0.0",
                 PreInstalled = true,
                 IsTest = false
             };
@@ -73,8 +73,8 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             var model = new GameDetectModel
             {
                 Folder = Path.Combine(_testBasePath, "game"),
-                ServerVersion = "1.0.0.12345",
-                ClientVersion = "1.0.0.12345",
+                ServerVersion = "25.7.0.0",
+                ClientVersion = "25.7.0.0",
                 PreInstalled = true,
                 IsTest = false
             };

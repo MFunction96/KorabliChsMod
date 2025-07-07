@@ -161,20 +161,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 绑定游戏版本
         /// </summary>
-        public string GameVersion
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(this._selectedGameDetectModel?.ClientVersion))
-                {
-                    return MainWindowViewModel.SelectedGameFolderHint;
-                }
-
-                return this._selectedGameDetectModel.PreInstalled && !string.IsNullOrEmpty(this._selectedGameDetectModel.ServerVersion)
-                    ? this._selectedGameDetectModel.ServerVersion
-                    : this._selectedGameDetectModel.ClientVersion;
-            }
-        }
+        public string GameVersion => string.IsNullOrEmpty(this._selectedGameDetectModel?.ClientVersion) ? MainWindowViewModel.SelectedGameFolderHint : this._selectedGameDetectModel.GameVersion;
 
         /// <summary>
         /// 绑定游戏测试服
@@ -385,6 +372,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             this._lgcIntegratorService.ServiceEvent += this.SyncServiceMessage;
             this._korabliConfigService.ServiceEvent += this.SyncServiceMessage;
             this._updateService.ServiceEvent += this.SyncServiceMessage;
+            NetworkEngine.ServiceEvent += this.SyncServiceMessage;
 
             _ = this._korabliConfigService.Load();
 
