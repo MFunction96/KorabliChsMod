@@ -47,7 +47,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
             try
             {
                 var mirror = korabliConfigService.CurrentConfig.Mirror;
-                var jToken = await metadataService.GetLatestJToken(false);
+                var jToken = await metadataService.GetAppJToken();
                 if (jToken is null)
                 {
                     return false;
@@ -89,7 +89,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
             {
                 var latest = this._latestJToken.TryGetValue(korabliConfigService.CurrentConfig.Mirror, out var jToken)
                     ? jToken
-                    : await metadataService.GetLatestJToken(false);
+                    : await metadataService.GetAppJToken();
                 var assets = latest!["assets"]! as JArray;
                 var downloadFile = assets!.First(q =>
                     string.Compare(q["name"]!.Value<string>(), "KorabliChsModInstaller.exe",

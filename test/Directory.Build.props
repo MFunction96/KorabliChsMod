@@ -6,12 +6,21 @@
 		<IsPublishable>false</IsPublishable>
 		<RootNamespace>Xanadu.Test.$(MSBuildProjectName.Replace(" ", "_").Replace("Tests", ""))</RootNamespace>
 		<AssemblyName>$(MSBuildProjectName.Replace(" ", "_"))</AssemblyName>
+		<EnableMSTestRunner>true</EnableMSTestRunner>
+		<OutputType>Exe</OutputType>
+		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+		<!--
+		Displays error on console in addition to the log file. Note that this feature comes with a performance impact.
+		For more information, visit https://learn.microsoft.com/dotnet/core/testing/unit-testing-platform-integration-dotnet-test#show-failure-per-test
+		-->
+		<TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="*" />
-		<PackageReference Include="MSTest.TestAdapter" Version="*" />
-		<PackageReference Include="MSTest.TestFramework" Version="*" />
-		<PackageReference Include="coverlet.collector" Version="*" />
+		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="*" />
+		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" Version="*" />
+		<PackageReference Include="MSTest" Version="*" />
 		<PackageReference Include="Moq" Version="*" />
 	</ItemGroup>
 

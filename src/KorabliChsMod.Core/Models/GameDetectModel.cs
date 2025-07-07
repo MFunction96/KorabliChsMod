@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
-using Newtonsoft.Json;
 
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 
@@ -94,6 +94,12 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// 客户端版本
         /// </summary>
         public string ClientVersion { get; set; } = string.Empty;
+
+        [JsonIgnore]
+        public string GameVersion 
+            => this.PreInstalled && !string.IsNullOrEmpty(this.ServerVersion)
+            ? this.ServerVersion
+            : this.ClientVersion;
 
         /// <summary>
         /// 编译版本号
