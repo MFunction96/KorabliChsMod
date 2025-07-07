@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -57,7 +56,13 @@ namespace Xanadu.KorabliChsMod.Core.Services
             var extractFolder = Path.Combine(zipFile.Pool.BasePath, Path.GetRandomFileName());
             try
             {
-                var latest = await metadataService.GetLatestJToken(true, gameDetectModel.IsTest) ?? throw new DataException("获取元信息失败！请检查网络连接。");
+                var gameVersion = gameDetectModel.GameVersion[..gameDetectModel.GameVersion.LastIndexOf('.')];
+                if (gameDetectModel.IsTest)
+                {
+                    gameVersion = gameVersion[..gameVersion.LastIndexOf('.')];
+                }
+                var latest = await metadataService.GetModJToken(Version.Parse(gameVersion),
+                    gameDetectModel.IsTest);
                 var assets = (latest["assets"] as JArray)!;
                 var downloadFile = assets.First(q => q["name"]!.Value<string>() == "Korabli_localization_chs.zip")["browser_download_url"]!.Value<string>()!;
                 await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
