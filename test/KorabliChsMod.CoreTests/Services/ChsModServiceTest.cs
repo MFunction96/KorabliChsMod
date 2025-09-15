@@ -13,7 +13,9 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
     public class ChsModServiceTest
     {
         private IServiceProvider _serviceProvider = null!;
+
         private readonly string _testBasePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        public TestContext TestContext { get; set; } = null!;
 
         [TestInitialize]
         public void Setup()
@@ -24,7 +26,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             services.AddSingleton<KorabliConfigService>();
             services.AddSingleton<FileCachePool>();
             services.AddTransient<NetworkEngine>();
-            services.AddTransient<MetadataService>();
+            services.AddTransient<MetadataServiceTest>();
             services.AddTransient<ChsModService>();
             this._serviceProvider = services.BuildServiceProvider();
         }
@@ -42,11 +44,12 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         public async Task Install_Cloudflare()
         {
             // Arrange
+            var now = DateTimeOffset.Now;
             var model = new GameDetectModel
             {
                 Folder = Path.Combine(_testBasePath, "game"),
-                ServerVersion = "25.6.0.0",
-                ClientVersion = "25.6.0.0",
+                ServerVersion = $"{now:yy}.{now.Month}.0.0",
+                ClientVersion = $"{now:yy}.{now.Month}.0.0",
                 PreInstalled = true,
                 IsTest = false
             };
@@ -55,7 +58,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             // Act
             using var scope = _serviceProvider.CreateScope();
             var chsModService = scope.ServiceProvider.GetRequiredService<ChsModService>();
-            var result = await chsModService.Install(model);
+            var result = await chsModService.Install(model, this.TestContext.CancellationTokenSource.Token);
 
             // Assert
             Assert.IsTrue(result);
@@ -85,7 +88,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             var korabliConfigService = scope.ServiceProvider.GetRequiredService<KorabliConfigService>();
             korabliConfigService.CurrentConfig.Mirror = MirrorList.Github;
             var chsModService = scope.ServiceProvider.GetRequiredService<ChsModService>();
-            var result = await chsModService.Install(model);
+            var result = await chsModService.Install(model, this.TestContext.CancellationTokenSource.Token);
 
             // Assert
             Assert.IsTrue(result);
@@ -95,6 +98,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "thanks.md")));
             Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "change.log")));
         }
+
     }
 
 }

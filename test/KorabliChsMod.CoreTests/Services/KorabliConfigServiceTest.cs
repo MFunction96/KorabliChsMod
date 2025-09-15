@@ -8,7 +8,7 @@ using Xanadu.KorabliChsMod.Core.Services;
 namespace Xanadu.Test.KorabliChsMod.Core.Services
 {
     [TestClass]
-    public class KorabliConfigServiceTests
+    public class KorabliConfigServiceTest
     {
         /// <summary>
         /// 
@@ -18,17 +18,17 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         /// <summary>
         /// 
         /// </summary>
-        private static readonly string TestConfigPath = Path.Combine(KorabliConfigServiceTests.TestFolder, "config.json");
+        private static readonly string TestConfigPath = Path.Combine(KorabliConfigServiceTest.TestFolder, "config.json");
 
         [TestInitialize]
         public void Setup()
         {
-            if (File.Exists(KorabliConfigServiceTests.TestConfigPath))
+            if (File.Exists(KorabliConfigServiceTest.TestConfigPath))
             {
-                File.Delete(KorabliConfigServiceTests.TestConfigPath);
+                File.Delete(KorabliConfigServiceTest.TestConfigPath);
             }
 
-            KorabliConfigModel.SetTestFolder(KorabliConfigServiceTests.TestFolder);
+            KorabliConfigModel.SetTestFolder(KorabliConfigServiceTest.TestFolder);
         }
 
         [TestMethod]
@@ -39,7 +39,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
 
             Assert.IsNotNull(config);
             Assert.AreEqual(KorabliConfigService.CurrentVersion, config.Version);
-            Assert.IsTrue(File.Exists(KorabliConfigServiceTests.TestConfigPath));
+            Assert.IsTrue(File.Exists(KorabliConfigServiceTest.TestConfigPath));
         }
 
         [TestMethod]
@@ -56,9 +56,9 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             var result = await configService.SaveAsync();
 
             Assert.IsTrue(result);
-            Assert.IsTrue(File.Exists(KorabliConfigServiceTests.TestConfigPath));
+            Assert.IsTrue(File.Exists(KorabliConfigServiceTest.TestConfigPath));
 
-            var json = File.ReadAllText(KorabliConfigServiceTests.TestConfigPath);
+            var json = File.ReadAllText(KorabliConfigServiceTest.TestConfigPath);
             Assert.IsTrue(json.Contains("TestGame"));
         }
 
@@ -80,18 +80,18 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
 
             var networkEngine = new NetworkEngine(configService);
             networkEngine.Dry();
-            Assert.IsTrue(File.Exists(KorabliConfigServiceTests.TestConfigPath));
+            Assert.IsTrue(File.Exists(KorabliConfigServiceTest.TestConfigPath));
 
-            var model = JsonConvert.DeserializeObject<KorabliConfigModel>(await File.ReadAllTextAsync(KorabliConfigServiceTests.TestConfigPath, System.Text.Encoding.UTF8))!;
+            var model = JsonConvert.DeserializeObject<KorabliConfigModel>(await File.ReadAllTextAsync(KorabliConfigServiceTest.TestConfigPath, System.Text.Encoding.UTF8))!;
             Assert.IsFalse(model.Proxy.Enabled, "Proxy should be disabled due to error.");
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            if (File.Exists(KorabliConfigServiceTests.TestConfigPath))
+            if (File.Exists(KorabliConfigServiceTest.TestConfigPath))
             {
-                File.Delete(KorabliConfigServiceTests.TestConfigPath);
+                File.Delete(KorabliConfigServiceTest.TestConfigPath);
             }
         }
     }
