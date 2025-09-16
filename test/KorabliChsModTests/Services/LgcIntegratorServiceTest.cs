@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Xanadu.KorabliChsMod.Core.Services;
 using Xanadu.KorabliChsMod.Services;
 
@@ -26,7 +26,7 @@ namespace Xanadu.Test.KorabliChsMod.Services
             var lgcIntegratorModel = lgcIntegrator.Load();
             if (lgcIntegratorModel is not null)
             {
-                TestContext.WriteLine(JsonConvert.SerializeObject(lgcIntegratorModel, Formatting.Indented));
+                TestContext.WriteLine(JsonSerializer.Serialize(lgcIntegratorModel));
             }
         }
     }

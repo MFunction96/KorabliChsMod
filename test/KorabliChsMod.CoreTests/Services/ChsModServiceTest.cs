@@ -6,6 +6,7 @@ using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Models;
 using Xanadu.KorabliChsMod.Core.Services;
 using Xanadu.Skidbladnir.IO.File.Cache;
+using Xanadu.Skidbladnir.Net.DevOps;
 
 namespace Xanadu.Test.KorabliChsMod.Core.Services
 {
@@ -24,9 +25,11 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             KorabliConfigModel.SetTestFolder(this._testBasePath);
             var services = new ServiceCollection();
             services.AddSingleton<KorabliConfigService>();
+            services.AddGitHubRestApiClient();
             services.AddSingleton<FileCachePool>();
-            services.AddTransient<NetworkEngine>();
-            services.AddTransient<MetadataServiceTest>();
+            services.AddHttpClient<NetworkEngine>(RestApiClient.DefaultHttpClientAction)
+                .ConfigurePrimaryHttpMessageHandler(() => RestApiClient.DefaultHttpClientHandler());
+            services.AddTransient<MetadataService>();
             services.AddTransient<ChsModService>();
             this._serviceProvider = services.BuildServiceProvider();
         }
@@ -38,6 +41,17 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             {
                 Directory.Delete(this._testBasePath, true);
             }
+        }
+
+        [TestMethod]
+        [DataRow("25.1.0.0.8798761")]
+        [DataRow("13.6.0.0.8601080")]
+        [DataRow("25.1.0.8798761")]
+        [DataRow("25.1.0.0.0.8798761")]
+        public void VersionRegex(string gameVersion)
+        {
+            this.TestContext.WriteLine(ChsModService.VersionRegex.Match(gameVersion).Groups["Version"].Value);
+            Assert.IsTrue(ChsModService.VersionRegex.IsMatch(gameVersion));
         }
 
         [TestMethod]
@@ -73,11 +87,12 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         public async Task Install_Github()
         {
             // Arrange
+            var now = DateTimeOffset.Now;
             var model = new GameDetectModel
             {
                 Folder = Path.Combine(_testBasePath, "game"),
-                ServerVersion = "25.7.0.0",
-                ClientVersion = "25.7.0.0",
+                ServerVersion = $"{now:yy}.{now.Month}.0.0",
+                ClientVersion = $"{now:yy}.{now.Month}.0.0",
                 PreInstalled = true,
                 IsTest = false
             };

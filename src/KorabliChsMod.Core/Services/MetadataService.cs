@@ -18,13 +18,13 @@ namespace Xanadu.KorabliChsMod.Core.Services
     /// <param name="networkEngine"></param>
     public partial class MetadataService(KorabliConfigService korabliConfigService, NetworkEngine networkEngine, GitHubRestApiClient gitHubRestApiClient) : IServiceEvent
     {
-        [GeneratedRegex(@"(?<Version>[Vv]\d+\.\d+(\.\d+)?(-\w+)?)", RegexOptions.ExplicitCapture)]
+        [GeneratedRegex(@"([Vv]\d+\.(?<Version>\d+\.\d+))", RegexOptions.ExplicitCapture)]
         private static partial Regex VersionTagRegex();
 
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
-        public static Regex VersionRegex = MetadataService.VersionTagRegex();
+        public static Regex VersionRegex => MetadataService.VersionTagRegex();
 
         /// <summary>
         /// 模组元信息获取服务

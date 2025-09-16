@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xanadu.KorabliChsMod.Core.Models;
@@ -21,7 +22,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
     /// <param name="networkEngine">网络引擎</param>
     /// <param name="fileCachePool">文件缓存</param>
     /// <param name="metadataService">元信息获取</param>
-    public class ChsModService(NetworkEngine networkEngine, FileCachePool fileCachePool, MetadataService metadataService) : IServiceEvent
+    public partial class ChsModService(NetworkEngine networkEngine, FileCachePool fileCachePool, MetadataService metadataService) : IServiceEvent
     {
         /// <summary>
         /// 文件相对路径，bool值表示是否为文件夹
@@ -34,6 +35,10 @@ namespace Xanadu.KorabliChsMod.Core.Services
             ("thanks.md", false),
             ("change.log",false)
         ];
+        [GeneratedRegex(@"(?<Version>\d+\.\d+)", RegexOptions.ExplicitCapture)]
+        private static partial Regex GameVersionRegex();
+
+        public static Regex VersionRegex => ChsModService.GameVersionRegex();
 
         /// <summary>
         /// 文件校验
@@ -55,11 +60,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
             var extractFolder = Path.Combine(zipFile.Pool.BasePath, Path.GetRandomFileName());
             try
             {
-                var gameVersion = gameDetectModel.GameVersion[..gameDetectModel.GameVersion.LastIndexOf('.')];
-                if (gameDetectModel.IsTest)
-                {
-                    gameVersion = gameVersion[..gameVersion.LastIndexOf('.')];
-                }
+                var gameVersion = ChsModService.VersionRegex.Match(gameDetectModel.GameVersion).Value;
                 var latest = await metadataService.GetModRelease(Version.Parse(gameVersion),
                     gameDetectModel.IsTest);
                 var downloadFile = latest.Assets.First(q => q.Name == "Korabli_localization_chs.zip").BrowserDownloadUrl;
@@ -77,18 +78,18 @@ namespace Xanadu.KorabliChsMod.Core.Services
                         var textFolderFiles = Directory.GetFiles(textFolder, "*.*", SearchOption.AllDirectories);
                         foreach (var textFolderFile in textFolderFiles)
                         {
-                            installedFiles[textFolderFile] = await this._checksum.GetFileHashAsync(textFolderFile, BinaryFormatting.Base64, cancellationToken);
+                            installedFiles[textFolderFile] = await this._checksum.GetFileHashAsync(textFolderFile, BinaryFormatting.BASE64, cancellationToken: cancellationToken);
                         }
                     }
                     else
                     {
                         var file = Path.Combine(gameDetectModel.ModFolder, item.FilePath);
                         File.Copy(Path.Combine(extractFolder, item.FilePath), file, true);
-                        installedFiles[file] = await this._checksum.GetFileHashAsync(file, BinaryFormatting.Base64, cancellationToken);
+                        installedFiles[file] = await this._checksum.GetFileHashAsync(file, BinaryFormatting.BASE64, cancellationToken: cancellationToken);
                     }
                 }
 
-                await File.WriteAllTextAsync(KorabliConfigModel.InstalledFilePath, JsonConvert.SerializeObject(installedFiles, Formatting.Indented), cancellationToken);
+                await File.WriteAllTextAsync(KorabliConfigModel.InstalledFilePath, JsonSerializer.Serialize(installedFiles), cancellationToken);
                 return true;
             }
             catch (Exception e)
@@ -118,7 +119,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
             }
 
             var json = await File.ReadAllTextAsync(KorabliConfigModel.InstalledFilePath);
-            var files = JsonConvert.DeserializeObject<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
+            var files = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
             return files;
 
         }
