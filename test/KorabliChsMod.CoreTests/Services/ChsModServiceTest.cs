@@ -86,7 +86,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             // Act
             using var scope = _serviceProvider.CreateScope();
             var korabliConfigService = scope.ServiceProvider.GetRequiredService<KorabliConfigService>();
-            korabliConfigService.CurrentConfig.Mirror = MirrorList.Github;
+            korabliConfigService.CurrentConfig.Mirror = MirrorList.GitHub;
             var chsModService = scope.ServiceProvider.GetRequiredService<ChsModService>();
             var result = await chsModService.Install(model, this.TestContext.CancellationTokenSource.Token);
 

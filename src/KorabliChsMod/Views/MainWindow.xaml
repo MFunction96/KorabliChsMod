@@ -137,7 +137,7 @@
                                 <Hyperlink NavigateUri="https://dev.azure.com/XanaCN/Lyoko/_git/KorabliChsMod" Click="HyperLink_OnClick">Azure DevOps</Hyperlink>
                             </TextBlock>
                             <TextBlock Margin="10 0 0 0">
-                                <Hyperlink NavigateUri="https://github.com/MFunction96/KorabliChsMod" Click="HyperLink_OnClick">Github(镜像)</Hyperlink>
+                                <Hyperlink NavigateUri="https://github.com/MFunction96/KorabliChsMod" Click="HyperLink_OnClick">GitHub(镜像)</Hyperlink>
                             </TextBlock>
                         </hc:SimpleStackPanel>
                         <hc:SimpleStackPanel Orientation="Horizontal" Margin="0 30 0 0">

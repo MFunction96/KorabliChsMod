@@ -1,4 +1,13 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Xanadu.KorabliChsMod.Core;
+using Xanadu.KorabliChsMod.Core.Services;
+using Xanadu.Skidbladnir.Net.DevOps;
+using Xanadu.Skidbladnir.Net.DevOps.Service;
 
 namespace Xanadu.Test.KorabliChsMod.Core.Services
 {
@@ -8,12 +17,16 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
     [TestClass]
     public class MetadataServiceTest
     {
-        private IServiceProvider _serviceProvider = null!;
+        private IServiceProvider _provider = null!;
 
         [TestInitialize]
         public void Setup()
         {
-            
+            var services = new ServiceCollection();
+            services.AddSingleton(new KorabliConfigService());
+            services.AddGitHubRestApiClient();
+            services.AddTransient<MetadataService>();
+            this._provider = services.BuildServiceProvider();
         }
 
         [TestCleanup]

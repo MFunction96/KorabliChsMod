@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xanadu.KorabliChsMod.Core.Models;
 
@@ -51,7 +51,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     return this.CurrentConfig;
                 }
 
-                this.CurrentConfig = JsonConvert.DeserializeObject<KorabliConfigModel>(File.ReadAllText(KorabliConfigModel.ConfigFilePath, Encoding.UTF8))!;
+                this.CurrentConfig = JsonSerializer.Deserialize<KorabliConfigModel>(File.ReadAllText(KorabliConfigModel.ConfigFilePath, Encoding.UTF8))!;
 
                 var updateConfig = false;
                 if (this.CurrentConfig.Version < KorabliConfigService.CurrentVersion)
@@ -93,7 +93,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
         {
             try
             {
-                var json = JsonConvert.SerializeObject(this.CurrentConfig, Formatting.Indented);
+                var json = JsonSerializer.Serialize(this.CurrentConfig);
                 if (!Directory.Exists(KorabliConfigModel.BaseFolder))
                 {
                     Directory.CreateDirectory(KorabliConfigModel.BaseFolder);

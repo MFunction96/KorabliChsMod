@@ -70,12 +70,6 @@ namespace Xanadu.KorabliChsMod.Core.Models
         public static readonly IDictionary<MirrorList, ResourceLinkModel> Links =
             new Dictionary<MirrorList, ResourceLinkModel>
             {
-                { MirrorList.Github , new ResourceLinkModel
-                {
-                    Mirror = MirrorList.Github,
-                    ModMetadata = "https://api.github.com/repos/DDFantasyV/Korabli_localization_chs/releases",
-                    UpdateMetadata = "https://api.github.com/repos/MFunction96/KorabliChsMod/releases"
-                }},
                 { MirrorList.Cloudflare , new ResourceLinkModel
                 {
                     Mirror = MirrorList.Cloudflare,

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -61,10 +60,9 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 {
                     gameVersion = gameVersion[..gameVersion.LastIndexOf('.')];
                 }
-                var latest = await metadataService.GetModJToken(Version.Parse(gameVersion),
+                var latest = await metadataService.GetModRelease(Version.Parse(gameVersion),
                     gameDetectModel.IsTest);
-                var assets = (latest["assets"] as JArray)!;
-                var downloadFile = assets.First(q => q["name"]!.Value<string>() == "Korabli_localization_chs.zip")["browser_download_url"]!.Value<string>()!;
+                var downloadFile = latest.Assets.First(q => q.Name == "Korabli_localization_chs.zip").BrowserDownloadUrl;
                 await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
                     zipFile.FullPath, 5, cancellationToken);
                 var installedFiles = await LoadInstalledFile();

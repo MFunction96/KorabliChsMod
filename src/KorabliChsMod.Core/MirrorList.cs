@@ -8,10 +8,14 @@
         /// <summary>
         /// Github源
         /// </summary>
-        Github = 0,
+        GitHub = 0,
         /// <summary>
         /// Cloudflare源
         /// </summary>
-        Cloudflare = 1
+        Cloudflare = 1,
+        /// <summary>
+        /// 阿里云
+        /// </summary>
+        AliYun = 2
     }
 }

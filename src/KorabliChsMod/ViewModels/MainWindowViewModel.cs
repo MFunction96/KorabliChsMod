@@ -348,8 +348,8 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <param name="chsModService">汉化安装服务</param>
         public MainWindowViewModel(
             Lazy<ILogger<MainWindowViewModel>> logger,
-            Lazy<LgcIntegratorService> lgcIntegrator,
             Lazy<KorabliConfigService> korabliConfigService,
+            Lazy<LgcIntegratorService> lgcIntegrator,
             Lazy<UpdateService> updateService,
             Lazy<ChsModService> chsModService)
         {
