@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<protocol name="game_info" wgc_publisher_id="lesta" version="2.16">
+<protocol version="2.17" name="game_info" wgc_publisher_id="lesta">
     <game>
-        <id>WOWS.RU.PRODUCTION</id>
+        <id>WOWS.RPT.PRODUCTION</id>
         <index>0</index>
         <installed>true</installed>
         <localization>RU</localization>
@@ -14,11 +14,11 @@
             <value>https://lstus-ru.lesta.ru/</value>
         </update_urls>
         <corrupt_parts/>
-        <part_versions>
-            <version name="client" installed="13.6.0.0.8601080" available="13.6.0.0.8601080"/>
-            <version name="hotfix" installed="13.6.0.0.8601080" available="13.6.0.0.8601080"/>
-            <version name="locale" installed="13.6.0.0.8601080" available="13.6.0.0.8601080"/>
-            <version name="sdcontent" installed="13.6.0.0.8601080" available="13.6.0.0.8601080"/>
+        <part_versions last_check="17584546213326575">
+            <version available="25.10.0.0.8824884" name="client" installed="25.10.0.0.8824884"/>
+            <version available="25.10.0.0.8824884" name="hotfix" installed="25.10.0.0.8824884"/>
+            <version available="25.10.0.0.8824884" name="locale" installed="25.10.0.0.8824884"/>
+            <version available="25.10.0.0.8824884" name="sdcontent" installed="25.10.0.0.8824884"/>
         </part_versions>
         <parameters>
             <value name="preinstall_balloon_shown">false</value>

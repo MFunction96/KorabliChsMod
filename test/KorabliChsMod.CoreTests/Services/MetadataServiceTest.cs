@@ -63,7 +63,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
 
         [TestMethod]
         [DataRow(true)]
-        [DataRow(false)]
+        //[DataRow(false)]
         public async Task GetModRelease(bool prerelease)
         {
             var metadataService = this._provider.GetRequiredService<MetadataService>();

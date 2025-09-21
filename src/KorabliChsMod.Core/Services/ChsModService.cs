@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Xanadu.KorabliChsMod.Core.Models;
-using Xanadu.Skidbladnir.Core.Extension;
 using Xanadu.Skidbladnir.IO.File;
 using Xanadu.Skidbladnir.IO.File.Cache;
 
@@ -24,8 +20,6 @@ namespace Xanadu.KorabliChsMod.Core.Services
     /// <param name="metadataService">元信息获取</param>
     public partial class ChsModService(NetworkEngine networkEngine, FileCachePool fileCachePool, MetadataService metadataService) : IServiceEvent
     {
-        private const string ModFileName = "MK_L10N_CHS.mkmod";
-
         [GeneratedRegex(@"(?<Version>\d+\.\d+)", RegexOptions.ExplicitCapture)]
         private static partial Regex GameVersionRegex();
 
@@ -42,20 +36,133 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <returns>成功返回true，失败返回false</returns>
         public async Task<bool> Install(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
         {
-            using var modFileCache = fileCachePool.Register(ChsModService.ModFileName, "download");
+            return await this.PathXmlAddon(gameDetectModel, cancellationToken) && await this.CorePackInstall(gameDetectModel, cancellationToken);
+        }
+
+        /// <summary>
+        /// 卸载汉化模组，仅移除汉化模组文件，不移除paths.xml中的mods路径
+        /// </summary>
+        /// <param name="gameDetectModel">游戏检测模块</param>
+        /// <param name="cancellationToken">取消句柄</param>
+        /// <returns>是否成功卸载</returns>
+        public bool Uninstall(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                IOExtension.DeleteFile(gameDetectModel.ChsModFilePath);
+                return true;
+            }
+            catch (Exception e)
+            {
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                {
+                    Exception = e
+                });
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 添加paths.xml中的mods路径
+        /// </summary>
+        /// <param name="gameDetectModel">游戏检测模型</param>
+        /// <param name="cancellationToken">取消句柄</param>
+        /// <returns>paths.xml安装状态</returns>
+        internal Task<bool> PathXmlAddon(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
+        {
+            return Task.Run(() =>
+            {
+                try
+                {
+                    if (GameDetectorService.PathXmlCheck(gameDetectModel))
+                    {
+                        return true;
+                    }
+
+                    XDocument doc;
+                    XElement? pathsElement;
+
+                    if (!File.Exists(gameDetectModel.PathXmlPath))
+                    {
+                        doc = new XDocument(new XElement("root", new XElement("Paths")));
+                        pathsElement = doc.Element("root")!.Element("Paths")!;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            doc = XDocument.Load(gameDetectModel.PathXmlPath);
+                            var root = doc.Element("root");
+                            if (root is null)
+                            {
+                                root = new XElement("root");
+                                doc.Add(root);
+                            }
+
+                            pathsElement = root.Element("Paths");
+                            if (pathsElement is null)
+                            {
+                                pathsElement = new XElement("Paths");
+                                root.Add(pathsElement);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new InvalidOperationException($"无法加载或解析XML文件：{gameDetectModel.PathXmlPath}", ex);
+                        }
+                    }
+
+                    var existingModsPaths = pathsElement.Elements("Path")
+                        .Where(p => p.Attribute("type")?.ToString() == "mods")
+                        .ToArray();
+
+                    foreach (var pathNode in existingModsPaths)
+                    {
+                        pathNode.Remove();
+                    }
+
+                    var newModsPath = new XElement("Path",
+                        new XAttribute("type", "mods"),
+                        @"..\mods"
+                    );
+
+                    pathsElement.AddFirst(newModsPath);
+                    doc.Save(gameDetectModel.PathXmlPath);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    {
+                        Exception = e
+                    });
+                    return false;
+                }
+            }, cancellationToken);
+        }
+
+        /// <summary>
+        /// 核心汉化包安装
+        /// </summary>
+        /// <param name="gameDetectModel">游戏检测模块</param>
+        /// <param name="cancellationToken">取消句柄</param>
+        /// <returns></returns>
+        internal async Task<bool> CorePackInstall(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
+        {
+            using var modFileCache = fileCachePool.Register(GameDetectModel.ChsModFileName, "download");
             try
             {
                 var gameVersion = ChsModService.VersionRegex.Match(gameDetectModel.GameVersion).Value;
                 var latest = await metadataService.GetModRelease(Version.Parse(gameVersion),
                     gameDetectModel.IsTest);
-                var downloadFile = latest.Assets.First(q => q.Name == ChsModService.ModFileName).BrowserDownloadUrl;
+                var downloadFile = latest.Assets.First(q => q.Name == GameDetectModel.ChsModFileName).BrowserDownloadUrl;
                 await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile), modFileCache.FullPath, 5, cancellationToken);
                 if (!Directory.Exists(gameDetectModel.ModFolder))
                 {
                     Directory.CreateDirectory(gameDetectModel.ModFolder);
                 }
 
-                File.Copy(modFileCache.FullPath, Path.Combine(gameDetectModel.ModFolder, ChsModService.ModFileName), true);
+                File.Copy(modFileCache.FullPath, gameDetectModel.ChsModFilePath, true);
                 return true;
             }
             catch (Exception e)

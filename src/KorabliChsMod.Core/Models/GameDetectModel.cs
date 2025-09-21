@@ -18,12 +18,6 @@ namespace Xanadu.KorabliChsMod.Core.Models
         private const string GameInfoXmlFileName = "game_info.xml";
 
         /// <summary>
-        /// locale_config.xml
-        /// </summary>
-        [JsonIgnore]
-        private const string LocaleInfoXmlFileName = "locale_config.xml";
-
-        /// <summary>
         /// metadata.xml
         /// </summary>
         [JsonIgnore]
@@ -34,6 +28,18 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// </summary>
         [JsonIgnore]
         private const string PreferencesXmlFileName = "preferences.xml";
+
+        /// <summary>
+        /// paths.xml
+        /// </summary>
+        [JsonIgnore]
+        private const string PathXmlFileName = "paths.xml";
+
+        /// <summary>
+        /// Mod文件名
+        /// </summary>
+        [JsonIgnore]
+        public const string ChsModFileName = "MK_L10N_CHS.mkmod";
 
         /// <summary>
         /// 是否为战舰世界
@@ -49,10 +55,7 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// Mod文件夹路径
         /// </summary>
         [JsonIgnore]
-        public string ModFolder
-            => string.IsNullOrEmpty(this.Folder)
-                ? string.Empty
-                : Path.Combine(this.Folder, "bin", this.BuildNumber, "res");
+        public string ModFolder => string.IsNullOrEmpty(this.Folder) ? string.Empty : Path.Combine(this.Folder, "bin", this.BuildNumber, "mods");
 
         /// <summary>
         /// game_info.xml路径
@@ -73,10 +76,15 @@ namespace Xanadu.KorabliChsMod.Core.Models
         public string PreferencesXmlPath => string.IsNullOrEmpty(this.Folder) ? string.Empty : Path.Combine(this.Folder, GameDetectModel.PreferencesXmlFileName);
 
         /// <summary>
-        /// locale_config.xml路径
+        /// paths.xml路径
         /// </summary>
         [JsonIgnore]
-        public string LocaleInfoXmlPath => string.IsNullOrEmpty(this.Folder) ? string.Empty : Path.Combine(this.ModFolder, GameDetectModel.LocaleInfoXmlFileName);
+        public string PathXmlPath => string.IsNullOrEmpty(this.Folder) ? string.Empty : Path.Combine(this.Folder, "bin", this.BuildNumber, "bin64", GameDetectModel.PathXmlFileName);
+
+        /// <summary>
+        /// Mod文件路径
+        /// </summary>
+        public string ChsModFilePath => string.IsNullOrEmpty(this.Folder) ? string.Empty : Path.Combine(this.ModFolder, GameDetectModel.ChsModFileName);
 
         /// <summary>
         /// 服务器
@@ -121,11 +129,6 @@ namespace Xanadu.KorabliChsMod.Core.Models
         public bool IsTest { get; set; } = false;
 
         /// <summary>
-        /// 本地化语言
-        /// </summary>
-        public string Locale { get; set; } = string.Empty;
-
-        /// <summary>
         /// 汉化模组状态
         /// </summary>
         public bool ChsMod { get; set; } = false;
@@ -145,7 +148,6 @@ namespace Xanadu.KorabliChsMod.Core.Models
                    this.IsWarship == other.IsWarship &&
                    this.PreInstalled == other.PreInstalled &&
                    this.IsTest == other.IsTest &&
-                   string.Equals(this.Locale, other.Locale, StringComparison.OrdinalIgnoreCase) &&
                    this.ChsMod == other.ChsMod;
         }
     }

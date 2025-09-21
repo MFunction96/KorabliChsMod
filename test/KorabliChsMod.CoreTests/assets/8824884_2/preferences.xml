@@ -1,0 +1,145 @@
+<preferences.xml>
+	<scriptsPreferences>
+		<ui>
+			<locale>	ru	</locale>
+			<elementsGroupExpand>
+				<channels4641564f5249544553>	true	</channels4641564f5249544553>
+				<channels534841524544>	true	</channels534841524544>
+				<channels4d594348414e4e454c53>	true	</channels4d594348414e4e454c53>
+				<channels484953544f5259>	true	</channels484953544f5259>
+				<contacts4944535f434841545f47524f55505f465249454e4453>	true	</contacts4944535f434841545f47524f55505f465249454e4453>
+				<contacts4944535f47524f55505f5449544c455f49474e4f525f4c495354>	false	</contacts4944535f47524f55505f5449544c455f49474e4f525f4c495354>
+			</elementsGroupExpand>
+			<battleLoadingTabIndex>	1	</battleLoadingTabIndex>
+			<seenPriorLoadingHints>
+				<IDS_TIPS_AIR_DEFENSE_SECTOR_GAIN>	true	</IDS_TIPS_AIR_DEFENSE_SECTOR_GAIN>
+			</seenPriorLoadingHints>
+			<seenTutorialHints>
+				<zoomInHint>	3	</zoomInHint>
+				<zoomOutHint>	3	</zoomOutHint>
+				<aaPrioritySectorHint>	3	</aaPrioritySectorHint>
+				<battleAgainstSubmarineHint>	3	</battleAgainstSubmarineHint>
+				<shipModifiersHint>	3	</shipModifiersHint>
+				<enemySubmarineWavedUsHint>	2	</enemySubmarineWavedUsHint>
+				<enemySubmarineWavedResetHint>	2	</enemySubmarineWavedResetHint>
+				<pushAllyTarget>	2	</pushAllyTarget>
+				<saveAllyTarget>	2	</saveAllyTarget>
+				<pushBothTargets>	2	</pushBothTargets>
+				<HelpPanelHint>	2	</HelpPanelHint>
+				<pingerGunHowTo>	3	</pingerGunHowTo>
+				<submarineDiveDown>	3	</submarineDiveDown>
+				<submarineDiveUp>	3	</submarineDiveUp>
+				<oilLeakPendingHint>	3	</oilLeakPendingHint>
+				<submarineNoEnergyHint>	3	</submarineNoEnergyHint>
+				<newRocketsUnderAttackHint>	2	</newRocketsUnderAttackHint>
+				<oilLeakStartedHint>	2	</oilLeakStartedHint>
+			</seenTutorialHints>
+			<tutorialHintsRepeatCount>
+				<zoomOutHint>	1	</zoomOutHint>
+				<aaPrioritySectorHint>	1	</aaPrioritySectorHint>
+				<battleAgainstSubmarineHint>	1	</battleAgainstSubmarineHint>
+				<shipModifiersHint>	1	</shipModifiersHint>
+				<enemySubmarineWavedUsHint>	1	</enemySubmarineWavedUsHint>
+				<enemySubmarineWavedResetHint>	1	</enemySubmarineWavedResetHint>
+				<pushAllyTarget>	1	</pushAllyTarget>
+				<saveAllyTarget>	1	</saveAllyTarget>
+				<pushBothTargets>	1	</pushBothTargets>
+				<HelpPanelHint>	4	</HelpPanelHint>
+				<pingerGunHowTo>	5	</pingerGunHowTo>
+				<submarineDiveDown>	1	</submarineDiveDown>
+				<submarineDiveUp>	1	</submarineDiveUp>
+				<oilLeakPendingHint>	3	</oilLeakPendingHint>
+				<submarineNoEnergyHint>	1	</submarineNoEnergyHint>
+				<newRocketsUnderAttackHint>	1	</newRocketsUnderAttackHint>
+				<oilLeakStartedHint>	1	</oilLeakStartedHint>
+			</tutorialHintsRepeatCount>
+			<aaPrioritySectorActivateCount>	21	</aaPrioritySectorActivateCount>
+			<armsRaceInstructionsSeen>	true	</armsRaceInstructionsSeen>
+			<seenAlmanacs>
+				<acc210475943_2502>	19	</acc210475943_2502>
+				<acc210475943_2510>	10	</acc210475943_2510>
+			</seenAlmanacs>
+			<switchUnmountSellModernization>	2	</switchUnmountSellModernization>
+			<chatBoxPositionX>
+				<209799102@wowsrpt.loc>	1162.0000	</209799102@wowsrpt.loc>
+			</chatBoxPositionX>
+			<chatBoxPositionY>
+				<209799102@wowsrpt.loc>	639.0000	</209799102@wowsrpt.loc>
+			</chatBoxPositionY>
+			<chatBoxWidth>
+				<clan-1350@clans.wowsrpt.wowsrpt.loc>	500.0000	</clan-1350@clans.wowsrpt.wowsrpt.loc>
+				<209799102@wowsrpt.loc>	500.0000	</209799102@wowsrpt.loc>
+			</chatBoxWidth>
+			<chatBoxHeight>
+				<clan-1350@clans.wowsrpt.wowsrpt.loc>	310.0000	</clan-1350@clans.wowsrpt.wowsrpt.loc>
+				<209799102@wowsrpt.loc>	310.0000	</209799102@wowsrpt.loc>
+			</chatBoxHeight>
+			<seenBattleRules>
+				<PCVE029>	1893463200	</PCVE029>
+			</seenBattleRules>
+			<switchBattleLoadingTabForEvent>	true	</switchBattleLoadingTabForEvent>
+		</ui>
+		<version>	48	</version>
+		<net_credentials>
+			<active_server>	&#208;&#158;&#208;&#177;&#209;&#137;&#208;&#184;&#208;&#185; &#209;&#130;&#208;&#181;&#209;&#129;&#209;&#130;	</active_server>
+			<last_server_version>	25,10,0,8824884	</last_server_version>
+			<demo />
+			<external />
+		</net_credentials>
+		<minimapOptions>
+			<minimapSizeIndex>	4	</minimapSizeIndex>
+			<PGSB810_Colorful_Schlieffen>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSB810_Colorful_Schlieffen>
+			<shipNamesDisplayEnabled>	1	</shipNamesDisplayEnabled>
+			<PGSB110_Grossdeutschland>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSB110_Grossdeutschland>
+			<PZSB610_Changzheng>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<rlsRangeEnabled>	1	</rlsRangeEnabled>
+			</PZSB610_Changzheng>
+			<PASS910_Balao_SUBTEST>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<hydrophoneRangeEnabled>	1	</hydrophoneRangeEnabled>
+			</PASS910_Balao_SUBTEST>
+			<PJSC610_Kitakami>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+			</PJSC610_Kitakami>
+		</minimapOptions>
+		<lobby_values>
+			<ship>	3749656016	</ship>
+			<port_preset>	waffentrager	</port_preset>
+			<game_type>	RandomBattle	</game_type>
+			<game_type_game_param_id>	0	</game_type_game_param_id>
+			<shipBattleHistory>	4179572528,1726834122,3340154864,1740142081,3655283920,1726835450,3445569328,1726832649,3340154320,1740143056,3655251664,1740143872	</shipBattleHistory>
+		</lobby_values>
+		<weaponSection>
+			<id_210475943>
+				<ship_3445569328>
+					<wt_0>	1,0	</wt_0>
+				</ship_3445569328>
+				<ship_4179572528>
+					<wt_0>	1,0	</wt_0>
+					<wt_1>	1,0	</wt_1>
+				</ship_4179572528>
+				<ship_3655283920 />
+				<ship_3340154864>
+					<wt_2>	0,0	</wt_2>
+				</ship_3340154864>
+				<ship_3340154320 />
+				<ship_3655251664 />
+			</id_210475943>
+		</weaponSection>
+	</scriptsPreferences>
+	<clientVersion>	25,10,0,0	</clientVersion>
+</preferences.xml>
