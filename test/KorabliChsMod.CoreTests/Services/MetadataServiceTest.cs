@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Services;
 using Xanadu.Skidbladnir.Net.DevOps;
 using Xanadu.Skidbladnir.Net.DevOps.Model.GitHub.Basic;
@@ -29,6 +31,9 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
                 .ConfigurePrimaryHttpMessageHandler(() => RestApiClient.DefaultHttpClientHandler());
             services.AddTransient<MetadataService>();
             this._provider = services.BuildServiceProvider();
+            var korabliConfigService = this._provider.GetRequiredService<KorabliConfigService>();
+            korabliConfigService.Load();
+            korabliConfigService.CurrentConfig.Mirror = MirrorList.AliYun;
         }
 
         [TestCleanup]
@@ -54,6 +59,30 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
                 this.TestContext.WriteLine(MetadataService.VersionRegex.Match(releaseModel.TagName).Groups["Version"].Value);
                 Assert.IsTrue(MetadataService.VersionRegex.IsMatch(releaseModel.TagName));
             }
+        }
+
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public async Task GetModRelease(bool prerelease)
+        {
+            var metadataService = this._provider.GetRequiredService<MetadataService>();
+            var now = DateTimeOffset.Now;
+            var version = prerelease ? Version.Parse($"{now:yy}.{now.Month + 1}") : Version.Parse($"{now:yy}.{now.Month}");
+            var releases = await metadataService.GetModRelease(version, prerelease);
+            // Assert.IsNotNull(releases);
+            this.TestContext.WriteLine(JsonSerializer.Serialize(releases, new JsonSerializerOptions { WriteIndented = true }));
+        }
+
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public async Task GetAppRelease(bool prerelease)
+        {
+            var metadataService = this._provider.GetRequiredService<MetadataService>();
+            var releases = await metadataService.GetAppRelease();
+            Assert.IsNotNull(releases);
+            this.TestContext.WriteLine(JsonSerializer.Serialize(releases, new JsonSerializerOptions { WriteIndented = true }));
         }
     }
 }

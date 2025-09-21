@@ -55,46 +55,49 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         }
 
         [TestMethod]
-        public async Task Install_Cloudflare()
+        [DataRow(true)]
+        public async Task Install_AliYun(bool prerelease)
         {
             // Arrange
             var now = DateTimeOffset.Now;
+            var version = prerelease ? $"{now:yy}.{now.Month + 1}.0.0.8601080" : $"{now:yy}.{now.Month}.0.0.8601080";
             var model = new GameDetectModel
             {
                 Folder = Path.Combine(_testBasePath, "game"),
-                ServerVersion = $"{now:yy}.{now.Month}.0.0",
-                ClientVersion = $"{now:yy}.{now.Month}.0.0",
+                ServerVersion = version,
+                ClientVersion = version,
                 PreInstalled = true,
-                IsTest = false
+                IsTest = prerelease
             };
             Directory.CreateDirectory(model.Folder);
 
             // Act
             using var scope = _serviceProvider.CreateScope();
+            var korabliConfigService = scope.ServiceProvider.GetRequiredService<KorabliConfigService>();
+            korabliConfigService.CurrentConfig.Mirror = MirrorList.AliYun;
             var chsModService = scope.ServiceProvider.GetRequiredService<ChsModService>();
             var result = await chsModService.Install(model, this.TestContext.CancellationTokenSource.Token);
 
             // Assert
             Assert.IsTrue(result);
             Assert.IsTrue(Directory.Exists(model.ModFolder));
-            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "locale_config.xml")));
-            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "LICENSE")));
-            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "thanks.md")));
-            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "change.log")));
+            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "MK_L10N_CHS.mkmod")));
         }
 
         [TestMethod]
-        public async Task Install_Github()
+        [DataRow(true)]
+        public async Task Install_Github(bool prerelease)
         {
             // Arrange
             var now = DateTimeOffset.Now;
+            var version = prerelease ? $"{now:yy}.{now.Month + 1}" : $"{now:yy}.{now.Month}";
             var model = new GameDetectModel
             {
                 Folder = Path.Combine(_testBasePath, "game"),
-                ServerVersion = $"{now:yy}.{now.Month}.0.0",
-                ClientVersion = $"{now:yy}.{now.Month}.0.0",
+                ServerVersion = version,
+                ClientVersion = version,
                 PreInstalled = true,
-                IsTest = false
+                IsTest = prerelease
             };
             Directory.CreateDirectory(model.Folder);
 
@@ -107,11 +110,8 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
 
             // Assert
             Assert.IsTrue(result);
-            Assert.IsTrue(Directory.Exists(model.ModFolder));
-            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "locale_config.xml")));
-            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "LICENSE")));
-            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "thanks.md")));
-            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "change.log")));
+            Assert.IsTrue(Directory.Exists(model.ModFolder)); 
+            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "MK_L10N_CHS.mkmod")));
         }
 
     }

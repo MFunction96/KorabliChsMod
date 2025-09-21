@@ -1,8 +1,6 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string] $OutputFolder,
-    [Parameter(Mandatory = $false)]
-    [string] $Proxy = ""
+    [string] $OutputFolder
 )
 
 $workFolder = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [Guid]::NewGuid().ToString())
@@ -18,39 +16,6 @@ function Invoke-Signing {
     & "C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\SignTool.exe" sign /f $CertPath /p $CertPassword /fd SHA256 $FilePath
 }
 
-function Invoke-Hashing {
-    param (
-        [string] $FilePath
-    )
-
-    $hash = Get-FileHash -Path $FilePath -Algorithm SHA256
-    $hash.Hash | Out-File -FilePath "$FilePath.sha256" -Encoding utf8 -Force
-}
-
-function Get-WebFile {
-    param (
-        [string] $Url,
-        [string] $OutputPath,
-        [string] $Proxy = ""
-    )
-
-    $curlArgs = @(
-        "-sL",
-        "-o", $OutputPath,
-        "--connect-timeout", "60",
-        "--max-time", "60",
-        "--retry", "5",
-        "--retry-delay", "5",
-        "--retry-max-time", "60"
-    )
-
-    if ($Proxy) {
-        $curlArgs += "--proxy", $Proxy
-    }
-
-    & curl @curlArgs $Url
-}
-
 dotnet publish --output $publishFolder
 
 try {
@@ -61,28 +26,20 @@ New-Item -Path $OutputFolder -ItemType Directory -Force
 
 # 签名生成的程序文件
 Invoke-Signing "$publishFolder\KorabliChsMod.exe" "D:\Certificate\Xanadu_CodeSign_RSA_ICA1-PKCS8.pfx" $env:PFX_PASSWORD
-Invoke-Hashing "$publishFolder\KorabliChsMod.exe"
 
 # 生成安装包
 & "makensis.exe" /X"SetCompressor /SOLID /FINAL lzma" /DSOURCE="$publishFolder" /DVERSION="$env:BIN_VER" /INPUTCHARSET UTF8 /OUTPUTCHARSET UTF8 ".\.azurepipelines\publish\installer.nsi"
 Copy-Item -Path ".\.azurepipelines\publish\KorabliChsModInstaller.exe" -Destination $OutputFolder -Force
 
 Invoke-Signing "$OutputFolder\KorabliChsModInstaller.exe" "D:\Certificate\Xanadu_CodeSign_RSA_ICA1-PKCS8.pfx" $env:PFX_PASSWORD
-Invoke-Hashing "$OutputFolder\KorabliChsModInstaller.exe"
 
-Get-WebFile "https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe" "$publishFolder/windowsdesktop-runtime-win-x64.exe" $Proxy
+Invoke-WebRequest -Uri "https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe" -OutFile "$publishFolder\windowsdesktop-runtime-win-x64.exe"
 
 # 生成带运行时的安装包
 & "makensis.exe" /X"SetCompressor /SOLID /FINAL lzma" /DSOURCE="$publishFolder" /DVERSION="$env:BIN_VER" /INPUTCHARSET UTF8 /OUTPUTCHARSET UTF8 ".\.azurepipelines\publish\installer_runtime.nsi"
 Copy-Item -Path ".\.azurepipelines\publish\KorabliChsModInstallerWithRuntime.exe" -Destination $OutputFolder -Force
 
 Invoke-Signing "$OutputFolder\KorabliChsModInstallerWithRuntime.exe" "D:\Certificate\Xanadu_CodeSign_RSA_ICA1-PKCS8.pfx" $env:PFX_PASSWORD
-Invoke-Hashing "$OutputFolder\KorabliChsModInstallerWithRuntime.exe"
-
-aws s3api put-object --bucket warshipmod --key "korablichsmod/KorabliChsModInstaller.exe" --body "$OutputFolder\KorabliChsModInstaller.exe"
-aws s3api put-object --bucket warshipmod --key "korablichsmod/KorabliChsModInstaller.exe.sha256" --body "$OutputFolder\KorabliChsModInstaller.exe.sha256"
-aws s3api put-object --bucket warshipmod --key "korablichsmod/KorabliChsModInstallerWithRuntime.exe" --body "$OutputFolder\KorabliChsModInstallerWithRuntime.exe"
-aws s3api put-object --bucket warshipmod --key "korablichsmod/KorabliChsModInstallerWithRuntime.exe.sha256" --body "$OutputFolder\KorabliChsModInstallerWithRuntime.exe.sha256"
 
 try {
     Remove-Item -Path $workFolder -Force -Recurse

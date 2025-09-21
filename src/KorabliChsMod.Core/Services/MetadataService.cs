@@ -24,6 +24,9 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
 
+        /// <summary>
+        /// 元数据版本号正则表达式
+        /// </summary>
         public static Regex VersionRegex => MetadataService.VersionTagRegex();
 
         /// <summary>
@@ -37,39 +40,15 @@ namespace Xanadu.KorabliChsMod.Core.Services
             try
             {
                 var releaseModels = await this.GetMetadata(true);
-                if (releaseModels == null || releaseModels.Length == 0)
+                if (releaseModels is null || releaseModels.Length == 0)
                 {
                     throw new NullReferenceException("元数据获取失败！");
                 }
 
-                foreach (var releaseModel in releaseModels)
-                {
-                    if (releaseModel.Prerelease ^ preRelease)
-                    {
-                        continue;
-                    }
-
-                    var tagVersion = releaseModel.TagName[(releaseModel.TagName.IndexOf(".", StringComparison.OrdinalIgnoreCase) + 1)..].Trim();
-                    if (tagVersion.Contains('-'))
-                    {
-                        tagVersion = tagVersion[..tagVersion.IndexOf('-', StringComparison.OrdinalIgnoreCase)];
-                    }
-
-                    if (tagVersion.Count(q => q == '.') > 1)
-                    {
-                        tagVersion = tagVersion[..tagVersion.LastIndexOf('.')].Trim();
-                    }
-
-                    var version = Version.Parse(tagVersion);
-                    if (version > gameVersion)
-                    {
-                        continue;
-                    }
-
-                    return releaseModel;
-                }
-
-                throw new NullReferenceException("未找到符合条件的汉化包");
+                var releaseModel = releaseModels.FirstOrDefault(q =>
+                    q.Prerelease == preRelease &&
+                    Version.Parse(MetadataService.VersionRegex.Match(q.TagName).Groups["Version"].Value) <= gameVersion);
+                return releaseModel ?? throw new NullReferenceException("未找到符合条件的汉化包");
             }
             catch (Exception e)
             {
@@ -81,7 +60,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
 
                 throw;
             }
-            
+
         }
 
         /// <summary>
@@ -126,6 +105,6 @@ namespace Xanadu.KorabliChsMod.Core.Services
             return await response.Content.ReadFromJsonAsync<ReleaseModel[]>();
         }
 
-        
+
     }
 }

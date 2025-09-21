@@ -24,26 +24,12 @@ namespace Xanadu.KorabliChsMod.Core.Services
     /// <param name="metadataService">元信息获取</param>
     public partial class ChsModService(NetworkEngine networkEngine, FileCachePool fileCachePool, MetadataService metadataService) : IServiceEvent
     {
-        /// <summary>
-        /// 文件相对路径，bool值表示是否为文件夹
-        /// </summary>
-        private static readonly IEnumerable<(string FilePath, bool IsDirectory)> RelativeFilePath =
-        [
-            ("texts", true),
-            ("locale_config.xml", false),
-            ("LICENSE", false),
-            ("thanks.md", false),
-            ("change.log",false)
-        ];
+        private const string ModFileName = "MK_L10N_CHS.mkmod";
+
         [GeneratedRegex(@"(?<Version>\d+\.\d+)", RegexOptions.ExplicitCapture)]
         private static partial Regex GameVersionRegex();
 
         public static Regex VersionRegex => ChsModService.GameVersionRegex();
-
-        /// <summary>
-        /// 文件校验
-        /// </summary>
-        private readonly Checksum _checksum = new(SHAAlgorithm.SHA256);
 
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
@@ -56,40 +42,20 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <returns>成功返回true，失败返回false</returns>
         public async Task<bool> Install(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
         {
-            using var zipFile = fileCachePool.Register("Korabli_localization_chs.zip", "download");
-            var extractFolder = Path.Combine(zipFile.Pool.BasePath, Path.GetRandomFileName());
+            using var modFileCache = fileCachePool.Register(ChsModService.ModFileName, "download");
             try
             {
                 var gameVersion = ChsModService.VersionRegex.Match(gameDetectModel.GameVersion).Value;
                 var latest = await metadataService.GetModRelease(Version.Parse(gameVersion),
                     gameDetectModel.IsTest);
-                var downloadFile = latest.Assets.First(q => q.Name == "Korabli_localization_chs.zip").BrowserDownloadUrl;
-                await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
-                    zipFile.FullPath, 5, cancellationToken);
-                var installedFiles = await LoadInstalledFile();
-                using var zip = ZipFile.OpenRead(zipFile.FullPath);
-                ZipFile.ExtractToDirectory(zipFile.FullPath, extractFolder, Encoding.UTF8, true);
-                foreach (var item in ChsModService.RelativeFilePath)
+                var downloadFile = latest.Assets.First(q => q.Name == ChsModService.ModFileName).BrowserDownloadUrl;
+                await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile), modFileCache.FullPath, 5, cancellationToken);
+                if (!Directory.Exists(gameDetectModel.ModFolder))
                 {
-                    if (item.IsDirectory)
-                    {
-                        var textFolder = Path.Combine(gameDetectModel.ModFolder, item.FilePath);
-                        IOExtension.CopyDirectory(Path.Combine(extractFolder, item.FilePath), textFolder);
-                        var textFolderFiles = Directory.GetFiles(textFolder, "*.*", SearchOption.AllDirectories);
-                        foreach (var textFolderFile in textFolderFiles)
-                        {
-                            installedFiles[textFolderFile] = await this._checksum.GetFileHashAsync(textFolderFile, BinaryFormatting.BASE64, cancellationToken: cancellationToken);
-                        }
-                    }
-                    else
-                    {
-                        var file = Path.Combine(gameDetectModel.ModFolder, item.FilePath);
-                        File.Copy(Path.Combine(extractFolder, item.FilePath), file, true);
-                        installedFiles[file] = await this._checksum.GetFileHashAsync(file, BinaryFormatting.BASE64, cancellationToken: cancellationToken);
-                    }
+                    Directory.CreateDirectory(gameDetectModel.ModFolder);
                 }
 
-                await File.WriteAllTextAsync(KorabliConfigModel.InstalledFilePath, JsonSerializer.Serialize(installedFiles), cancellationToken);
+                File.Copy(modFileCache.FullPath, Path.Combine(gameDetectModel.ModFolder, ChsModService.ModFileName), true);
                 return true;
             }
             catch (Exception e)
@@ -101,27 +67,6 @@ namespace Xanadu.KorabliChsMod.Core.Services
 
                 return false;
             }
-            finally
-            {
-                IOExtension.DeleteDirectory(extractFolder);
-            }
-        }
-
-        /// <summary>
-        /// 加载已安装文件
-        /// </summary>
-        /// <returns>已安装文件目录</returns>
-        private static async Task<Dictionary<string, string>> LoadInstalledFile()
-        {
-            if (!File.Exists(KorabliConfigModel.InstalledFilePath))
-            {
-                return new Dictionary<string, string>();
-            }
-
-            var json = await File.ReadAllTextAsync(KorabliConfigModel.InstalledFilePath);
-            var files = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
-            return files;
-
         }
     }
 

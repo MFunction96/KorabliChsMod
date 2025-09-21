@@ -70,11 +70,11 @@ namespace Xanadu.KorabliChsMod.Core.Models
         public static readonly IDictionary<MirrorList, ResourceLinkModel> Links =
             new Dictionary<MirrorList, ResourceLinkModel>
             {
-                { MirrorList.Cloudflare , new ResourceLinkModel
+                { MirrorList.AliYun , new ResourceLinkModel
                 {
-                    Mirror = MirrorList.Cloudflare,
-                    ModMetadata = "https://warshipmod.mfbrain.xyz/mods/chs/metadata.json",
-                    UpdateMetadata = "https://warshipmod.mfbrain.xyz/korablichsmod/metadata.json"
+                    Mirror = MirrorList.AliYun,
+                    ModMetadata = "https://mk-localization-chs.oss-cn-wulanchabu.aliyuncs.com/mods/chs/metadata.json",
+                    UpdateMetadata = "https://mk-localization-chs.oss-cn-wulanchabu.aliyuncs.com/korablichsmod/metadata.json"
                 }}
             };
 
@@ -96,7 +96,7 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// <summary>
         /// 镜像站
         /// </summary>
-        public MirrorList Mirror { get; set; } = MirrorList.Cloudflare;
+        public MirrorList Mirror { get; set; } = MirrorList.AliYun;
 
         /// <summary>
         /// 自动更新

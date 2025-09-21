@@ -52,9 +52,7 @@ namespace Xanadu.KorabliChsMod.Core.Models
         public string ModFolder
             => string.IsNullOrEmpty(this.Folder)
                 ? string.Empty
-                : this.IsTest
-                    ? Path.Combine(this.Folder, "bin", this.BuildNumber, "res")
-                    : Path.Combine(this.Folder, "bin", this.BuildNumber, "res_mods");
+                : Path.Combine(this.Folder, "bin", this.BuildNumber, "res");
 
         /// <summary>
         /// game_info.xml路径
