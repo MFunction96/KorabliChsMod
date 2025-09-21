@@ -19,7 +19,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         public void VersionDetectTest(string subFolder, string expected)
         {
             var gameDetector = new GameDetectorService();
-            var model = gameDetector.Load(Path.Combine(Environment.CurrentDirectory, "assets", "GameDetectorService", subFolder));
+            var model = gameDetector.Load(Path.Combine("assets", "GameDetectorService", subFolder));
             Assert.IsNotNull(model);
             Assert.AreEqual(expected, model.GameVersion);
         }
@@ -33,7 +33,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         {
             var gameDetectModel = new GameDetectModel
             {
-                Folder = Path.Combine(Environment.CurrentDirectory, "assets", "GameDetectorService", subFolder),
+                Folder = Path.Combine("assets", "GameDetectorService", subFolder),
                 ClientVersion = version,
                 ServerVersion = version
             };
@@ -50,7 +50,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         {
             var gameDetectModel = new GameDetectModel
             {
-                Folder = Path.Combine(Environment.CurrentDirectory, "assets", "GameDetectorService", subFolder),
+                Folder = Path.Combine("assets", "GameDetectorService", subFolder),
                 ClientVersion = version,
                 ServerVersion = version
             };

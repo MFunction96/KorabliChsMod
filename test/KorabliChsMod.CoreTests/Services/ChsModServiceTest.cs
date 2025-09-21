@@ -67,7 +67,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             using var scope = _serviceProvider.CreateScope();
             var gameDetectService = scope.ServiceProvider.GetRequiredService<GameDetectorService>();
             var korabliConfigService = scope.ServiceProvider.GetRequiredService<KorabliConfigService>();
-            var model = gameDetectService.Load(Path.Combine(Environment.CurrentDirectory, "assets", "GameDetectorService", subFolder))!;
+            var model = gameDetectService.Load(Path.Combine(Environment.CurrentDirectory, "assets", "ChsModService", subFolder))!;
             korabliConfigService.CurrentConfig.Mirror = MirrorList.AliYun;
             var chsModService = scope.ServiceProvider.GetRequiredService<ChsModService>();
 
@@ -92,7 +92,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             using var scope = _serviceProvider.CreateScope();
             var gameDetectService = scope.ServiceProvider.GetRequiredService<GameDetectorService>();
             var korabliConfigService = scope.ServiceProvider.GetRequiredService<KorabliConfigService>();
-            var model = gameDetectService.Load(Path.Combine(Environment.CurrentDirectory, "assets", "GameDetectorService", subFolder))!;
+            var model = gameDetectService.Load(Path.Combine(Environment.CurrentDirectory, "assets", "ChsModService", subFolder))!;
             korabliConfigService.CurrentConfig.Mirror = MirrorList.AliYun;
             var chsModService = scope.ServiceProvider.GetRequiredService<ChsModService>();
 
