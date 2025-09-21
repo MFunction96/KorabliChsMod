@@ -16,6 +16,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         private IServiceProvider _serviceProvider = null!;
 
         private readonly string _testBasePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
         public TestContext TestContext { get; set; } = null!;
 
         [TestInitialize]
@@ -29,6 +30,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             services.AddSingleton<FileCachePool>();
             services.AddHttpClient<NetworkEngine>(RestApiClient.DefaultHttpClientAction)
                 .ConfigurePrimaryHttpMessageHandler(() => RestApiClient.DefaultHttpClientHandler());
+            services.AddTransient<GameDetectorService>();
             services.AddTransient<MetadataService>();
             services.AddTransient<ChsModService>();
             this._serviceProvider = services.BuildServiceProvider();
@@ -55,63 +57,53 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         }
 
         [TestMethod]
-        [DataRow(true)]
-        public async Task Install_AliYun(bool prerelease)
+        [DataRow("8824884_0", true)]
+        // [DataRow("8824884_1", false)]
+        // [DataRow("8824884_2", false)]
+        [DataRow("8824884_3", true)]
+        public async Task Install_AliYun(string subFolder, bool prerelease)
         {
             // Arrange
-            var now = DateTimeOffset.Now;
-            var version = prerelease ? $"{now:yy}.{now.Month + 1}.0.0.8601080" : $"{now:yy}.{now.Month}.0.0.8601080";
-            var model = new GameDetectModel
-            {
-                Folder = Path.Combine(_testBasePath, "game"),
-                ServerVersion = version,
-                ClientVersion = version,
-                PreInstalled = true,
-                IsTest = prerelease
-            };
-            Directory.CreateDirectory(model.Folder);
-
-            // Act
             using var scope = _serviceProvider.CreateScope();
+            var gameDetectService = scope.ServiceProvider.GetRequiredService<GameDetectorService>();
             var korabliConfigService = scope.ServiceProvider.GetRequiredService<KorabliConfigService>();
+            var model = gameDetectService.Load(Path.Combine(Environment.CurrentDirectory, "assets", "GameDetectorService", subFolder))!;
             korabliConfigService.CurrentConfig.Mirror = MirrorList.AliYun;
             var chsModService = scope.ServiceProvider.GetRequiredService<ChsModService>();
+
+            // Act
             var result = await chsModService.Install(model, this.TestContext.CancellationTokenSource.Token);
 
             // Assert
             Assert.IsTrue(result);
             Assert.IsTrue(Directory.Exists(model.ModFolder));
-            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "MK_L10N_CHS.mkmod")));
+            Assert.IsTrue(File.Exists(model.ChsModFilePath));
+            Assert.IsTrue(GameDetectorService.PathXmlCheck(model));
         }
 
         [TestMethod]
-        [DataRow(true)]
-        public async Task Install_Github(bool prerelease)
+        [DataRow("8824884_0", true)]
+        // [DataRow("8824884_1", false)]
+        // [DataRow("8824884_2", false)]
+        [DataRow("8824884_3", true)]
+        public async Task Install_Github(string subFolder, bool prerelease)
         {
             // Arrange
-            var now = DateTimeOffset.Now;
-            var version = prerelease ? $"{now:yy}.{now.Month + 1}" : $"{now:yy}.{now.Month}";
-            var model = new GameDetectModel
-            {
-                Folder = Path.Combine(_testBasePath, "game"),
-                ServerVersion = version,
-                ClientVersion = version,
-                PreInstalled = true,
-                IsTest = prerelease
-            };
-            Directory.CreateDirectory(model.Folder);
+            using var scope = _serviceProvider.CreateScope();
+            var gameDetectService = scope.ServiceProvider.GetRequiredService<GameDetectorService>();
+            var korabliConfigService = scope.ServiceProvider.GetRequiredService<KorabliConfigService>();
+            var model = gameDetectService.Load(Path.Combine(Environment.CurrentDirectory, "assets", "GameDetectorService", subFolder))!;
+            korabliConfigService.CurrentConfig.Mirror = MirrorList.AliYun;
+            var chsModService = scope.ServiceProvider.GetRequiredService<ChsModService>();
 
             // Act
-            using var scope = _serviceProvider.CreateScope();
-            var korabliConfigService = scope.ServiceProvider.GetRequiredService<KorabliConfigService>();
-            korabliConfigService.CurrentConfig.Mirror = MirrorList.GitHub;
-            var chsModService = scope.ServiceProvider.GetRequiredService<ChsModService>();
             var result = await chsModService.Install(model, this.TestContext.CancellationTokenSource.Token);
 
             // Assert
             Assert.IsTrue(result);
             Assert.IsTrue(Directory.Exists(model.ModFolder)); 
-            Assert.IsTrue(File.Exists(Path.Combine(model.ModFolder, "MK_L10N_CHS.mkmod")));
+            Assert.IsTrue(File.Exists(model.ChsModFilePath));
+            Assert.IsTrue(GameDetectorService.PathXmlCheck(model));
         }
 
     }

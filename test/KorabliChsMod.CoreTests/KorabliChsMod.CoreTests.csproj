@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -9,79 +9,114 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="assets\8824884_0\bin\8824884\bin64\paths.xml">
+	  <None Update="assets\ChsModService\8824884_0\bin\8824884\bin64\paths.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_0\game_info.xml">
+	  <None Update="assets\ChsModService\8824884_0\bin\8824884\mods\MK_L10N_CHS.mkmod">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_0\game_metadata\metadata.xml">
+	  <None Update="assets\ChsModService\8824884_0\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_0\preferences.xml">
+	  <None Update="assets\ChsModService\8824884_0\game_metadata\metadata.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_1\bin\8824884\bin64\paths.xml">
+	  <None Update="assets\ChsModService\8824884_0\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_0\bin\8824884\mods\MK_L10N_CHS.mkmod">
+	  <None Update="assets\ChsModService\8824884_1\bin\8824884\bin64\paths.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_1\game_info.xml">
+	  <None Update="assets\ChsModService\8824884_1\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_1\game_metadata\metadata.xml">
+	  <None Update="assets\ChsModService\8824884_1\game_metadata\metadata.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_1\preferences.xml">
+	  <None Update="assets\ChsModService\8824884_1\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_2\bin\8824884\bin64\paths.xml">
+	  <None Update="assets\ChsModService\8824884_2\bin\8824884\bin64\paths.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_2\game_info.xml">
+	  <None Update="assets\ChsModService\8824884_2\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_2\game_metadata\metadata.xml">
+	  <None Update="assets\ChsModService\8824884_2\game_metadata\metadata.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_2\preferences.xml">
+	  <None Update="assets\ChsModService\8824884_2\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_3\bin\8824884\bin64\paths.xml">
+	  <None Update="assets\ChsModService\8824884_3\bin\8824884\bin64\paths.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_3\bin\8824884\mods\MK_L10N_CHS.mkmod">
+	  <None Update="assets\ChsModService\8824884_3\bin\8824884\mods\MK_L10N_CHS.mkmod">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_3\game_info.xml">
+	  <None Update="assets\ChsModService\8824884_3\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_3\game_metadata\metadata.xml">
+	  <None Update="assets\ChsModService\8824884_3\game_metadata\metadata.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\8824884_3\preferences.xml">
+	  <None Update="assets\ChsModService\8824884_3\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\bin\8601080\.gitkeep">
+	  <None Update="assets\GameDetectorService\8824884_0\bin\8824884\bin64\paths.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\config_test.json">
+	  <None Update="assets\GameDetectorService\8824884_0\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\game_info.xml">
+	  <None Update="assets\GameDetectorService\8824884_0\game_metadata\metadata.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\game_metadata\metadata.xml">
+	  <None Update="assets\GameDetectorService\8824884_0\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\preferences.xml">
+	  <None Update="assets\GameDetectorService\8824884_1\bin\8824884\bin64\paths.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="assets\bin\8601080\" />
+	  <None Update="assets\GameDetectorService\8824884_0\bin\8824884\mods\MK_L10N_CHS.mkmod">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_1\game_info.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_1\game_metadata\metadata.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_1\preferences.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_2\bin\8824884\bin64\paths.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_2\game_info.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_2\game_metadata\metadata.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_2\preferences.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_3\bin\8824884\bin64\paths.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_3\bin\8824884\mods\MK_L10N_CHS.mkmod">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_3\game_info.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_3\game_metadata\metadata.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\8824884_3\preferences.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>
