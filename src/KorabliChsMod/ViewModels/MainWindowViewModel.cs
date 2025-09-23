@@ -213,7 +213,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             set { SetProperty(ref this._message, value); }
         }
 
-        public bool RemoveEnabled => !(this._selectedGameDetectModel?.IsTest ?? false) && this._coreEnabled;
+        public bool RemoveEnabled => (this._selectedGameDetectModel?.ChsMod ?? false) && this._coreEnabled;
 
         #endregion
 
@@ -588,19 +588,21 @@ namespace Xanadu.KorabliChsMod.ViewModels
             try
             {
                 this.CoreEnabled = false;
-                if (!string.IsNullOrEmpty(this._selectedGameDetectModel?.ModFolder))
+                var result = this._chsModService.Uninstall(this._selectedGameDetectModel!);
+                if (!result)
                 {
-                    IOExtension.DeleteDirectory(this._selectedGameDetectModel.ModFolder);
+                    this.SyncServiceMessage(this, new ServiceEventArg
+                    {
+                        Message = "卸载汉化失败！"
+                    });
+                    return;
                 }
 
-                this.Reload();
                 this.SyncServiceMessage(this, new ServiceEventArg
                 {
-                    Message = "移除Mod完成！"
+                    Message = "卸载汉化成功！"
                 });
 
-                this.CoreEnabled = true;
-                this.RefreshViews();
             }
             catch (Exception e)
             {
@@ -609,6 +611,12 @@ namespace Xanadu.KorabliChsMod.ViewModels
                     Message = "卸载汉化失败！",
                     Exception = e
                 });
+            }
+            finally
+            {
+                this.Reload();
+                this.CoreEnabled = true;
+                this.RefreshViews();
             }
         });
 
