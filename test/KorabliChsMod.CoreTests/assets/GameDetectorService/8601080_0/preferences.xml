@@ -1,0 +1,1226 @@
+<preferences.xml>
+	<scriptsPreferences>
+		<ui>
+			<locale>	zh_cn	</locale>
+			<premShownCommon>	false	</premShownCommon>
+			<premShownWOWS>	false	</premShownWOWS>
+			<IMPositionX>
+				<IM>	1228.8000	</IM>
+			</IMPositionX>
+			<IMPositionY>
+				<IM>	172.8000	</IM>
+			</IMPositionY>
+			<seenPriorLoadingHints>
+				<IDS_TIPS_SHIP_MANAGEMENT>	true	</IDS_TIPS_SHIP_MANAGEMENT>
+				<IDS_TIPS_DEFENSE>	true	</IDS_TIPS_DEFENSE>
+				<IDS_TIPS_BINOCULARS>	true	</IDS_TIPS_BINOCULARS>
+				<IDS_TIPS_AIR_DEFENSE_SECTOR_GAIN>	true	</IDS_TIPS_AIR_DEFENSE_SECTOR_GAIN>
+				<IDS_TIPS_SHIP_MOVEMENT>	true	</IDS_TIPS_SHIP_MOVEMENT>
+				<IDS_TIPS_FIRE_AND_FLOODING>	true	</IDS_TIPS_FIRE_AND_FLOODING>
+				<IDS_TIPS_SUBMARINE_DEPTH_CONTROL>	true	</IDS_TIPS_SUBMARINE_DEPTH_CONTROL>
+			</seenPriorLoadingHints>
+			<battleLoadingTabIndex>	1	</battleLoadingTabIndex>
+			<seenTutorialHints>
+				<movementHint>	3	</movementHint>
+				<shipModifiersHint>	3	</shipModifiersHint>
+				<zoomInHint>	3	</zoomInHint>
+				<zoomOutHint>	3	</zoomOutHint>
+				<repairBurnHint>	3	</repairBurnHint>
+				<aaPrioritySectorHint>	3	</aaPrioritySectorHint>
+				<battleAgainstSubmarineHint>	3	</battleAgainstSubmarineHint>
+				<enemySubmarineWavedUsHint>	3	</enemySubmarineWavedUsHint>
+				<enemySubmarineWavedResetHint>	2	</enemySubmarineWavedResetHint>
+				<repairFloodHint>	3	</repairFloodHint>
+				<newRocketsUnderAttackHint>	3	</newRocketsUnderAttackHint>
+				<newRocketsFirstLaunchHint>	3	</newRocketsFirstLaunchHint>
+				<newRocketsFirstAttackHint>	3	</newRocketsFirstAttackHint>
+				<pingerGunHowTo>	3	</pingerGunHowTo>
+				<submarineDiveDown>	3	</submarineDiveDown>
+				<submarineDiveUp>	3	</submarineDiveUp>
+				<submarineWaveHitsHint>	3	</submarineWaveHitsHint>
+				<submarineNoEnergyHint>	3	</submarineNoEnergyHint>
+				<pingerGunTorpedoesShot>	3	</pingerGunTorpedoesShot>
+				<oilLeakPendingHint>	3	</oilLeakPendingHint>
+				<enemySubmarineWavedPlayerSubmarineHint>	3	</enemySubmarineWavedPlayerSubmarineHint>
+				<enemySubmarineWavedPlayerSubmarineResetHint>	2	</enemySubmarineWavedPlayerSubmarineResetHint>
+				<oilLeakStartedHint>	3	</oilLeakStartedHint>
+				<submarineMultipleTargetsHint>	3	</submarineMultipleTargetsHint>
+				<scoutCameraHint>	3	</scoutCameraHint>
+				<keyTargetInBattleHint>	2	</keyTargetInBattleHint>
+				<submarineDeactivateWaveHit>	3	</submarineDeactivateWaveHit>
+				<submarineSelectActiveWaveHit>	3	</submarineSelectActiveWaveHit>
+				<submarineActiveWaveHit>	3	</submarineActiveWaveHit>
+				<pushAllyTarget>	3	</pushAllyTarget>
+				<saveAllyTarget>	3	</saveAllyTarget>
+				<pushBothTargets>	3	</pushBothTargets>
+			</seenTutorialHints>
+			<tutorialHintsRepeatCount>
+				<movementHint>	1	</movementHint>
+				<shipModifiersHint>	1	</shipModifiersHint>
+				<repairBurnHint>	1	</repairBurnHint>
+				<aaPrioritySectorHint>	3	</aaPrioritySectorHint>
+				<battleAgainstSubmarineHint>	1	</battleAgainstSubmarineHint>
+				<enemySubmarineWavedUsHint>	3	</enemySubmarineWavedUsHint>
+				<enemySubmarineWavedResetHint>	2	</enemySubmarineWavedResetHint>
+				<repairFloodHint>	1	</repairFloodHint>
+				<newRocketsUnderAttackHint>	2	</newRocketsUnderAttackHint>
+				<newRocketsFirstLaunchHint>	1	</newRocketsFirstLaunchHint>
+				<newRocketsFirstAttackHint>	2	</newRocketsFirstAttackHint>
+				<pingerGunHowTo>	3	</pingerGunHowTo>
+				<submarineDiveDown>	1	</submarineDiveDown>
+				<submarineDiveUp>	1	</submarineDiveUp>
+				<submarineWaveHitsHint>	9	</submarineWaveHitsHint>
+				<submarineNoEnergyHint>	1	</submarineNoEnergyHint>
+				<pingerGunTorpedoesShot>	3	</pingerGunTorpedoesShot>
+				<oilLeakPendingHint>	3	</oilLeakPendingHint>
+				<enemySubmarineWavedPlayerSubmarineHint>	3	</enemySubmarineWavedPlayerSubmarineHint>
+				<enemySubmarineWavedPlayerSubmarineResetHint>	2	</enemySubmarineWavedPlayerSubmarineResetHint>
+				<oilLeakStartedHint>	3	</oilLeakStartedHint>
+				<submarineMultipleTargetsHint>	6	</submarineMultipleTargetsHint>
+				<scoutCameraHint>	3	</scoutCameraHint>
+				<strategicActionsTaskHint>	2	</strategicActionsTaskHint>
+				<keyTargetInBattleHint>	19	</keyTargetInBattleHint>
+				<submarineSelectActiveWaveHit>	1	</submarineSelectActiveWaveHit>
+				<submarineActiveWaveHit>	1	</submarineActiveWaveHit>
+				<pushAllyTarget>	3	</pushAllyTarget>
+				<saveAllyTarget>	3	</saveAllyTarget>
+				<pushBothTargets>	3	</pushBothTargets>
+			</tutorialHintsRepeatCount>
+			<switchPurchaseShipBuyCommander>	false	</switchPurchaseShipBuyCommander>
+			<crewRecruitmentOnPurchaseOption>	0	</crewRecruitmentOnPurchaseOption>
+			<commentWantTo_division />
+			<chatBoxWidth>
+				<classesColor>	1	</classesColor>
+				<colorHP>	2	</colorHP>
+				<panelsScale>	114.0000	</panelsScale>
+				<clan-451307@clans.wows.wowsru.loc>	462.0000	</clan-451307@clans.wows.wowsru.loc>
+				<teamHPPlus_enemy_positionY>	128.0000	</teamHPPlus_enemy_positionY>
+				<teamHPPlus_ally_barType>	1.0000	</teamHPPlus_ally_barType>
+				<209799102@wowsru.loc>	440.0000	</209799102@wowsru.loc>
+				<teamHPPlus_cellsHeight>	19.0000	</teamHPPlus_cellsHeight>
+				<teamHPPlus_cellsCount>	25.0000	</teamHPPlus_cellsCount>
+				<teamHPPlus_cellsIndent>	3.0000	</teamHPPlus_cellsIndent>
+				<teamHPPlus_ally_positionX>	-5.0000	</teamHPPlus_ally_positionX>
+				<teamHPPlus_ally_positionY>	128.0000	</teamHPPlus_ally_positionY>
+				<teamHPPlus_enemy_positionX>	1810.0000	</teamHPPlus_enemy_positionX>
+				<210935348@wowsru.loc>	462.0000	</210935348@wowsru.loc>
+				<prebattle>	500.0000	</prebattle>
+				<scoreTimer2Ally_positionX>	934.0000	</scoreTimer2Ally_positionX>
+				<scoreTimer2Ally_positionY>	119.0000	</scoreTimer2Ally_positionY>
+			</chatBoxWidth>
+			<elementsGroupExpand>
+				<showIcons>	false	</showIcons>
+				<showNickNames>	true	</showNickNames>
+				<showNickNamesWithClan>	true	</showNickNamesWithClan>
+				<showTTX0>	false	</showTTX0>
+				<teamHPPlus_vSyncEnabled>	true	</teamHPPlus_vSyncEnabled>
+				<teamHPPlus_showK>	true	</teamHPPlus_showK>
+				<channels4641564f5249544553>	true	</channels4641564f5249544553>
+				<channels534841524544>	true	</channels534841524544>
+				<channels4d594348414e4e454c53>	true	</channels4d594348414e4e454c53>
+				<channels484953544f5259>	true	</channels484953544f5259>
+				<contacts4944535f434841545f47524f55505f465249454e4453>	true	</contacts4944535f434841545f47524f55505f465249454e4453>
+				<contacts4944535f47524f55505f5449544c455f49474e4f525f4c495354>	false	</contacts4944535f47524f55505f5449544c455f49474e4f525f4c495354>
+				<contacts4944535f434841545f47524f55505f524546455252414c53>	true	</contacts4944535f434841545f47524f55505f524546455252414c53>
+			</elementsGroupExpand>
+			<shipSellAllModulesFlag>	1	</shipSellAllModulesFlag>
+			<defaultRoute>
+				<exterior>	camouflage	</exterior>
+				<profile>	collections	</profile>
+			</defaultRoute>
+			<summaryInset>	1	</summaryInset>
+			<shipStatsSortIndex>	2	</shipStatsSortIndex>
+			<contactsInset>	0	</contactsInset>
+			<shipPanelExpanded>	true	</shipPanelExpanded>
+			<isEconomicsExpanded>	true	</isEconomicsExpanded>
+			<navalFlagAccordeonExpanded>	true	</navalFlagAccordeonExpanded>
+			<seenAlmanacs>
+				<acc210332722_2309>	15	</acc210332722_2309>
+				<acc210475943_2309>	1	</acc210475943_2309>
+				<acc210475943_2310>	1	</acc210475943_2310>
+				<acc210475943_2311>	1	</acc210475943_2311>
+				<acc210475943_2312>	1	</acc210475943_2312>
+				<acc210475943_2401>	1	</acc210475943_2401>
+				<acc210475943_2402>	1	</acc210475943_2402>
+				<acc210475943_2403>	1	</acc210475943_2403>
+				<acc210475943_2404>	15	</acc210475943_2404>
+				<acc210475943_2405>	1	</acc210475943_2405>
+				<acc210475943_2406>	2	</acc210475943_2406>
+				<acc210475943_2407>	4	</acc210475943_2407>
+			</seenAlmanacs>
+			<crewAssignRetrainingOption>	1	</crewAssignRetrainingOption>
+			<aaPrioritySectorActivateCount>	1260	</aaPrioritySectorActivateCount>
+			<tabStatsTabIndex>	0	</tabStatsTabIndex>
+			<isBattlePassTasksNew>	false	</isBattlePassTasksNew>
+			<wgncMessagePositionX>
+				<WGNC>	1222.0000	</WGNC>
+			</wgncMessagePositionX>
+			<wgncMessagePositionY>
+				<WGNC>	264.0000	</WGNC>
+			</wgncMessagePositionY>
+			<crewRecruitmentOption>	1	</crewRecruitmentOption>
+			<chatBoxPositionX>
+				<209799102@wowsru.loc>	1593.0000	</209799102@wowsru.loc>
+				<210935348@wowsru.loc>	43.0000	</210935348@wowsru.loc>
+				<prebattle>	1208.0000	</prebattle>
+				<clan-451307@clans.wows.wowsru.loc>	43.0000	</clan-451307@clans.wows.wowsru.loc>
+			</chatBoxPositionX>
+			<chatBoxPositionY>
+				<209799102@wowsru.loc>	655.0000	</209799102@wowsru.loc>
+				<210935348@wowsru.loc>	808.0000	</210935348@wowsru.loc>
+				<prebattle>	117.0000	</prebattle>
+				<clan-451307@clans.wows.wowsru.loc>	808.0000	</clan-451307@clans.wows.wowsru.loc>
+			</chatBoxPositionY>
+			<chatBoxHeight>
+				<clan-451307@clans.wows.wowsru.loc>	310.0000	</clan-451307@clans.wows.wowsru.loc>
+				<209799102@wowsru.loc>	260.0000	</209799102@wowsru.loc>
+				<210935348@wowsru.loc>	310.0000	</210935348@wowsru.loc>
+				<prebattle>	300.0000	</prebattle>
+			</chatBoxHeight>
+			<crewResetSkillType>	1.0000	</crewResetSkillType>
+			<PBSEconomicsExpand>
+				<creditsSpentPerBattle>	true	</creditsSpentPerBattle>
+				<creditsModifiers>	false	</creditsModifiers>
+				<expModifiers>	false	</expModifiers>
+			</PBSEconomicsExpand>
+			<armsRaceInstructionsSeen>	true	</armsRaceInstructionsSeen>
+			<crewFiringOption>	2	</crewFiringOption>
+			<crewRetrainingOption>	3	</crewRetrainingOption>
+			<isFilteredShipsHided>	true	</isFilteredShipsHided>
+			<achievementsGroupExpand>
+				<EXPLORING_ACHIEVEMENT>	true	</EXPLORING_ACHIEVEMENT>
+				<MEMORABLE_ACHIEVEMENT>	true	</MEMORABLE_ACHIEVEMENT>
+				<ADVANCED_ACHIEVEMENT>	true	</ADVANCED_ACHIEVEMENT>
+				<BATTLE_ACHIEVEMENT>	true	</BATTLE_ACHIEVEMENT>
+			</achievementsGroupExpand>
+			<divisionPlayersListWidth>	280.0000	</divisionPlayersListWidth>
+			<switchBattleLoadingTabForEvent>	false	</switchBattleLoadingTabForEvent>
+			<switchUnmountSellModernization>	8	</switchUnmountSellModernization>
+			<shipSortStatsDirection>	true	</shipSortStatsDirection>
+			<showLoginRewardsOnDockEnter>	true	</showLoginRewardsOnDockEnter>
+		</ui>
+		<version>	36	</version>
+		<net_credentials>
+			<active_server>	&#208;&#156;&#208;&#152;&#208;&#160; &#208;&#154;&#208;&#158;&#208;&#160;&#208;&#144;&#208;&#145;&#208;&#155;&#208;&#149;&#208;&#153;	</active_server>
+			<demo />
+			<external />
+		</net_credentials>
+		<lobby_values>
+			<ship>	3667834576	</ship>
+			<port_preset_custom />
+			<port_preset>	tableruby	</port_preset>
+			<shipBattleHistory>	3765352144,1702037763,4078876656,1710509565,4185896944,1697882902,3764336432,1703164709,3666786288,1716898806,3752802000,1713276193,3740186064,1718529697,3739137488,1716038760,4182652208,1701571910,4075697872,1716468525,4181604048,1716553808,4180588528,1702201244,4276041712,1702297222,3751720912,1703328778,4184815056,1697458057,4188976432,1694258610,3751196368,1716551090,4074649296,1716984151,4287542992,1711631491,4290689008,1694837743,4293867504,1694931575,3655284688,1722435420,4186879408,1697947997,3766433072,1703211662,4281284304,1712395607,4287575760,1698149518,3667834576,1722607469,4182685680,1702182989,3765352400,1703213865,3656333264,1716895160,4292785968,1694871398,3666818864,1716299196,3750672112,1722519389,3751786192,1719152605,3668883440,1704006585,4076746448,1715517282,4289607664,1702176710,4183734256,1702177913,4078909392,1703218347,3667802064,1717588242,3555670000,1704006032,3765319120,1703208686,3760109008,1722518764,4077795024,1716470566,3762272208,1718455840,4292818736,1722521448,4293834736,1694829688,4078843600,1716470055,4269717488,1694922139,3743365072,1703216172,4256085712,1694332178,4185798384,1701601047,4292753392,1694838292,4284430032,1711550979,4282333168,1702200433,4078909232,1703850627,4186879728,1697880163,4181603632,1722606607,4282267344,1722520771,4288624336,1710206180,3762173936,1714812501,4183209424,1716984713,4074714928,1715860385,3445569328,1719659103,4065212112,1716897215,3445503824,1721740141,3741234992,1714731913,4181637104,1702200044,3763288016,1717592159,4075763504,1709995960,3969857328,1711373513,4277090288,1722605555,4183701200,1712574168,4273911792,1722604776,4288559088,1704715197,3553572848,1709458090,3763255088,1703209049,3741267760,1722513844,4183700784,1705407831,3763254608,1703165797,3699291600,1702113409,4184749360,1694522851,4293834544,1694841070,4280170480,1694938572,4286527472,1702183488,3667900400,1702200791,3753818064,1703215665,4183734064,1710160744,4077860656,1708948292,3764303216,1704007498,4074158064,1705149537,4185831152,1697957176,4186846960,1697876629,4185797936,1694329491,3447600848,1717671552,4292786160,1694832399,3732879312,1703217814,3446585136,1716983303,4179572528,1722603719,4187895536,1697872632,4186846512,1694263048,4289640432,1694937833,4274927600,1694923591,4288624624,1695972393,4076812080,1709958231,4187927984,1697860846,3752769264,1717590398,4183766480,1703934095,4187895088,1694261256,3667801808,1702114297,4266538992,1694838967,4076811984,1707638053,3447666672,1717320321,4183799792,1715519128,3667801296,1714734027,4077860816,1705406030,3760142064,1711355728,4187928304,1697859360,3764271088,1702177427,4183766864,1704460648,4290721776,1695388640,4259264496,1702178794,3764303056,1703212370,3751720752,1717681559,3763287856,1722430925,4182652624,1713270065,4288591856,1713270940,4078352368,1702176300,3752736208,1710588165,3749656016,1719316903,3655251664,1721734538,4290655952,1716045981	</shipBattleHistory>
+			<game_type>	RandomBattle	</game_type>
+			<game_type_game_param_id>	0	</game_type_game_param_id>
+		</lobby_values>
+		<weaponSection>
+			<id_210332722>
+				<ship_4293834736 />
+				<ship_4292786160>
+					<wt_0>	1,0	</wt_0>
+				</ship_4292786160>
+				<ship_4188976432 />
+				<ship_4187895088>
+					<wt_0>	1,0	</wt_0>
+				</ship_4187895088>
+				<ship_4186846512>
+					<wt_0>	0,0	</wt_0>
+				</ship_4186846512>
+				<ship_4185797936>
+					<wt_0>	0,0	</wt_0>
+				</ship_4185797936>
+				<ship_4184749360>
+					<wt_1>	1,0	</wt_1>
+					<wt_0>	0,0	</wt_0>
+				</ship_4184749360>
+				<ship_4256085712 />
+			</id_210332722>
+			<id_210475943>
+				<ship_4293834736 />
+				<ship_4292786160>
+					<wt_0>	0,0	</wt_0>
+				</ship_4292786160>
+				<ship_4290689008>
+					<wt_0>	0,0	</wt_0>
+				</ship_4290689008>
+				<ship_4292753392>
+					<wt_0>	0,0	</wt_0>
+				</ship_4292753392>
+				<ship_4266538992>
+					<wt_0>	0,0	</wt_0>
+				</ship_4266538992>
+				<ship_4269717488>
+					<wt_0>	1,0	</wt_0>
+				</ship_4269717488>
+				<ship_4274927600>
+					<wt_0>	0,0	</wt_0>
+				</ship_4274927600>
+				<ship_4293834544 />
+				<ship_4280170480>
+					<wt_1>	0,0	</wt_1>
+					<wt_0>	0,0	</wt_0>
+				</ship_4280170480>
+				<ship_4293867504>
+					<wt_0>	0,0	</wt_0>
+				</ship_4293867504>
+				<ship_3764303056>
+					<wt_0>	0,0	</wt_0>
+				</ship_3764303056>
+				<ship_4292785968>
+					<wt_0>	1,0	</wt_0>
+				</ship_4292785968>
+				<ship_4289640432>
+					<wt_0>	1,0	</wt_0>
+				</ship_4289640432>
+				<ship_3743365072>
+					<wt_0>	1,0	</wt_0>
+				</ship_3743365072>
+				<ship_4185896944 />
+				<ship_4290721776>
+					<wt_0>	1,0	</wt_0>
+				</ship_4290721776>
+				<ship_4183734256>
+					<wt_0>	1,0	</wt_0>
+				</ship_4183734256>
+				<ship_4289607664>
+					<wt_1>	0,0	</wt_1>
+				</ship_4289607664>
+				<ship_4078876656>
+					<wt_0>	1,0	</wt_0>
+				</ship_4078876656>
+				<ship_4182685680>
+					<wt_0>	0,0	</wt_0>
+				</ship_4182685680>
+				<ship_4078352368 />
+				<ship_4292818736>
+					<wt_0>	1,0	</wt_0>
+				</ship_4292818736>
+				<ship_4184815056>
+					<wt_0>	1,0	</wt_0>
+				</ship_4184815056>
+				<ship_3751720752>
+					<wt_0>	1,0	</wt_0>
+					<wt_1>	1,0	</wt_1>
+				</ship_3751720752>
+				<ship_4288624624>
+					<wt_0>	1,0	</wt_0>
+				</ship_4288624624>
+				<ship_4181637104>
+					<wt_0>	0,0	</wt_0>
+					<wt_1>	1,0	</wt_1>
+				</ship_4181637104>
+				<ship_4078909392>
+					<wt_0>	0,0	</wt_0>
+				</ship_4078909392>
+				<ship_3656333264>
+					<wt_0>	0,0	</wt_0>
+				</ship_3656333264>
+				<ship_4259264496>
+					<wt_0>	1,0	</wt_0>
+				</ship_4259264496>
+				<ship_4078909232>
+					<wt_0>	1,0	</wt_0>
+				</ship_4078909232>
+				<ship_4183700784>
+					<wt_0>	0,0	</wt_0>
+					<wt_1>	0,0	</wt_1>
+				</ship_4183700784>
+				<ship_4183734064>
+					<wt_0>	0,0	</wt_0>
+				</ship_4183734064>
+				<ship_4286527472>
+					<wt_0>	1,0	</wt_0>
+				</ship_4286527472>
+				<ship_4183766864>
+					<wt_0>	1,0	</wt_0>
+				</ship_4183766864>
+				<ship_4077860816>
+					<wt_0>	1,0	</wt_0>
+				</ship_4077860816>
+				<ship_3751196368>
+					<wt_2>	1,0	</wt_2>
+				</ship_3751196368>
+				<ship_4288591856>
+					<wt_0>	0,0	</wt_0>
+				</ship_4288591856>
+				<ship_3763287856>
+					<wt_0>	1,0	</wt_0>
+				</ship_3763287856>
+				<ship_4187928304>
+					<wt_0>	1,0	</wt_0>
+				</ship_4187928304>
+				<ship_4187927984>
+					<wt_0>	1,0	</wt_0>
+				</ship_4187927984>
+				<ship_4187895536>
+					<wt_0>	0,0	</wt_0>
+				</ship_4187895536>
+				<ship_4186846960>
+					<wt_0>	1,0	</wt_0>
+				</ship_4186846960>
+				<ship_4186879728>
+					<wt_0>	1,0	</wt_0>
+				</ship_4186879728>
+				<ship_4185831152>
+					<wt_0>	1,0	</wt_0>
+				</ship_4185831152>
+				<ship_4186879408 />
+				<ship_4185798384>
+					<wt_0>	1,0	</wt_0>
+				</ship_4185798384>
+				<ship_4183766480>
+					<wt_0>	1,0	</wt_0>
+				</ship_4183766480>
+				<ship_4287575760>
+					<wt_0>	1,0	</wt_0>
+				</ship_4287575760>
+				<ship_4183209424>
+					<wt_2>	0,0	</wt_2>
+				</ship_4183209424>
+				<ship_4183799792 />
+				<ship_4287542992>
+					<wt_0>	0,0	</wt_0>
+				</ship_4287542992>
+				<ship_4282333168>
+					<wt_0>	1,0	</wt_0>
+				</ship_4282333168>
+				<ship_3732879312>
+					<wt_0>	1,0	</wt_0>
+				</ship_3732879312>
+				<ship_4182652208>
+					<wt_0>	0,0	</wt_0>
+					<wt_1>	0,0	</wt_1>
+				</ship_4182652208>
+				<ship_4180588528>
+					<wt_0>	0,0	</wt_0>
+				</ship_4180588528>
+				<ship_3666786288>
+					<wt_0>	0,0	</wt_0>
+					<wt_1>	1,0	</wt_1>
+				</ship_3666786288>
+				<ship_3666818864>
+					<wt_0>	1,0	</wt_0>
+				</ship_3666818864>
+				<ship_4276041712>
+					<wt_0>	1,0	</wt_0>
+				</ship_4276041712>
+				<ship_4076811984>
+					<wt_0>	1,0	</wt_0>
+				</ship_4076811984>
+				<ship_4288559088>
+					<wt_1>	0,0	</wt_1>
+					<wt_0>	0,0	</wt_0>
+				</ship_4288559088>
+				<ship_3765352144>
+					<wt_0>	0,0	</wt_0>
+				</ship_3765352144>
+				<ship_4288624336>
+					<wt_0>	1,0	</wt_0>
+				</ship_4288624336>
+				<ship_3739137488>
+					<wt_0>	0,0	</wt_0>
+				</ship_3739137488>
+				<ship_3699291600>
+					<wt_0>	1,0	</wt_0>
+				</ship_3699291600>
+				<ship_3667834576>
+					<wt_0>	0,0	</wt_0>
+				</ship_3667834576>
+				<ship_3667801808 />
+				<ship_3764271088 />
+				<ship_3667900400 />
+				<ship_4273911792>
+					<wt_0>	0,0	</wt_0>
+				</ship_4273911792>
+				<ship_4277090288>
+					<wt_0>	1,0	</wt_0>
+					<wt_1>	1,0	</wt_1>
+				</ship_4277090288>
+				<ship_3969857328>
+					<wt_0>	1,0	</wt_0>
+				</ship_3969857328>
+				<ship_4074649296>
+					<wt_0>	0,0	</wt_0>
+					<wt_1>	0,0	</wt_1>
+				</ship_4074649296>
+				<ship_4290655952 />
+				<ship_4078843600>
+					<wt_1>	0,0	</wt_1>
+				</ship_4078843600>
+				<ship_4077795024>
+					<wt_1>	1,0	</wt_1>
+					<wt_0>	0,0	</wt_0>
+				</ship_4077795024>
+				<ship_4074158064>
+					<wt_2>	0,0	</wt_2>
+				</ship_4074158064>
+				<ship_3764336432>
+					<wt_0>	1,0	</wt_0>
+				</ship_3764336432>
+				<ship_3741267760>
+					<wt_0>	1,0	</wt_0>
+				</ship_3741267760>
+				<ship_3763254608>
+					<wt_0>	1,0	</wt_0>
+				</ship_3763254608>
+				<ship_3765319120 />
+				<ship_3763255088>
+					<wt_0>	0,0	</wt_0>
+				</ship_3763255088>
+				<ship_3741234992>
+					<wt_0>	0,0	</wt_0>
+				</ship_3741234992>
+				<ship_3766433072>
+					<wt_0>	1,0	</wt_0>
+				</ship_3766433072>
+				<ship_3667801296>
+					<wt_1>	0,0	</wt_1>
+					<wt_0>	1,0	</wt_0>
+				</ship_3667801296>
+				<ship_3553572848>
+					<wt_0>	1,0	</wt_0>
+				</ship_3553572848>
+				<ship_3765352400>
+					<wt_0>	0,0	</wt_0>
+				</ship_3765352400>
+				<ship_3753818064>
+					<wt_0>	0,0	</wt_0>
+				</ship_3753818064>
+				<ship_3752802000>
+					<wt_0>	1,0	</wt_0>
+				</ship_3752802000>
+				<ship_3667802064>
+					<wt_0>	0,0	</wt_0>
+					<wt_1>	0,0	</wt_1>
+				</ship_3667802064>
+				<ship_4181604048>
+					<wt_0>	0,0	</wt_0>
+					<wt_1>	0,0	</wt_1>
+				</ship_4181604048>
+				<ship_3751720912 />
+				<ship_4065212112>
+					<wt_0>	0,0	</wt_0>
+					<wt_1>	0,0	</wt_1>
+				</ship_4065212112>
+				<ship_3760109008>
+					<wt_0>	1,0	</wt_0>
+					<wt_1>	1,0	</wt_1>
+				</ship_3760109008>
+				<ship_3762173936>
+					<wt_0>	0,0	</wt_0>
+					<wt_1>	0,0	</wt_1>
+				</ship_3762173936>
+				<ship_3762272208>
+					<wt_1>	1,0	</wt_1>
+				</ship_3762272208>
+				<ship_3555670000>
+					<wt_0>	1,0	</wt_0>
+				</ship_3555670000>
+				<ship_3668883440>
+					<wt_0>	1,0	</wt_0>
+				</ship_3668883440>
+				<ship_3764303216 />
+				<ship_3752769264>
+					<wt_0>	0,0	</wt_0>
+				</ship_3752769264>
+				<ship_4077860656>
+					<wt_0>	1,0	</wt_0>
+					<wt_1>	1,0	</wt_1>
+				</ship_4077860656>
+				<ship_4076812080>
+					<wt_0>	1,0	</wt_0>
+					<wt_1>	1,0	</wt_1>
+				</ship_4076812080>
+				<ship_4075763504>
+					<wt_0>	0,0	</wt_0>
+				</ship_4075763504>
+				<ship_4074714928>
+					<wt_0>	1,0	</wt_0>
+				</ship_4074714928>
+				<ship_3752736208>
+					<wt_0>	1,0	</wt_0>
+				</ship_3752736208>
+				<ship_4284430032>
+					<wt_0>	1,0	</wt_0>
+				</ship_4284430032>
+				<ship_3760142064>
+					<wt_0>	0,0	</wt_0>
+				</ship_3760142064>
+				<ship_4281284304>
+					<wt_0>	0,0	</wt_0>
+				</ship_4281284304>
+				<ship_4183701200>
+					<wt_1>	1,0	</wt_1>
+					<wt_0>	0,0	</wt_0>
+				</ship_4183701200>
+				<ship_3750672112>
+					<wt_0>	0,0	</wt_0>
+				</ship_3750672112>
+				<ship_4182652624>
+					<wt_1>	0,0	</wt_1>
+					<wt_0>	0,0	</wt_0>
+				</ship_4182652624>
+				<ship_4076746448>
+					<wt_1>	0,0	</wt_1>
+				</ship_4076746448>
+				<ship_3655251664>
+					<wt_1>	1,0	</wt_1>
+					<wt_0>	0,0	</wt_0>
+				</ship_3655251664>
+				<ship_4179572528>
+					<wt_0>	1,0	</wt_0>
+				</ship_4179572528>
+				<ship_4075697872>
+					<wt_1>	0,0	</wt_1>
+				</ship_4075697872>
+				<ship_3446585136>
+					<wt_0>	0,0	</wt_0>
+				</ship_3446585136>
+				<ship_4282267344>
+					<wt_1>	0,0	</wt_1>
+					<wt_0>	0,0	</wt_0>
+				</ship_4282267344>
+				<ship_3445569328>
+					<wt_0>	1,0	</wt_0>
+				</ship_3445569328>
+				<ship_3445503824>
+					<wt_0>	0,0	</wt_0>
+				</ship_3445503824>
+				<ship_3447666672>
+					<wt_0>	1,0	</wt_0>
+				</ship_3447666672>
+				<ship_3655284688>
+					<wt_0>	1,0	</wt_0>
+					<wt_1>	1,0	</wt_1>
+				</ship_3655284688>
+				<ship_3447600848>
+					<wt_1>	0,0	</wt_1>
+					<wt_0>	0,0	</wt_0>
+				</ship_3447600848>
+				<ship_3763288016>
+					<wt_0>	0,0	</wt_0>
+				</ship_3763288016>
+				<ship_4181603632>
+					<wt_1>	0,0	</wt_1>
+				</ship_4181603632>
+				<ship_3751786192>
+					<wt_1>	1,0	</wt_1>
+				</ship_3751786192>
+				<ship_3749656016>
+					<wt_0>	1,0	</wt_0>
+					<wt_1>	1,0	</wt_1>
+				</ship_3749656016>
+				<ship_3740186064>
+					<wt_0>	1,0	</wt_0>
+				</ship_3740186064>
+			</id_210475943>
+			<id_0>
+				<ship_4274927600 />
+				<ship_4182685680>
+					<wt_0>	0,0	</wt_0>
+				</ship_4182685680>
+				<ship_4292818736 />
+				<ship_4286527472 />
+				<ship_3763287856>
+					<wt_0>	0,0	</wt_0>
+				</ship_3763287856>
+				<ship_4186879408 />
+				<ship_3666786288>
+					<wt_0>	0,0	</wt_0>
+				</ship_3666786288>
+				<ship_3655251664 />
+				<ship_4282267344>
+					<wt_1>	0,0	</wt_1>
+					<wt_0>	1,0	</wt_0>
+				</ship_4282267344>
+			</id_0>
+		</weaponSection>
+		<minimapOptions>
+			<PASC001_Erie_1936>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASC001_Erie_1936>
+			<minimapSizeIndex>	4	</minimapSizeIndex>
+			<shipNamesDisplayEnabled>	1	</shipNamesDisplayEnabled>
+			<minimapRotationEnabled>	0	</minimapRotationEnabled>
+			<PASC002_Chester_1908>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+			</PASC002_Chester_1908>
+			<PWSC101_Gryf>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PWSC101_Gryf>
+			<PWSD102_Tatra>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+			</PWSD102_Tatra>
+			<PWSD103_Romulus>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PWSD103_Romulus>
+			<PWSD104_Klas_Horn>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PWSD104_Klas_Horn>
+			<PWSD105_Visby>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PWSD105_Visby>
+			<PJSC037_Hashidate_1940>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSC037_Hashidate_1940>
+			<PASC004_St_Louis_1906>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASC004_St_Louis_1906>
+			<PASD027_Wickes_1918>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASD027_Wickes_1918>
+			<PASD019_Clemson_1920>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASD019_Clemson_1920>
+			<PASD014_Leader_1919>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASD014_Leader_1919>
+			<PASB001_Michigan_1916>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+			</PASB001_Michigan_1916>
+			<PZSC506_Huang_he>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PZSC506_Huang_he>
+			<PGSC002_Drezden_1908>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PGSC002_Drezden_1908>
+			<PASC024_Phoenix_1917>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PASC024_Phoenix_1917>
+			<PASC005_Omaha_1923>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PASC005_Omaha_1923>
+			<PBSB526_Repulse>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PBSB526_Repulse>
+			<PASA104_Langley>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+			</PASA104_Langley>
+			<PASC106_Pensacola_1944>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASC106_Pensacola_1944>
+			<PASD005_Farragut_1944>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASD005_Farragut_1944>
+			<PASC107_New_Orlean_1944>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASC107_New_Orlean_1944>
+			<PASS206_Cachalot>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<hydrophoneRangeEnabled>	1	</hydrophoneRangeEnabled>
+				<submarineLocatorRangeEnabled>	1	</submarineLocatorRangeEnabled>
+			</PASS206_Cachalot>
+			<PGSB002_Tirpiz_1942>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PGSB002_Tirpiz_1942>
+			<PRSB105_Pyotr_Velikiy>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PRSB105_Pyotr_Velikiy>
+			<PASB004_Arkansas_1912>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASB004_Arkansas_1912>
+			<PGSC518_Mainz>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSC518_Mainz>
+			<PASB006_New_York_1934>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASB006_New_York_1934>
+			<PASC108_Baltimore_1944>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+				<rlsRangeEnabled>	1	</rlsRangeEnabled>
+			</PASC108_Baltimore_1944>
+			<PBSB609_Scarlet_Thunder>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PBSB609_Scarlet_Thunder>
+			<PASB034_New_Mexico_1941>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASB034_New_Mexico_1941>
+			<PBSB206_Renown>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PBSB206_Renown>
+			<PGSB206_Mackensen>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSB206_Mackensen>
+			<PWSD106_Vasteras>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PWSD106_Vasteras>
+			<PGSC106_Nurnberg>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PGSC106_Nurnberg>
+			<PASB008_Colorado_1945>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASB008_Colorado_1945>
+			<PFSB106_Normandie>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PFSB106_Normandie>
+			<PBSB207_Rooke>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PBSB207_Rooke>
+			<PJSS518_I56>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<hydrophoneRangeEnabled>	1	</hydrophoneRangeEnabled>
+			</PJSS518_I56>
+			<PASC006_Atlanta_1942>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<rlsRangeEnabled>	1	</rlsRangeEnabled>
+			</PASC006_Atlanta_1942>
+			<PASC206_Dallas>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PASC206_Dallas>
+			<PGSB507_Scharnhorst>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PGSB507_Scharnhorst>
+			<PISC102_Nino_Bixio>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PISC102_Nino_Bixio>
+			<PISD102_Curtatone>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PISD102_Curtatone>
+			<PISD103_Sauro>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PISD103_Sauro>
+			<PISC103_Taranto>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PISC103_Taranto>
+			<PISC104_Alberto_da_Giussano>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PISC104_Alberto_da_Giussano>
+			<PSSC103_Navarra>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PSSC103_Navarra>
+			<PISD104_Turbine>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PISD104_Turbine>
+			<PRSB106_Izmail>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PRSB106_Izmail>
+			<PJSB007_Kongo_1942>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSB007_Kongo_1942>
+			<PRSS106_S_1>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<hydrophoneRangeEnabled>	1	</hydrophoneRangeEnabled>
+				<submarineLocatorRangeEnabled>	1	</submarineLocatorRangeEnabled>
+			</PRSS106_S_1>
+			<PASA106_Ranger>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASA106_Ranger>
+			<PJSC007_Aoba_1943>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PJSC007_Aoba_1943>
+			<PASB012_North_Carolina_1945>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASB012_North_Carolina_1945>
+			<PBSB536_Black_Repulse>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PBSB536_Black_Repulse>
+			<PWSD107_Skane>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PWSD107_Skane>
+			<PASC109_Buffalo>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<rlsRangeEnabled>	1	</rlsRangeEnabled>
+			</PASC109_Buffalo>
+			<PASC599_Black_Alaska>
+				<visibilityRangeEnabled>	1	</visibilityRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+				<rlsRangeEnabled>	1	</rlsRangeEnabled>
+			</PASC599_Black_Alaska>
+			<PGSB599_Black_Pommern>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSB599_Black_Pommern>
+			<PASB018_Iowa_1944>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASB018_Iowa_1944>
+			<PJSB208_Yumihari>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSB208_Yumihari>
+			<PASD006_Mahan_1936>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASD006_Mahan_1936>
+			<PJSC505_Yahagi>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PJSC505_Yahagi>
+			<PJSB006_Fuso_1943>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSB006_Fuso_1943>
+			<PRSC530_Black_Smolensk>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PRSC530_Black_Smolensk>
+			<PRSC568_Black_Lazo>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PRSC568_Black_Lazo>
+			<PJSC598_Black_Atago>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSC598_Black_Atago>
+			<PJSD598_Black_Asashio>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD598_Black_Asashio>
+			<PASD506_Monaghan>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+			</PASD506_Monaghan>
+			<PASB017_Montana_1945>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASB017_Montana_1945>
+			<PJSD210_Harugumo>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD210_Harugumo>
+			<PJSD206_Hatsuharu>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD206_Hatsuharu>
+			<PJSD207_Shiratsuyu>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+			</PJSD207_Shiratsuyu>
+			<PASC020_Des_Moines_1948>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+				<rlsRangeEnabled>	1	</rlsRangeEnabled>
+			</PASC020_Des_Moines_1948>
+			<PGSB310_Preussen>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSB310_Preussen>
+			<PASS210_Balao>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<hydrophoneRangeEnabled>	1	</hydrophoneRangeEnabled>
+				<submarineLocatorRangeEnabled>	1	</submarineLocatorRangeEnabled>
+			</PASS210_Balao>
+			<PGSB506_Prinz_Eithel_Friedrich>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PGSB506_Prinz_Eithel_Friedrich>
+			<PGSB528_Anhalt>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PGSB528_Anhalt>
+			<PBSC516_London>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PBSC516_London>
+			<PJSB517_Hyuga>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSB517_Hyuga>
+			<PRSC510_Stalingrad>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<rlsRangeEnabled>	1	</rlsRangeEnabled>
+			</PRSC510_Stalingrad>
+			<PBSA508_Indomitable>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PBSA508_Indomitable>
+			<PASB705_Texas_1944>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASB705_Texas_1944>
+			<PASC597_Nueve_de_Julio_1951>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PASC597_Nueve_de_Julio_1951>
+			<PISC517_Francesco_Ferruccio>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PISC517_Francesco_Ferruccio>
+			<PZSD598_Black_LoYang>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+			</PZSD598_Black_LoYang>
+			<PJSD219_Kitakaze>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD219_Kitakaze>
+			<PJSD108_Akizuki>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD108_Akizuki>
+			<PGSB207_Prinz_Heinrich>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSB207_Prinz_Heinrich>
+			<PASB707_California>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASB707_California>
+			<PGSB208_Zieten>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSB208_Zieten>
+			<PGSB209_Prinz_Rupprecht>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSB209_Prinz_Rupprecht>
+			<PGSB210_Schlieffen>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSB210_Schlieffen>
+			<PRSD517_Tashkent_1939>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+			</PRSD517_Tashkent_1939>
+			<PJSB010_Nagato_1944>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSB010_Nagato_1944>
+			<PISB510_Ruggiero_di_Lauria>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PISB510_Ruggiero_di_Lauria>
+			<PJSB013_Amagi_1942>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSB013_Amagi_1942>
+			<PASD508_Kidd>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+			</PASD508_Kidd>
+			<PJSD106_Fubuki>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD106_Fubuki>
+			<PISC519_Michelangelo>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PISC519_Michelangelo>
+			<PJSD107_Akatsuki>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD107_Akatsuki>
+			<PGSC528_Schill>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+			</PGSC528_Schill>
+			<PBSD598_Black_Cossack>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PBSD598_Black_Cossack>
+			<PJSD208_Kagero>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD208_Kagero>
+			<PJSC610_Kitakami>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSC610_Kitakami>
+			<PGSB110_Grossdeutschland>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSB110_Grossdeutschland>
+			<PJSD209_Yugumo>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD209_Yugumo>
+			<PJSD004_Minekadze_1920>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD004_Minekadze_1920>
+			<PGSC809_Colorful_Roon>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+			</PGSC809_Colorful_Roon>
+			<PJSD012_Shimakaze_1943>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD012_Shimakaze_1943>
+			<PGSB810_Colorful_Schlieffen>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+			</PGSB810_Colorful_Schlieffen>
+			<PFSD810_Colorful_Kleber>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PFSD810_Colorful_Kleber>
+			<PASB808_Colorful_North_Carolina>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PASB808_Colorful_North_Carolina>
+			<PBSB610_Incomparable>
+				<sonarRangeEnabled>	1	</sonarRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+			</PBSB610_Incomparable>
+			<PJSD808_Colorful_Akizuki>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PJSD808_Colorful_Akizuki>
+			<PBSB507_Hood>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PBSB507_Hood>
+			<PWSD108_Oland>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PWSD108_Oland>
+			<PRSB520_Severomorsk>
+				<visibilityPlaneRangeEnabled>	1	</visibilityPlaneRangeEnabled>
+				<atbaRangeEnabled>	1	</atbaRangeEnabled>
+				<aaRangeMaxEnabled>	1	</aaRangeMaxEnabled>
+			</PRSB520_Severomorsk>
+		</minimapOptions>
+		<peculiarities>	33554431	</peculiarities>
+	</scriptsPreferences>
+	<clientVersion>	13,6,0,0	</clientVersion>
+</preferences.xml>

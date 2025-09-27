@@ -44,7 +44,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 gameDetectModel.IsWarship = gameInfoXml["protocol"]?["game"]?["id"]?.InnerText.Contains("WOWS", StringComparison.OrdinalIgnoreCase) ?? false;
                 gameDetectModel.Server = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
                 gameDetectModel.ClientVersion = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
-                gameDetectModel.PreInstalled = !(gameInfoXml["protocol"]?["game"]?["accepted_preinstalls"]?.IsEmpty ?? true);
+                gameDetectModel.PreInstalled = gameInfoXml["protocol"]?["game"]?["accepted_preinstalls"] is not null;
                 if (File.Exists(gameDetectModel.PreferencesXmlPath))
                 {
                     var preferenceLines = File.ReadLines(gameDetectModel.PreferencesXmlPath, Encoding.UTF8);
@@ -85,6 +85,11 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <returns>paths.xml中的mods路径状态</returns>
         public static bool PathXmlCheck(GameDetectModel gameDetectModel)
         {
+            if (!File.Exists(gameDetectModel.PathXmlPath))
+            {
+                return false;
+            }
+
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(gameDetectModel.PathXmlPath);
             var paths = xmlDocument["root"]?["Paths"]?.ChildNodes;
