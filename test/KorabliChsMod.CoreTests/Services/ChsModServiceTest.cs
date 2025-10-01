@@ -58,8 +58,8 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
 
         [TestMethod]
         [DataRow("8824884_0", true)]
-        // [DataRow("8824884_1", false)]
-        // [DataRow("8824884_2", false)]
+        [DataRow("8824884_1", false)]
+        [DataRow("8824884_2", false)]
         [DataRow("8824884_3", true)]
         public async Task Install_AliYun(string subFolder, bool prerelease)
         {
@@ -83,8 +83,8 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
 
         [TestMethod]
         [DataRow("8824884_0", true)]
-        // [DataRow("8824884_1", false)]
-        // [DataRow("8824884_2", false)]
+        [DataRow("8824884_1", false)]
+        [DataRow("8824884_2", false)]
         [DataRow("8824884_3", true)]
         public async Task Install_Github(string subFolder, bool prerelease)
         {
