@@ -85,6 +85,11 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <returns>paths.xml中的mods路径状态</returns>
         public static bool PathXmlCheck(GameDetectModel gameDetectModel)
         {
+            if (!gameDetectModel.IsTest)
+            {
+                return true;
+            }
+
             if (!File.Exists(gameDetectModel.PathXmlPath))
             {
                 return false;
