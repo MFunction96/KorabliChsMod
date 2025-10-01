@@ -37,7 +37,8 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             {
                 Folder = Path.Combine("assets", "GameDetectorService", subFolder),
                 ClientVersion = version,
-                ServerVersion = version
+                ServerVersion = version,
+                IsTest = true
             };
 
             Assert.AreEqual(expected, GameDetectorService.PathXmlCheck(gameDetectModel));
@@ -54,7 +55,8 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             {
                 Folder = Path.Combine("assets", "GameDetectorService", subFolder),
                 ClientVersion = version,
-                ServerVersion = version
+                ServerVersion = version,
+                IsTest = true
             };
 
             Assert.AreEqual(expected, GameDetectorService.ChsModPackCheck(gameDetectModel));
