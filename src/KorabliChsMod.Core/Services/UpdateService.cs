@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xanadu.Skidbladnir.IO.File.Cache;
+using Xanadu.Skidbladnir.Net.DevOps.Model.GitHub.Release;
 
 namespace Xanadu.KorabliChsMod.Core.Services
 {
@@ -27,7 +27,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <summary>
         /// 镜像元信息
         /// </summary>
-        private readonly Dictionary<MirrorList, JToken> _latestJToken = [];
+        private readonly Dictionary<MirrorList, ReleaseModel> _latestJToken = [];
 
         /// <summary>
         /// 最新版本版本号
@@ -47,14 +47,14 @@ namespace Xanadu.KorabliChsMod.Core.Services
             try
             {
                 var mirror = korabliConfigService.CurrentConfig.Mirror;
-                var jToken = await metadataService.GetAppJToken();
+                var jToken = await metadataService.GetAppRelease();
                 if (jToken is null)
                 {
                     return false;
                 }
 
                 this._latestJToken[mirror] = jToken;
-                var name = this._latestJToken[mirror]["name"]!.Value<string>()!;
+                var name = this._latestJToken[mirror].Name;
                 var version = name[name.IndexOf(" ", StringComparison.OrdinalIgnoreCase)..].Trim();
                 this.LatestVersion = Version.Parse(version);
                 var result = this.LatestVersion > appVersion;
@@ -89,11 +89,11 @@ namespace Xanadu.KorabliChsMod.Core.Services
             {
                 var latest = this._latestJToken.TryGetValue(korabliConfigService.CurrentConfig.Mirror, out var jToken)
                     ? jToken
-                    : await metadataService.GetAppJToken();
-                var assets = latest!["assets"]! as JArray;
-                var downloadFile = assets!.First(q =>
-                    string.Compare(q["name"]!.Value<string>(), "KorabliChsModInstaller.exe",
-                        StringComparison.OrdinalIgnoreCase) == 0)["browser_download_url"]!.Value<string>();
+                    : (await metadataService.GetAppRelease())!;
+                var assets = latest.Assets;
+                var downloadFile = assets.First(q =>
+                    string.Compare(q.Name, "KorabliChsModInstaller.exe",
+                        StringComparison.OrdinalIgnoreCase) == 0).BrowserDownloadUrl;
                 await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
                     exeFile, 5);
 

@@ -8,7 +8,6 @@
 		<AssemblyName>$(MSBuildProjectName.Replace(" ", "_"))</AssemblyName>
 		<EnableMSTestRunner>true</EnableMSTestRunner>
 		<OutputType>Exe</OutputType>
-		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
 		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 		<!--
 		Displays error on console in addition to the log file. Note that this feature comes with a performance impact.
@@ -18,10 +17,9 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="*" />
-		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="*" />
-		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" Version="*" />
 		<PackageReference Include="MSTest" Version="*" />
 		<PackageReference Include="Moq" Version="*" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(DotNetMajorVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>

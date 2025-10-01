@@ -44,7 +44,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 gameDetectModel.IsWarship = gameInfoXml["protocol"]?["game"]?["id"]?.InnerText.Contains("WOWS", StringComparison.OrdinalIgnoreCase) ?? false;
                 gameDetectModel.Server = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
                 gameDetectModel.ClientVersion = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
-                gameDetectModel.PreInstalled = !(gameInfoXml["protocol"]?["game"]?["accepted_preinstalls"]?.IsEmpty ?? true);
+                gameDetectModel.PreInstalled = gameInfoXml["protocol"]?["game"]?["accepted_preinstalls"] is not null;
                 if (File.Exists(gameDetectModel.PreferencesXmlPath))
                 {
                     var preferenceLines = File.ReadLines(gameDetectModel.PreferencesXmlPath, Encoding.UTF8);
@@ -58,18 +58,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 var metadataXml = new XmlDocument();
                 metadataXml.Load(gameDetectModel.MetaDataXmlPath);
                 gameDetectModel.IsTest = string.Compare(metadataXml["protocol"]?["predefined_section"]?["app_id"]?.InnerText, "WOWS.RU.PRODUCTION", StringComparison.OrdinalIgnoreCase) != 0;
-                if (!File.Exists(gameDetectModel.LocaleInfoXmlPath))
-                {
-                    gameDetectModel.Locale = "RU";
-                    gameDetectModel.ChsMod = false;
-                }
-                else
-                {
-                    var localeXml = new XmlDocument();
-                    localeXml.Load(gameDetectModel.LocaleInfoXmlPath);
-                    gameDetectModel.Locale = localeXml["locale_config"]?["lang_mapping"]?["lang"]?.Attributes["full"]?.Value ?? string.Empty;
-                    gameDetectModel.ChsMod = string.Compare(gameDetectModel.Locale, "schinese", StringComparison.OrdinalIgnoreCase) == 0;
-                }
+                gameDetectModel.ChsMod = GameDetectorService.PathXmlCheck(gameDetectModel) && GameDetectorService.ChsModPackCheck(gameDetectModel);
 
                 if (!Directory.Exists(gameDetectModel.ModFolder))
                 {
@@ -87,6 +76,34 @@ namespace Xanadu.KorabliChsMod.Core.Services
 
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 检查paths.xml中是否已经添加mods路径
+        /// </summary>
+        /// <param name="gameDetectModel">游戏检测模块</param>
+        /// <returns>paths.xml中的mods路径状态</returns>
+        public static bool PathXmlCheck(GameDetectModel gameDetectModel)
+        {
+            if (!File.Exists(gameDetectModel.PathXmlPath))
+            {
+                return false;
+            }
+
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(gameDetectModel.PathXmlPath);
+            var paths = xmlDocument["root"]?["Paths"]?.ChildNodes;
+            return paths is not null && string.Compare(paths.Cast<XmlNode>().FirstOrDefault()?.Attributes?["type"]?.Value, "mods", StringComparison.OrdinalIgnoreCase) == 0;
+        }
+
+        /// <summary>
+        /// 检查汉化模组是否安装
+        /// </summary>
+        /// <param name="gameDetectModel">游戏检测模块</param>
+        /// <returns>汉化模组安装状态</returns>
+        internal static bool ChsModPackCheck(GameDetectModel gameDetectModel)
+        {
+            return File.Exists(gameDetectModel.ChsModFilePath);
         }
     }
 }

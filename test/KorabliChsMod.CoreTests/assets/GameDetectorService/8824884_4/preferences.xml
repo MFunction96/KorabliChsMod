@@ -1,0 +1,67 @@
+<preferences.xml>
+	<scriptsPreferences>
+		<ui>
+			<locale>	ru	</locale>
+			<lgncMessagePositionX>
+				<LGNC>	653.5000	</LGNC>
+			</lgncMessagePositionX>
+			<lgncMessagePositionY>
+				<LGNC>	245.4100	</LGNC>
+			</lgncMessagePositionY>
+			<elementsGroupExpand>
+				<channels4641564f5249544553>	true	</channels4641564f5249544553>
+				<channels534841524544>	true	</channels534841524544>
+				<channels4d594348414e4e454c53>	true	</channels4d594348414e4e454c53>
+				<channels484953544f5259>	true	</channels484953544f5259>
+				<contacts4944535f434841545f47524f55505f465249454e4453>	true	</contacts4944535f434841545f47524f55505f465249454e4453>
+				<contacts4944535f47524f55505f5449544c455f49474e4f525f4c495354>	false	</contacts4944535f47524f55505f5449544c455f49474e4f525f4c495354>
+			</elementsGroupExpand>
+			<battleLoadingTabIndex>	1	</battleLoadingTabIndex>
+			<seenTutorialHints>
+				<HelpPanelHint>	3	</HelpPanelHint>
+				<aaPrioritySectorHint>	3	</aaPrioritySectorHint>
+				<newRocketsUnderAttackHint>	1	</newRocketsUnderAttackHint>
+			</seenTutorialHints>
+			<tutorialHintsRepeatCount>
+				<HelpPanelHint>	1	</HelpPanelHint>
+				<aaPrioritySectorHint>	3	</aaPrioritySectorHint>
+				<newRocketsUnderAttackHint>	1	</newRocketsUnderAttackHint>
+			</tutorialHintsRepeatCount>
+			<seenPriorLoadingHints>
+				<IDS_TIPS_AIR_DEFENSE_SECTOR_GAIN>	true	</IDS_TIPS_AIR_DEFENSE_SECTOR_GAIN>
+			</seenPriorLoadingHints>
+			<aaPrioritySectorActivateCount>	7	</aaPrioritySectorActivateCount>
+			<shipPanelExpanded>	true	</shipPanelExpanded>
+			<defaultRoute>
+				<profile>	collections	</profile>
+			</defaultRoute>
+			<switchBattleLoadingTabForEvent>	true	</switchBattleLoadingTabForEvent>
+		</ui>
+		<version>	47	</version>
+		<net_credentials>
+			<base />
+			<demo />
+			<external />
+			<active_server>	&#208;&#156;&#208;&#152;&#208;&#160; &#208;&#154;&#208;&#158;&#208;&#160;&#208;&#144;&#208;&#145;&#208;&#155;&#208;&#149;&#208;&#153;	</active_server>
+			<last_server_version>	25,9,0,8821884	</last_server_version>
+		</net_credentials>
+		<lobby_values>
+			<ship>	4185830864	</ship>
+			<port_preset>	dbay_2025	</port_preset>
+			<shipBattleHistory>	4186846672,1758966799,4185830864,1758971495	</shipBattleHistory>
+		</lobby_values>
+		<weaponSection>
+			<id_0>
+				<ship_4186846672 />
+			</id_0>
+			<id_291784400>
+				<ship_4186846672 />
+				<ship_4185830864 />
+			</id_291784400>
+		</weaponSection>
+		<minimapOptions>
+			<minimapSizeIndex>	1	</minimapSizeIndex>
+		</minimapOptions>
+	</scriptsPreferences>
+	<clientVersion>	25,9,0,0	</clientVersion>
+</preferences.xml>

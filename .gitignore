@@ -365,3 +365,4 @@ compile_commands.json
 CTestTestfile.cmake
 build/
 cmake-build-*/
+!test/KorabliChsMod.CoreTests/assets/**/*

@@ -1,8 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\KorabliChsMod\KorabliChsMod.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\KorabliChsMod\KorabliChsMod.csproj" />
+	</ItemGroup>
 </Project>
