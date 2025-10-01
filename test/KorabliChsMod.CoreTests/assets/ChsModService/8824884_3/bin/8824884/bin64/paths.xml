@@ -1,0 +1,8 @@
+<root>
+    <Paths>
+	    <Path type="mods">..\mods</Path>
+        <Path key="15b8d" packages="..\..\..\res_packages" type="PFS">..\idx</Path>
+        <Path key="35d52">..\res</Path>
+        <Path key="77ee7" type="DLC">..\res_dlc</Path>
+    </Paths>
+</root>

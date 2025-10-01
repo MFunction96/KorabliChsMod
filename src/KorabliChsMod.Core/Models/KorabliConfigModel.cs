@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json.Serialization;
 using Xanadu.Skidbladnir.IO.File;
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 
@@ -70,17 +70,11 @@ namespace Xanadu.KorabliChsMod.Core.Models
         public static readonly IDictionary<MirrorList, ResourceLinkModel> Links =
             new Dictionary<MirrorList, ResourceLinkModel>
             {
-                { MirrorList.Github , new ResourceLinkModel
+                { MirrorList.AliYun , new ResourceLinkModel
                 {
-                    Mirror = MirrorList.Github,
-                    ModMetadata = "https://api.github.com/repos/DDFantasyV/Korabli_localization_chs/releases",
-                    UpdateMetadata = "https://api.github.com/repos/MFunction96/KorabliChsMod/releases"
-                }},
-                { MirrorList.Cloudflare , new ResourceLinkModel
-                {
-                    Mirror = MirrorList.Cloudflare,
-                    ModMetadata = "https://warshipmod.mfbrain.xyz/mods/chs/metadata.json",
-                    UpdateMetadata = "https://warshipmod.mfbrain.xyz/korablichsmod/metadata.json"
+                    Mirror = MirrorList.AliYun,
+                    ModMetadata = "https://mk-localization-chs.oss-cn-wulanchabu.aliyuncs.com/mods/chs/metadata.json",
+                    UpdateMetadata = "https://mk-localization-chs.oss-cn-wulanchabu.aliyuncs.com/korablichsmod/metadata.json"
                 }}
             };
 
@@ -102,7 +96,7 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// <summary>
         /// 镜像站
         /// </summary>
-        public MirrorList Mirror { get; set; } = MirrorList.Cloudflare;
+        public MirrorList Mirror { get; set; } = MirrorList.AliYun;
 
         /// <summary>
         /// 自动更新

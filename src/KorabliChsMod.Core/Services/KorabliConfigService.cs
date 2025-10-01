@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xanadu.KorabliChsMod.Core.Models;
 
@@ -18,14 +18,14 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <summary>
         /// 当前配置文件版本
         /// </summary>
-        public static Version CurrentVersion => new(1, 0, 0);
+        public static Version CurrentVersion => new(1, 1, 0);
 
         /// <summary>
         /// 默认配置
         /// </summary>
         private static KorabliConfigModel DefaultKorabliConfigModel => new()
         {
-            Mirror = MirrorList.Cloudflare,
+            Mirror = MirrorList.AliYun,
             Proxy = new ProxyConfigModel(),
             AutoUpdate = true,
             GameFolder = string.Empty,
@@ -51,7 +51,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     return this.CurrentConfig;
                 }
 
-                this.CurrentConfig = JsonConvert.DeserializeObject<KorabliConfigModel>(File.ReadAllText(KorabliConfigModel.ConfigFilePath, Encoding.UTF8))!;
+                this.CurrentConfig = JsonSerializer.Deserialize<KorabliConfigModel>(File.ReadAllText(KorabliConfigModel.ConfigFilePath, Encoding.UTF8))!;
 
                 var updateConfig = false;
                 if (this.CurrentConfig.Version < KorabliConfigService.CurrentVersion)
@@ -93,7 +93,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
         {
             try
             {
-                var json = JsonConvert.SerializeObject(this.CurrentConfig, Formatting.Indented);
+                var json = JsonSerializer.Serialize(this.CurrentConfig);
                 if (!Directory.Exists(KorabliConfigModel.BaseFolder))
                 {
                     Directory.CreateDirectory(KorabliConfigModel.BaseFolder);

@@ -1,16 +1,12 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Xanadu.KorabliChsMod.Core.Models;
-using Xanadu.Skidbladnir.Core.Extension;
 using Xanadu.Skidbladnir.IO.File;
 using Xanadu.Skidbladnir.IO.File.Cache;
 
@@ -22,24 +18,12 @@ namespace Xanadu.KorabliChsMod.Core.Services
     /// <param name="networkEngine">网络引擎</param>
     /// <param name="fileCachePool">文件缓存</param>
     /// <param name="metadataService">元信息获取</param>
-    public class ChsModService(NetworkEngine networkEngine, FileCachePool fileCachePool, MetadataService metadataService) : IServiceEvent
+    public partial class ChsModService(NetworkEngine networkEngine, FileCachePool fileCachePool, MetadataService metadataService) : IServiceEvent
     {
-        /// <summary>
-        /// 文件相对路径，bool值表示是否为文件夹
-        /// </summary>
-        private static readonly IEnumerable<(string FilePath, bool IsDirectory)> RelativeFilePath =
-        [
-            ("texts", true),
-            ("locale_config.xml", false),
-            ("LICENSE", false),
-            ("thanks.md", false),
-            ("change.log",false)
-        ];
+        [GeneratedRegex(@"(?<Version>\d+\.\d+)", RegexOptions.ExplicitCapture)]
+        private static partial Regex GameVersionRegex();
 
-        /// <summary>
-        /// 文件校验
-        /// </summary>
-        private readonly Checksum _checksum = new(SHAAlgorithm.SHA256);
+        public static Regex VersionRegex => ChsModService.GameVersionRegex();
 
         /// <inheritdoc />
         public event EventHandler<ServiceEventArg>? ServiceEvent;
@@ -52,45 +36,133 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <returns>成功返回true，失败返回false</returns>
         public async Task<bool> Install(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
         {
-            using var zipFile = fileCachePool.Register("Korabli_localization_chs.zip", "download");
-            var extractFolder = Path.Combine(zipFile.Pool.BasePath, Path.GetRandomFileName());
+            return await this.PathXmlAddon(gameDetectModel, cancellationToken) && await this.CorePackInstall(gameDetectModel, cancellationToken);
+        }
+
+        /// <summary>
+        /// 卸载汉化模组，仅移除汉化模组文件，不移除paths.xml中的mods路径
+        /// </summary>
+        /// <param name="gameDetectModel">游戏检测模块</param>
+        /// <param name="cancellationToken">取消句柄</param>
+        /// <returns>是否成功卸载</returns>
+        public bool Uninstall(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
+        {
             try
             {
-                var gameVersion = gameDetectModel.GameVersion[..gameDetectModel.GameVersion.LastIndexOf('.')];
-                if (gameDetectModel.IsTest)
+                IOExtension.DeleteFile(gameDetectModel.ChsModFilePath);
+                return true;
+            }
+            catch (Exception e)
+            {
+                this.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
-                    gameVersion = gameVersion[..gameVersion.LastIndexOf('.')];
-                }
-                var latest = await metadataService.GetModJToken(Version.Parse(gameVersion),
-                    gameDetectModel.IsTest);
-                var assets = (latest["assets"] as JArray)!;
-                var downloadFile = assets.First(q => q["name"]!.Value<string>() == "Korabli_localization_chs.zip")["browser_download_url"]!.Value<string>()!;
-                await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
-                    zipFile.FullPath, 5, cancellationToken);
-                var installedFiles = await LoadInstalledFile();
-                using var zip = ZipFile.OpenRead(zipFile.FullPath);
-                ZipFile.ExtractToDirectory(zipFile.FullPath, extractFolder, Encoding.UTF8, true);
-                foreach (var item in ChsModService.RelativeFilePath)
+                    Exception = e
+                });
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 添加paths.xml中的mods路径
+        /// </summary>
+        /// <param name="gameDetectModel">游戏检测模型</param>
+        /// <param name="cancellationToken">取消句柄</param>
+        /// <returns>paths.xml安装状态</returns>
+        internal Task<bool> PathXmlAddon(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
+        {
+            return Task.Run(() =>
+            {
+                try
                 {
-                    if (item.IsDirectory)
+                    if (GameDetectorService.PathXmlCheck(gameDetectModel))
                     {
-                        var textFolder = Path.Combine(gameDetectModel.ModFolder, item.FilePath);
-                        IOExtension.CopyDirectory(Path.Combine(extractFolder, item.FilePath), textFolder);
-                        var textFolderFiles = Directory.GetFiles(textFolder, "*.*", SearchOption.AllDirectories);
-                        foreach (var textFolderFile in textFolderFiles)
-                        {
-                            installedFiles[textFolderFile] = await this._checksum.GetFileHashAsync(textFolderFile, BinaryFormatting.Base64, cancellationToken);
-                        }
+                        return true;
+                    }
+
+                    XDocument doc;
+                    XElement? pathsElement;
+
+                    if (!File.Exists(gameDetectModel.PathXmlPath))
+                    {
+                        doc = new XDocument(new XElement("root", new XElement("Paths")));
+                        pathsElement = doc.Element("root")!.Element("Paths")!;
                     }
                     else
                     {
-                        var file = Path.Combine(gameDetectModel.ModFolder, item.FilePath);
-                        File.Copy(Path.Combine(extractFolder, item.FilePath), file, true);
-                        installedFiles[file] = await this._checksum.GetFileHashAsync(file, BinaryFormatting.Base64, cancellationToken);
+                        try
+                        {
+                            doc = XDocument.Load(gameDetectModel.PathXmlPath);
+                            var root = doc.Element("root");
+                            if (root is null)
+                            {
+                                root = new XElement("root");
+                                doc.Add(root);
+                            }
+
+                            pathsElement = root.Element("Paths");
+                            if (pathsElement is null)
+                            {
+                                pathsElement = new XElement("Paths");
+                                root.Add(pathsElement);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new InvalidOperationException($"无法加载或解析XML文件：{gameDetectModel.PathXmlPath}", ex);
+                        }
                     }
+
+                    var existingModsPaths = pathsElement.Elements("Path")
+                        .Where(p => p.Attribute("type")?.ToString() == "mods")
+                        .ToArray();
+
+                    foreach (var pathNode in existingModsPaths)
+                    {
+                        pathNode.Remove();
+                    }
+
+                    var newModsPath = new XElement("Path",
+                        new XAttribute("type", "mods"),
+                        @"..\mods"
+                    );
+
+                    pathsElement.AddFirst(newModsPath);
+                    doc.Save(gameDetectModel.PathXmlPath);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg
+                    {
+                        Exception = e
+                    });
+                    return false;
+                }
+            }, cancellationToken);
+        }
+
+        /// <summary>
+        /// 核心汉化包安装
+        /// </summary>
+        /// <param name="gameDetectModel">游戏检测模块</param>
+        /// <param name="cancellationToken">取消句柄</param>
+        /// <returns></returns>
+        internal async Task<bool> CorePackInstall(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
+        {
+            using var modFileCache = fileCachePool.Register(GameDetectModel.ChsModFileName, "download");
+            try
+            {
+                var gameVersion = ChsModService.VersionRegex.Match(gameDetectModel.GameVersion).Value;
+                var latest = await metadataService.GetModRelease(Version.Parse(gameVersion),
+                    gameDetectModel.IsTest);
+                var downloadFile = latest.Assets.First(q => q.Name == GameDetectModel.ChsModFileName).BrowserDownloadUrl;
+                await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile), modFileCache.FullPath, 5, cancellationToken);
+                if (!Directory.Exists(gameDetectModel.ModFolder))
+                {
+                    Directory.CreateDirectory(gameDetectModel.ModFolder);
                 }
 
-                await File.WriteAllTextAsync(KorabliConfigModel.InstalledFilePath, JsonConvert.SerializeObject(installedFiles, Formatting.Indented), cancellationToken);
+                File.Copy(modFileCache.FullPath, gameDetectModel.ChsModFilePath, true);
                 return true;
             }
             catch (Exception e)
@@ -102,27 +174,6 @@ namespace Xanadu.KorabliChsMod.Core.Services
 
                 return false;
             }
-            finally
-            {
-                IOExtension.DeleteDirectory(extractFolder);
-            }
-        }
-
-        /// <summary>
-        /// 加载已安装文件
-        /// </summary>
-        /// <returns>已安装文件目录</returns>
-        private static async Task<Dictionary<string, string>> LoadInstalledFile()
-        {
-            if (!File.Exists(KorabliConfigModel.InstalledFilePath))
-            {
-                return new Dictionary<string, string>();
-            }
-
-            var json = await File.ReadAllTextAsync(KorabliConfigModel.InstalledFilePath);
-            var files = JsonConvert.DeserializeObject<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
-            return files;
-
         }
     }
 
