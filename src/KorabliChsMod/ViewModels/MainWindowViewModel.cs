@@ -478,7 +478,12 @@ namespace Xanadu.KorabliChsMod.ViewModels
         {
             try
             {
-                this._lgcIntegratorModel = this._lgcIntegratorService.Load()!;
+                var manuals = this._lgcIntegratorModel.GameDetectModels.Where(q => q.Manual).ToArray();
+                this._lgcIntegratorModel = this._lgcIntegratorService.Load(manuals) ?? new LgcIntegratorModel
+                {
+                    Folder = string.Empty
+                };
+
                 this._gameFolders = this._lgcIntegratorModel.GameDetectModels.Select(x => x.Folder)
                     .Where(x => !string.IsNullOrEmpty(x)).Distinct().ToHashSet();
                 this._gameFolders.Add(MainWindowViewModel.ManualSelectionHint);
@@ -566,16 +571,15 @@ namespace Xanadu.KorabliChsMod.ViewModels
                     var result = dialog.ShowDialog();
                     if (!(result ?? false))
                     {
-                        this._selectedGameFolder = string.Empty;
+                        this.SelectedGameFolder = string.Empty;
                         RaisePropertyChanged(nameof(this.SelectedGameFolder));
                         return;
                     }
-
-                    this._selectedGameFolder = dialog.FolderName;
-                    var gameDetectModel = this._gameDetector.Load(this._selectedGameFolder);
+                    
+                    var gameDetectModel = this._gameDetector.Load(dialog.FolderName);
                     if (gameDetectModel is null)
                     {
-                        this._selectedGameFolder = string.Empty;
+                        this.SelectedGameFolder = string.Empty;
                         this.SyncServiceMessage(this, new ServiceEventArg
                         {
                             Message = "所选文件夹不是有效的窝窝屎客户端位置，请重新选择！",
@@ -586,9 +590,9 @@ namespace Xanadu.KorabliChsMod.ViewModels
                     }
 
                     this._lgcIntegratorModel.GameDetectModels.Add(gameDetectModel);
-                    this._selectedGameDetectModel = gameDetectModel;
+                    this._gameFolders.Add(gameDetectModel.Folder);
+                    this.SelectedGameFolder = gameDetectModel.Folder;
                     this._korabliConfigService.CurrentConfig.GameFolder = gameDetectModel.Folder;
-                    SetProperty(ref this._selectedGameFolder, gameDetectModel.Folder);
                 }
                 
                 this._korabliConfigService.CurrentConfig.GameFolder = this._selectedGameFolder;

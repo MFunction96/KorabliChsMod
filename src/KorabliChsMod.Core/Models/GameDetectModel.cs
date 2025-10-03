@@ -133,6 +133,11 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// </summary>
         public bool ChsMod { get; set; } = false;
 
+        /// <summary>
+        /// 手动
+        /// </summary>
+        public bool Manual { get; set; } = false;
+
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {

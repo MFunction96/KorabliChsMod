@@ -5,6 +5,7 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Xml;
 using Xanadu.KorabliChsMod.Core;
+using Xanadu.KorabliChsMod.Core.Models;
 using Xanadu.KorabliChsMod.Core.Services;
 using Xanadu.KorabliChsMod.Models;
 
@@ -27,9 +28,10 @@ namespace Xanadu.KorabliChsMod.Services
         /// <summary>
         /// 加载LGC配置
         /// </summary>
+        /// <param name="gameDetectModels">游戏探查模型</param>
         /// <param name="path">指定LGC配置文件路径</param>
         /// <returns>true为加载成功，false为加载失败</returns>
-        public LgcIntegratorModel? Load(string path = "")
+        public LgcIntegratorModel? Load(GameDetectModel[]? gameDetectModels = null, string path = "")
         {
             try
             {
@@ -111,6 +113,14 @@ namespace Xanadu.KorabliChsMod.Services
                     
                 }
 
+                if (gameDetectModels is not null)
+                {
+                    foreach (var gameDetectModel in gameDetectModels)
+                    {
+                        lgcIntegratorModel.GameDetectModels.Add(gameDetectModel);
+                    }
+                }
+
                 this.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
                     Message = "已成功读取游戏安装目录"
@@ -122,7 +132,9 @@ namespace Xanadu.KorabliChsMod.Services
             {
                 this.ServiceEvent?.Invoke(this, new ServiceEventArg
                 {
-                    Exception = e
+                    Exception = e,
+                    AppendException = false,
+                    Message = "读取Lesta Game Center（LGC）失败，无法自动加载游戏路径，请卸载并重新安装LGC或手动选择游戏安装路径。"
                 });
 
                 return null;
