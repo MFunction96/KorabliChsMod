@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using Xanadu.KorabliChsMod.Core.Models;
 
 namespace Xanadu.KorabliChsMod.Core.Services
@@ -39,12 +40,14 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     return null;
                 }
 
-                var gameInfoXml = new XmlDocument();
-                gameInfoXml.Load(gameDetectModel.GameInfoXmlPath);
-                gameDetectModel.IsWarship = gameInfoXml["protocol"]?["game"]?["id"]?.InnerText.Contains("WOWS", StringComparison.OrdinalIgnoreCase) ?? false;
-                gameDetectModel.Server = gameInfoXml["protocol"]?["game"]?["localization"]?.InnerText ?? string.Empty;
-                gameDetectModel.ClientVersion = gameInfoXml["protocol"]?["game"]?["part_versions"]?["version"]?.Attributes["installed"]?.Value ?? string.Empty;
-                gameDetectModel.PreInstalled = gameInfoXml["protocol"]?["game"]?["accepted_preinstalls"] is not null;
+                var gameInfoXml = XDocument.Load(gameDetectModel.GameInfoXmlPath);
+                var gameId = gameInfoXml.Root?.Element("game")?.Element("id")?.Value;
+                gameDetectModel.IsWarship = string.Compare(gameId, "MK.RU.PRODUCTION", StringComparison.OrdinalIgnoreCase) == 0
+                                            || string.Compare(gameId, "MK.RPT.PRODUCTION", StringComparison.OrdinalIgnoreCase) == 0;
+                gameDetectModel.Server = gameInfoXml.Root?.Element("game")?.Element("localization")?.Value ?? string.Empty;
+                gameDetectModel.ClientVersion = gameInfoXml.Root?.Element("game")?.Element("part_versions")?.Element("version")?.Attribute("installed")?.Value ?? string.Empty;
+                gameDetectModel.PreInstalled = gameInfoXml.Root?.Element("game")?.Element("accepted_preinstalls") is not null;
+                gameDetectModel.IsTest = string.Compare(gameId, "MK.RU.PRODUCTION", StringComparison.OrdinalIgnoreCase) != 0;
                 if (File.Exists(gameDetectModel.PreferencesXmlPath))
                 {
                     var preferenceLines = File.ReadLines(gameDetectModel.PreferencesXmlPath, Encoding.UTF8);
@@ -55,9 +58,6 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     }
                 }
 
-                var metadataXml = new XmlDocument();
-                metadataXml.Load(gameDetectModel.MetaDataXmlPath);
-                gameDetectModel.IsTest = string.Compare(metadataXml["protocol"]?["predefined_section"]?["app_id"]?.InnerText, "WOWS.RU.PRODUCTION", StringComparison.OrdinalIgnoreCase) != 0;
                 gameDetectModel.ChsMod = GameDetectorService.PathXmlCheck(gameDetectModel) && GameDetectorService.ChsModPackCheck(gameDetectModel);
 
                 if (!Directory.Exists(gameDetectModel.ModFolder))

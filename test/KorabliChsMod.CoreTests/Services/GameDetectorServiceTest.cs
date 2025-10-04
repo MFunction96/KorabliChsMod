@@ -61,5 +61,19 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
 
             Assert.AreEqual(expected, GameDetectorService.ChsModPackCheck(gameDetectModel));
         }
+
+        [TestMethod]
+        [DataRow("Korabli", true, false)]
+        [DataRow("Korabli_PT", true, true)]
+        [DataRow("Tanki", false, true)]
+        [DataRow("Tanks_Blitz", false, true)]
+        public void WarshipCheck(string subFolder, bool isWarship, bool isTest)
+        {
+            var gameDetector = new GameDetectorService();
+            var model = gameDetector.Load(Path.Combine("assets", "GameDetectorService", subFolder));
+            Assert.IsNotNull(model);
+            Assert.AreEqual(model.IsWarship, isWarship);
+            Assert.AreEqual(model.IsTest, isTest);
+        }
     }
 }

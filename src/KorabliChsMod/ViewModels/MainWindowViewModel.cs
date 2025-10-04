@@ -78,7 +78,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 游戏文件夹
         /// </summary>
-        private HashSet<string> _gameFolders = new();
+        private HashSet<string> _gameFolders = [];
 
         /// <summary>
         /// 选中的游戏文件夹
@@ -478,7 +478,20 @@ namespace Xanadu.KorabliChsMod.ViewModels
         {
             try
             {
-                this._lgcIntegratorModel = this._lgcIntegratorService.Load()!;
+                var manuals = this._lgcIntegratorModel.GameDetectModels.Where(q => q.Manual).ToHashSet();
+                if (Directory.Exists(this._korabliConfigService.CurrentConfig.GameFolder))
+                {
+                    manuals.Add(new GameDetectModel
+                    {
+                        Folder = this._korabliConfigService.CurrentConfig.GameFolder
+                    });
+                }
+
+                this._lgcIntegratorModel = this._lgcIntegratorService.Load(manuals.ToArray()) ?? new LgcIntegratorModel
+                {
+                    Folder = string.Empty
+                };
+
                 this._gameFolders = this._lgcIntegratorModel.GameDetectModels.Select(x => x.Folder)
                     .Where(x => !string.IsNullOrEmpty(x)).Distinct().ToHashSet();
                 this._gameFolders.Add(MainWindowViewModel.ManualSelectionHint);
@@ -566,16 +579,15 @@ namespace Xanadu.KorabliChsMod.ViewModels
                     var result = dialog.ShowDialog();
                     if (!(result ?? false))
                     {
-                        this._selectedGameFolder = string.Empty;
+                        this.SelectedGameFolder = string.Empty;
                         RaisePropertyChanged(nameof(this.SelectedGameFolder));
                         return;
                     }
 
-                    this._selectedGameFolder = dialog.FolderName;
-                    var gameDetectModel = this._gameDetector.Load(this._selectedGameFolder);
+                    var gameDetectModel = this._gameDetector.Load(dialog.FolderName);
                     if (gameDetectModel is null)
                     {
-                        this._selectedGameFolder = string.Empty;
+                        this.SelectedGameFolder = string.Empty;
                         this.SyncServiceMessage(this, new ServiceEventArg
                         {
                             Message = "所选文件夹不是有效的窝窝屎客户端位置，请重新选择！",
@@ -584,13 +596,13 @@ namespace Xanadu.KorabliChsMod.ViewModels
                         RaisePropertyChanged(nameof(this.SelectedGameFolder));
                         return;
                     }
-
+                    gameDetectModel.Manual = true;
                     this._lgcIntegratorModel.GameDetectModels.Add(gameDetectModel);
-                    this._selectedGameDetectModel = gameDetectModel;
+                    this._gameFolders.Add(gameDetectModel.Folder);
+                    this.SelectedGameFolder = gameDetectModel.Folder;
                     this._korabliConfigService.CurrentConfig.GameFolder = gameDetectModel.Folder;
-                    SetProperty(ref this._selectedGameFolder, gameDetectModel.Folder);
                 }
-                
+
                 this._korabliConfigService.CurrentConfig.GameFolder = this._selectedGameFolder;
                 _ = await this._korabliConfigService.SaveAsync();
                 this.RefreshViews();

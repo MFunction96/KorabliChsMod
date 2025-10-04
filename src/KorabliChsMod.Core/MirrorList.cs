@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Xanadu.KorabliChsMod.Core
+﻿namespace Xanadu.KorabliChsMod.Core
 {
     /// <summary>
     /// 镜像列表
@@ -11,11 +9,6 @@ namespace Xanadu.KorabliChsMod.Core
         /// Github源
         /// </summary>
         GitHub = 0,
-        /// <summary>
-        /// Cloudflare源
-        /// </summary>
-        [Obsolete("Cloudflare源已不可用，请使用阿里云源")]
-        Cloudflare = 1,
         /// <summary>
         /// 阿里云
         /// </summary>
