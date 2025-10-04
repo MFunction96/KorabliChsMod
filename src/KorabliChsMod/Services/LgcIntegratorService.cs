@@ -117,7 +117,14 @@ namespace Xanadu.KorabliChsMod.Services
                 {
                     foreach (var gameDetectModel in gameDetectModels)
                     {
-                        lgcIntegratorModel.GameDetectModels.Add(gameDetectModel);
+                        var newModel = gameDetectorService.Load(gameDetectModel.Folder);
+                        if (newModel is null || !newModel.IsWarship)
+                        {
+                            continue;
+                        }
+
+                        newModel.Manual = true;
+                        lgcIntegratorModel.GameDetectModels.Add(newModel);
                     }
                 }
 

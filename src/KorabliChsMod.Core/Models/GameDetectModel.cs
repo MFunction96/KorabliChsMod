@@ -16,13 +16,7 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// </summary>
         [JsonIgnore]
         private const string GameInfoXmlFileName = "game_info.xml";
-
-        /// <summary>
-        /// metadata.xml
-        /// </summary>
-        [JsonIgnore]
-        private const string MetaDataXmlFileName = "metadata.xml";
-
+        
         /// <summary>
         /// preferences.xml
         /// </summary>
@@ -62,12 +56,6 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// </summary>
         [JsonIgnore]
         public string GameInfoXmlPath => string.IsNullOrEmpty(this.Folder) ? string.Empty : Path.Combine(this.Folder, GameDetectModel.GameInfoXmlFileName);
-
-        /// <summary>
-        /// metadata.xml路径
-        /// </summary>
-        [JsonIgnore]
-        public string MetaDataXmlPath => string.IsNullOrEmpty(this.Folder) ? string.Empty : Path.Combine(this.Folder, "game_metadata", GameDetectModel.MetaDataXmlFileName);
 
         /// <summary>
         /// preferences.xml路径

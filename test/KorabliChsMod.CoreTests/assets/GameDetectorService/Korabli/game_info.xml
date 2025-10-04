@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<protocol wgc_publisher_id="lesta" name="game_info" version="2.17">
+    <game>
+        <id>MK.RU.PRODUCTION</id>
+        <index>0</index>
+        <installed>true</installed>
+        <localization>RU</localization>
+        <content_localizations>
+            <content_localization realm="ru">ru</content_localization>
+        </content_localizations>
+        <client_type>high</client_type>
+        <show_guide>false</show_guide>
+        <update_urls>
+            <value>https://lstus-ru.lesta.ru/</value>
+        </update_urls>
+        <corrupt_parts/>
+        <part_versions last_check="17595566234642799">
+            <version available="25.10.0.0.8825509" installed="25.10.0.0.8825509" name="client"/>
+            <version available="25.10.0.0.8825509" installed="25.10.0.0.8825509" name="hotfix"/>
+            <version available="25.10.0.0.8826009" installed="25.10.0.0.8826009" name="locale"/>
+            <version available="25.10.0.0.8825509" installed="25.10.0.0.8825509" name="sdcontent"/>
+        </part_versions>
+        <parameters>
+            <value name="preinstall_balloon_shown">false</value>
+        </parameters>
+        <dlc/>
+        <in_game_overlay>true</in_game_overlay>
+        <accepted_preinstalls/>
+        <available_content_languages>
+            <language_id>ru</language_id>
+        </available_content_languages>
+    </game>
+</protocol>

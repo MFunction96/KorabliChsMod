@@ -18,9 +18,6 @@
 	  <None Update="assets\ChsModService\8824884_0\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\ChsModService\8824884_0\game_metadata\metadata.xml">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
 	  <None Update="assets\ChsModService\8824884_0\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
@@ -30,9 +27,6 @@
 	  <None Update="assets\ChsModService\8824884_1\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\ChsModService\8824884_1\game_metadata\metadata.xml">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
 	  <None Update="assets\ChsModService\8824884_1\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
@@ -40,9 +34,6 @@
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="assets\ChsModService\8824884_2\game_info.xml">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="assets\ChsModService\8824884_2\game_metadata\metadata.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="assets\ChsModService\8824884_2\preferences.xml">
@@ -57,9 +48,6 @@
 	  <None Update="assets\ChsModService\8824884_3\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\ChsModService\8824884_3\game_metadata\metadata.xml">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
 	  <None Update="assets\ChsModService\8824884_3\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
@@ -67,9 +55,6 @@
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="assets\ChsModService\8824884_4\game_info.xml">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="assets\ChsModService\8824884_4\game_metadata\metadata.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="assets\ChsModService\8824884_4\preferences.xml">
@@ -81,22 +66,13 @@
 	  <None Update="assets\GameDetectorService\8601080_0\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\GameDetectorService\8601080_0\game_metadata\metadata.xml">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
 	  <None Update="assets\GameDetectorService\8601080_0\preferences.xml">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="assets\GameDetectorService\8796161_0\game_metadata\metadata.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="assets\GameDetectorService\8824884_0\bin\8824884\bin64\paths.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="assets\GameDetectorService\8824884_0\game_info.xml">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="assets\GameDetectorService\8824884_0\game_metadata\metadata.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="assets\GameDetectorService\8824884_0\preferences.xml">
@@ -111,9 +87,6 @@
 	  <None Update="assets\GameDetectorService\8824884_1\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\GameDetectorService\8824884_1\game_metadata\metadata.xml">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
 	  <None Update="assets\GameDetectorService\8824884_1\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
@@ -121,9 +94,6 @@
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="assets\GameDetectorService\8824884_2\game_info.xml">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="assets\GameDetectorService\8824884_2\game_metadata\metadata.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="assets\GameDetectorService\8824884_2\preferences.xml">
@@ -144,9 +114,6 @@
 	  <None Update="assets\GameDetectorService\8824884_4\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\GameDetectorService\8824884_4\game_metadata\metadata.xml">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
 	  <None Update="assets\GameDetectorService\8824884_4\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
@@ -159,10 +126,19 @@
 	  <None Update="assets\GameDetectorService\8824884_3\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\GameDetectorService\8824884_3\game_metadata\metadata.xml">
+	  <None Update="assets\GameDetectorService\8824884_3\preferences.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="assets\GameDetectorService\8824884_3\preferences.xml">
+	  <None Update="assets\GameDetectorService\Korabli\game_info.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\Korabli_PT\game_info.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\Tanki\game_info.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="assets\GameDetectorService\Tanks_Blitz\game_info.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

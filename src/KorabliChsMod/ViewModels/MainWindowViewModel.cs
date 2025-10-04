@@ -78,7 +78,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 游戏文件夹
         /// </summary>
-        private HashSet<string> _gameFolders = new();
+        private HashSet<string> _gameFolders = [];
 
         /// <summary>
         /// 选中的游戏文件夹
@@ -478,8 +478,16 @@ namespace Xanadu.KorabliChsMod.ViewModels
         {
             try
             {
-                var manuals = this._lgcIntegratorModel.GameDetectModels.Where(q => q.Manual).ToArray();
-                this._lgcIntegratorModel = this._lgcIntegratorService.Load(manuals) ?? new LgcIntegratorModel
+                var manuals = this._lgcIntegratorModel.GameDetectModels.Where(q => q.Manual).ToHashSet();
+                if (Directory.Exists(this._korabliConfigService.CurrentConfig.GameFolder))
+                {
+                    manuals.Add(new GameDetectModel
+                    {
+                        Folder = this._korabliConfigService.CurrentConfig.GameFolder
+                    });
+                }
+
+                this._lgcIntegratorModel = this._lgcIntegratorService.Load(manuals.ToArray()) ?? new LgcIntegratorModel
                 {
                     Folder = string.Empty
                 };
@@ -575,7 +583,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
                         RaisePropertyChanged(nameof(this.SelectedGameFolder));
                         return;
                     }
-                    
+
                     var gameDetectModel = this._gameDetector.Load(dialog.FolderName);
                     if (gameDetectModel is null)
                     {
@@ -588,13 +596,13 @@ namespace Xanadu.KorabliChsMod.ViewModels
                         RaisePropertyChanged(nameof(this.SelectedGameFolder));
                         return;
                     }
-
+                    gameDetectModel.Manual = true;
                     this._lgcIntegratorModel.GameDetectModels.Add(gameDetectModel);
                     this._gameFolders.Add(gameDetectModel.Folder);
                     this.SelectedGameFolder = gameDetectModel.Folder;
                     this._korabliConfigService.CurrentConfig.GameFolder = gameDetectModel.Folder;
                 }
-                
+
                 this._korabliConfigService.CurrentConfig.GameFolder = this._selectedGameFolder;
                 _ = await this._korabliConfigService.SaveAsync();
                 this.RefreshViews();
