@@ -2,9 +2,11 @@
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
 using Xanadu.KorabliChsMod.Core.Models;
 using Xanadu.Skidbladnir.IO.File;
@@ -127,7 +129,14 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     );
 
                     pathsElement.AddFirst(newModsPath);
-                    doc.Save(gameDetectModel.PathXmlPath);
+                    using var writer = XmlWriter.Create(gameDetectModel.PathXmlPath, new XmlWriterSettings
+                    {
+                        Indent = true,
+                        Encoding = new UTF8Encoding(false),
+                        OmitXmlDeclaration = true
+                    });
+
+                    doc.Save(writer);
                     return true;
                 }
                 catch (Exception e)
