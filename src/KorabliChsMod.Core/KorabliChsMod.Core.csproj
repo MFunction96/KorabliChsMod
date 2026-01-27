@@ -9,6 +9,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="$(DotNetMajorVersion)" />
     <PackageReference Include="Skidbladnir.IO.File" Version="*" />
     <PackageReference Include="Skidbladnir.Net.DevOps" Version="*" />
+    <Content Include="Assets\ime_config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
