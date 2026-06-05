@@ -19,6 +19,7 @@
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="*" />
 		<PackageReference Include="MSTest" Version="*" />
 		<PackageReference Include="Moq" Version="*" />
+		<PackageReference Include="Skidbladnir.Core.Test" Version="*" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(DotNetMajorVersion)" />
 	</ItemGroup>
 

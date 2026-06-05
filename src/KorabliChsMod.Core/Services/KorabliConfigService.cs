@@ -18,14 +18,14 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <summary>
         /// 当前配置文件版本
         /// </summary>
-        public static Version CurrentVersion => new(1, 1, 0);
+        public static Version CurrentVersion => new(1, 2, 0);
 
         /// <summary>
         /// 默认配置
         /// </summary>
         private static KorabliConfigModel DefaultKorabliConfigModel => new()
         {
-            Mirror = MirrorList.AliYun,
+            Mirror = MirrorList.Kodo,
             Proxy = new ProxyConfigModel(),
             AutoUpdate = true,
             GameFolder = string.Empty,

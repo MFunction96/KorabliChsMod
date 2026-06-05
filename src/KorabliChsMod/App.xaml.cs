@@ -47,28 +47,28 @@ namespace Xanadu.KorabliChsMod
             {
                 var korabliConfigService = provider.Resolve<KorabliConfigService>();
                 return RestApiClient.DefaultHttpClient(handler =>
-                {
-                    try
                     {
-                        if (korabliConfigService.CurrentConfig.Proxy.Enabled &&
-                            !string.IsNullOrEmpty(korabliConfigService.CurrentConfig.Proxy.Address))
+                        try
                         {
-                            handler.Proxy = new WebProxy(korabliConfigService.CurrentConfig.Proxy.Address,
-                                true, null,
-                                new NetworkCredential(korabliConfigService.CurrentConfig.Proxy.Username,
-                                    korabliConfigService.CurrentConfig.Proxy.Password));
+                            if (korabliConfigService.CurrentConfig.Proxy.Enabled &&
+                                !string.IsNullOrEmpty(korabliConfigService.CurrentConfig.Proxy.Address))
+                            {
+                                handler.Proxy = new WebProxy(korabliConfigService.CurrentConfig.Proxy.Address,
+                                    true, null,
+                                    new NetworkCredential(korabliConfigService.CurrentConfig.Proxy.Username,
+                                        korabliConfigService.CurrentConfig.Proxy.Password));
+                            }
                         }
-                    }
-                    catch (Exception)
-                    {
-                        lock (korabliConfigService.CurrentConfig.Proxy)
+                        catch (Exception)
                         {
-                            korabliConfigService.CurrentConfig.Proxy.Enabled = false;
-                            korabliConfigService.SaveAsync().ConfigureAwait(false);
+                            lock (korabliConfigService.CurrentConfig.Proxy)
+                            {
+                                korabliConfigService.CurrentConfig.Proxy.Enabled = false;
+                                korabliConfigService.SaveAsync().ConfigureAwait(false);
+                            }
                         }
-                    }
-                },
-                GitHubRestApiClient.DefaultHttpClientAction);
+                    },
+                    GitHubRestApiClient.DefaultHttpClientAction);
             });
             
             // 注册Lesta Game Center探查服务

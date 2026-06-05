@@ -29,7 +29,7 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             services.AddGitHubRestApiClient();
             services.AddSingleton<FileCachePool>();
             services.AddHttpClient<NetworkEngine>(RestApiClient.DefaultHttpClientAction)
-                .ConfigurePrimaryHttpMessageHandler(() => RestApiClient.DefaultHttpClientHandler());
+                .ConfigurePrimaryHttpMessageHandler(() => RestApiClient.DefaultSocketsHttpHandler());
             services.AddTransient<GameDetectorService>();
             services.AddTransient<MetadataService>();
             services.AddTransient<ChsModService>();

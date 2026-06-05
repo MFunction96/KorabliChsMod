@@ -33,7 +33,7 @@ Copy-Item -Path ".\.azurepipelines\publish\KorabliChsModInstaller.exe" -Destinat
 
 Invoke-Signing "$OutputFolder\KorabliChsModInstaller.exe" "D:\Certificate\Xanadu_CodeSign_RSA_ICA1-PKCS8.pfx" $env:PFX_PASSWORD
 
-Invoke-WebRequest -Uri "https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe" -OutFile "$publishFolder\windowsdesktop-runtime-win-x64.exe"
+Invoke-WebRequest -Uri "https://aka.ms/dotnet/10.0/windowsdesktop-runtime-win-x64.exe" -OutFile "$publishFolder\windowsdesktop-runtime-win-x64.exe"
 
 # 生成带运行时的安装包
 & "makensis.exe" /X"SetCompressor /SOLID /FINAL lzma" /DSOURCE="$publishFolder" /DVERSION="$env:BIN_VER" /INPUTCHARSET UTF8 /OUTPUTCHARSET UTF8 ".\.azurepipelines\publish\installer_runtime.nsi"

@@ -12,6 +12,10 @@
         /// <summary>
         /// 阿里云
         /// </summary>
-        AliYun = 2
+        AliYun = 2,
+        /// <summary>
+        /// 七牛
+        /// </summary>
+        Kodo = 3,
     }
 }

@@ -94,8 +94,13 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 var downloadFile = assets.First(q =>
                     string.Compare(q.Name, "KorabliChsModInstaller.exe",
                         StringComparison.OrdinalIgnoreCase) == 0).BrowserDownloadUrl;
-                await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile),
-                    exeFile, 5);
+                using var request = new HttpRequestMessage(HttpMethod.Get, downloadFile);
+                if (korabliConfigService.CurrentConfig.Mirror == MirrorList.Kodo)
+                {
+                    request.Headers.Referrer = new Uri("https://korablichsmod-kodo.mfbrain.xyz/");
+                }
+
+                await networkEngine.DownloadAsync(request, exeFile, 5);
 
                 var processInfo = new ProcessStartInfo
                 {

@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Services;
+using Xanadu.Skidbladnir.Core.Test;
 using Xanadu.Skidbladnir.Net.DevOps;
 using Xanadu.Skidbladnir.Net.DevOps.Model.GitHub.Basic;
 using Xanadu.Skidbladnir.Net.DevOps.Service;
@@ -25,15 +26,16 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         public void Setup()
         {
             var services = new ServiceCollection();
+            services.AddTestLogging(this.TestContext);
             services.AddSingleton<KorabliConfigService>();
             services.AddGitHubRestApiClient();
             services.AddHttpClient<NetworkEngine>(RestApiClient.DefaultHttpClientAction)
-                .ConfigurePrimaryHttpMessageHandler(() => RestApiClient.DefaultHttpClientHandler());
+                .ConfigurePrimaryHttpMessageHandler(() => RestApiClient.DefaultSocketsHttpHandler());
             services.AddTransient<MetadataService>();
             this._provider = services.BuildServiceProvider();
             var korabliConfigService = this._provider.GetRequiredService<KorabliConfigService>();
             korabliConfigService.Load();
-            korabliConfigService.CurrentConfig.Mirror = MirrorList.AliYun;
+            korabliConfigService.CurrentConfig.Mirror = MirrorList.Kodo;
         }
 
         [TestCleanup]
