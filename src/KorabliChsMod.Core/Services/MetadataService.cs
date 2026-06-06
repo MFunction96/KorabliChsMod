@@ -47,7 +47,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
 
                 var releaseModel = releaseModels.FirstOrDefault(q =>
                     q.Prerelease == preRelease &&
-                    Version.Parse(MetadataService.VersionRegex.Match(q.TagName).Groups["Version"].Value) <= gameVersion);
+                    (gameVersion.Major < 26 || Version.Parse(MetadataService.VersionRegex.Match(q.TagName).Groups["Version"].Value) <= gameVersion));
                 return releaseModel ?? throw new NullReferenceException("未找到符合条件的汉化包");
             }
             catch (Exception e)

@@ -246,7 +246,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 绑定更新镜像
         /// </summary>
-        public static IEnumerable<string> UpdateMirrors => Enum.GetNames(typeof(MirrorList));
+        public static IEnumerable<string> UpdateMirrors => Enum.GetNames<MirrorList>();
 
         /// <summary>
         /// 绑定选中的更新镜像

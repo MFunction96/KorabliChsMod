@@ -61,18 +61,18 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
         [DataRow("8824884_1", false)]
         [DataRow("8824884_2", false)]
         [DataRow("8824884_3", true)]
-        public async Task Install_AliYun(string subFolder, bool prerelease)
+        public async Task Install_China(string subFolder, bool prerelease)
         {
             // Arrange
             using var scope = _serviceProvider.CreateScope();
             var gameDetectService = scope.ServiceProvider.GetRequiredService<GameDetectorService>();
             var korabliConfigService = scope.ServiceProvider.GetRequiredService<KorabliConfigService>();
             var model = gameDetectService.Load(Path.Combine(Environment.CurrentDirectory, "assets", "ChsModService", subFolder))!;
-            korabliConfigService.CurrentConfig.Mirror = MirrorList.AliYun;
+            korabliConfigService.CurrentConfig.Mirror = MirrorList.Kodo;
             var chsModService = scope.ServiceProvider.GetRequiredService<ChsModService>();
 
             // Act
-            var result = await chsModService.Install(model, this.TestContext.CancellationTokenSource.Token);
+            var result = await chsModService.Install(model, this.TestContext.CancellationToken);
 
             // Assert
             Assert.IsTrue(result);
@@ -93,11 +93,11 @@ namespace Xanadu.Test.KorabliChsMod.Core.Services
             var gameDetectService = scope.ServiceProvider.GetRequiredService<GameDetectorService>();
             var korabliConfigService = scope.ServiceProvider.GetRequiredService<KorabliConfigService>();
             var model = gameDetectService.Load(Path.Combine(Environment.CurrentDirectory, "assets", "ChsModService", subFolder))!;
-            korabliConfigService.CurrentConfig.Mirror = MirrorList.AliYun;
+            korabliConfigService.CurrentConfig.Mirror = MirrorList.Kodo;
             var chsModService = scope.ServiceProvider.GetRequiredService<ChsModService>();
 
             // Act
-            var result = await chsModService.Install(model, this.TestContext.CancellationTokenSource.Token);
+            var result = await chsModService.Install(model, this.TestContext.CancellationToken);
 
             // Assert
             Assert.IsTrue(result);

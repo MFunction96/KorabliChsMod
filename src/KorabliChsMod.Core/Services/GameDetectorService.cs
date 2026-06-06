@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Xanadu.KorabliChsMod.Core.Models;
+using Xanadu.Skidbladnir.Core.Extension;
 
 namespace Xanadu.KorabliChsMod.Core.Services
 {
@@ -50,7 +50,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 gameDetectModel.IsTest = string.Compare(gameId, "MK.RU.PRODUCTION", StringComparison.OrdinalIgnoreCase) != 0;
                 if (File.Exists(gameDetectModel.PreferencesXmlPath))
                 {
-                    var preferenceLines = File.ReadLines(gameDetectModel.PreferencesXmlPath, Encoding.UTF8);
+                    var preferenceLines = File.ReadLines(gameDetectModel.PreferencesXmlPath, StaticVault.Utf8WithoutBomEncoding);
                     var serverVersion = preferenceLines.FirstOrDefault(q => q.Contains("last_server_version", StringComparison.OrdinalIgnoreCase));
                     if (!string.IsNullOrEmpty(serverVersion))
                     {
