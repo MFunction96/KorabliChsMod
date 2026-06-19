@@ -89,6 +89,11 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     {
                         doc = new XDocument(new XElement("root", new XElement("Paths")));
                         pathsElement = doc.Element("root")!.Element("Paths")!;
+                        var directory = Path.GetDirectoryName(gameDetectModel.PathXmlPath);
+                        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                        {
+                            Directory.CreateDirectory(directory);
+                        }
                     }
                     else
                     {

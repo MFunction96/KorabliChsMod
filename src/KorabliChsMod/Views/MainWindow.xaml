@@ -79,7 +79,7 @@
                             <TextBlock Text="{Binding GameServer}" Margin="30 0 0 0"/>
                         </hc:SimpleStackPanel>
                         <hc:SimpleStackPanel Orientation="Horizontal" Margin="110 15 0 0">
-                            <TextBlock Text="客户端版本" Margin="0 0 30 0"/>
+                            <TextBlock Text="游戏版本号" Margin="0 0 30 0"/>
                             <TextBlock Text="{Binding GameVersion}" Margin="30 0 0 0"/>
                         </hc:SimpleStackPanel>
                         <hc:SimpleStackPanel Orientation="Horizontal" Margin="110 15 0 0">

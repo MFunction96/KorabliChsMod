@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
+using System.Threading.Tasks;
 using System.Xml;
 using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Models;
@@ -32,6 +33,17 @@ namespace Xanadu.KorabliChsMod.Services
         /// <param name="path">指定LGC配置文件路径</param>
         /// <returns>true为加载成功，false为加载失败</returns>
         public LgcIntegratorModel? Load(GameDetectModel[]? gameDetectModels = null, string path = "")
+        {
+            return this.LoadAsync(gameDetectModels, path).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// 异步加载LGC配置
+        /// </summary>
+        /// <param name="gameDetectModels">游戏探查模型</param>
+        /// <param name="path">指定LGC配置文件路径</param>
+        /// <returns>true为加载成功，false为加载失败</returns>
+        public async Task<LgcIntegratorModel?> LoadAsync(GameDetectModel[]? gameDetectModels = null, string path = "")
         {
             try
             {
@@ -105,7 +117,7 @@ namespace Xanadu.KorabliChsMod.Services
                         continue;
                     }
 
-                    var gameDetectModel = gameDetectorService.Load(gameFolder);
+                    var gameDetectModel = await gameDetectorService.LoadAsync(gameFolder).ConfigureAwait(false);
                     if (gameDetectModel is not null && gameDetectModel.IsWarship)
                     {
                         lgcIntegratorModel.GameDetectModels.Add(gameDetectModel);
@@ -117,7 +129,7 @@ namespace Xanadu.KorabliChsMod.Services
                 {
                     foreach (var gameDetectModel in gameDetectModels)
                     {
-                        var newModel = gameDetectorService.Load(gameDetectModel.Folder);
+                        var newModel = await gameDetectorService.LoadAsync(gameDetectModel.Folder).ConfigureAwait(false);
                         if (newModel is null || !newModel.IsWarship)
                         {
                             continue;
