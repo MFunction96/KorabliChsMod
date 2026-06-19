@@ -19,8 +19,11 @@ namespace Xanadu.Test.KorabliChsMod.Services
         public void LgcTest()
         {
             var service = new ServiceCollection();
+            service.AddHttpClient();
+            service.AddSingleton<KorabliConfigService>();
             service.AddSingleton<LgcIntegratorService>();
             service.AddTransient<GameDetectorService>();
+            service.AddTransient<NetworkEngine>();
             var serviceProvider = service.BuildServiceProvider();
             var lgcIntegrator = serviceProvider.GetRequiredService<LgcIntegratorService>();
             var lgcIntegratorModel = lgcIntegrator.Load();

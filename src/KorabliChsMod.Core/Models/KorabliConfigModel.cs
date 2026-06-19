@@ -70,11 +70,11 @@ namespace Xanadu.KorabliChsMod.Core.Models
         public static readonly IDictionary<MirrorList, ResourceLinkModel> Links =
             new Dictionary<MirrorList, ResourceLinkModel>
             {
-                { MirrorList.AliYun , new ResourceLinkModel
+                { MirrorList.Kodo , new ResourceLinkModel
                 {
-                    Mirror = MirrorList.AliYun,
-                    ModMetadata = "https://mk-localization-chs.oss-cn-wulanchabu.aliyuncs.com/mods/chs/metadata.json",
-                    UpdateMetadata = "https://mk-localization-chs.oss-cn-wulanchabu.aliyuncs.com/korablichsmod/metadata.json"
+                    Mirror = MirrorList.Kodo,
+                    ModMetadata = "https://korablichsmod-kodo.mfbrain.xyz/mods/chs/metadata.json",
+                    UpdateMetadata = "https://korablichsmod-kodo.mfbrain.xyz/korablichsmod/metadata.json"
                 }}
             };
 
@@ -96,7 +96,7 @@ namespace Xanadu.KorabliChsMod.Core.Models
         /// <summary>
         /// 镜像站
         /// </summary>
-        public MirrorList Mirror { get; set; } = MirrorList.AliYun;
+        public MirrorList Mirror { get; set; } = MirrorList.Kodo;
 
         /// <summary>
         /// 自动更新

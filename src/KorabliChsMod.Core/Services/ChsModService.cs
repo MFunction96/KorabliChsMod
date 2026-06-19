@@ -20,7 +20,8 @@ namespace Xanadu.KorabliChsMod.Core.Services
     /// <param name="networkEngine">网络引擎</param>
     /// <param name="fileCachePool">文件缓存</param>
     /// <param name="metadataService">元信息获取</param>
-    public partial class ChsModService(NetworkEngine networkEngine, FileCachePool fileCachePool, MetadataService metadataService) : IServiceEvent
+    /// <param name="korabliConfigService">考拉比配置中心</param>
+    public partial class ChsModService(NetworkEngine networkEngine, FileCachePool fileCachePool, MetadataService metadataService, KorabliConfigService korabliConfigService) : IServiceEvent
     {
         [GeneratedRegex(@"(?<Version>\d+\.\d+)", RegexOptions.ExplicitCapture)]
         private static partial Regex GameVersionRegex();
@@ -88,6 +89,11 @@ namespace Xanadu.KorabliChsMod.Core.Services
                     {
                         doc = new XDocument(new XElement("root", new XElement("Paths")));
                         pathsElement = doc.Element("root")!.Element("Paths")!;
+                        var directory = Path.GetDirectoryName(gameDetectModel.PathXmlPath);
+                        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                        {
+                            Directory.CreateDirectory(directory);
+                        }
                     }
                     else
                     {
@@ -165,7 +171,12 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 var latest = await metadataService.GetModRelease(Version.Parse(gameVersion),
                     gameDetectModel.IsTest);
                 var downloadFile = latest.Assets.First(q => q.Name == GameDetectModel.ChsModFileName).BrowserDownloadUrl;
-                await networkEngine.DownloadAsync(new HttpRequestMessage(HttpMethod.Get, downloadFile), modFileCache.FullPath, 5, cancellationToken);
+                using var request = new HttpRequestMessage(HttpMethod.Get, downloadFile);
+                if (korabliConfigService.CurrentConfig.Mirror == MirrorList.Kodo)
+                {
+                    request.Headers.Referrer = new Uri("https://korablichsmod-kodo.mfbrain.xyz/");
+                }
+                await networkEngine.DownloadAsync(request, modFileCache.FullPath, 5, cancellationToken);
                 if (!Directory.Exists(gameDetectModel.ModFolder))
                 {
                     Directory.CreateDirectory(gameDetectModel.ModFolder);

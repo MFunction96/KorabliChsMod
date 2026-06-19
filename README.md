@@ -2,9 +2,7 @@
 
 [![Build Status](https://dev.azure.com/XanaCN/Lyoko/_apis/build/status/KorabliChsMod/Build?branchName=main)](https://dev.azure.com/XanaCN/Lyoko/_build/latest?definitionId=20&branchName=main) [![Release Status](https://vsrm.dev.azure.com/XanaCN/_apis/public/Release/badge/f06af8ee-5084-455c-ac24-8fc4f735382c/5/7)](https://dev.azure.com/XanaCN/Lyoko/_release?view=all&path=%5CKorabliChsMod&_a=releases) [![Code Coverage](https://img.shields.io/azure-devops/coverage/XanaCN/Lyoko/20/main)]()
 
-[![dotnet](https://img.shields.io/badge/.NET-%3E%3D8.0.4-blue.svg?style=flat-square&logo=.NET)](https://dotnet.microsoft.com/)
-[![GitHub License](https://img.shields.io/github/license/MFunction96/KorabliChsMod)](https://github.com/MFunction96/KorabliChsMod/blob/main/LICENSE)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/MFunction96/KorabliChsMod/total)
+[![dotnet](https://img.shields.io/badge/.NET-%3E%3D10.0.0-blue.svg?style=flat-square&logo=.NET)](https://dotnet.microsoft.com/) [![GitHub License](https://img.shields.io/github/license/MFunction96/KorabliChsMod)](https://github.com/MFunction96/KorabliChsMod/blob/main/LICENSE) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/MFunction96/KorabliChsMod/total)
 
 
 傻瓜式就连小刻都会用的莱服窝窝屎汉化更新程序。
@@ -15,7 +13,7 @@
 
 ## 安装使用
 
-考拉比汉社厂由.NET 8编写，因此需要.NET 8运行环境。
+考拉比汉社厂由.NET 10编写，因此需要.NET 10运行环境。
 
 ### 安装
 

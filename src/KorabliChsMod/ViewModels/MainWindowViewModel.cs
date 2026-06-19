@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using Xanadu.KorabliChsMod.Core;
 using Xanadu.KorabliChsMod.Core.Models;
 using Xanadu.KorabliChsMod.Core.Services;
@@ -246,7 +247,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 绑定更新镜像
         /// </summary>
-        public static IEnumerable<string> UpdateMirrors => Enum.GetNames(typeof(MirrorList));
+        public static IEnumerable<string> UpdateMirrors => Enum.GetNames<MirrorList>();
 
         /// <summary>
         /// 绑定选中的更新镜像
@@ -474,7 +475,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 重载功能
         /// </summary>
-        private void Reload()
+        private async Task ReloadAsync()
         {
             try
             {
@@ -487,7 +488,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
                     });
                 }
 
-                this._lgcIntegratorModel = this._lgcIntegratorService.Load(manuals.ToArray()) ?? new LgcIntegratorModel
+                this._lgcIntegratorModel = await this._lgcIntegratorService.LoadAsync(manuals.ToArray()) ?? new LgcIntegratorModel
                 {
                     Folder = string.Empty
                 };
@@ -537,7 +538,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 绑定窗体加载
         /// </summary>
-        public DelegateCommand WindowLoadCommand => new(Reload);
+        public DelegateCommand WindowLoadCommand => new(async void () => await this.ReloadAsync());
 
         /// <summary>
         /// 绑定刷新窗体
@@ -584,7 +585,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
                         return;
                     }
 
-                    var gameDetectModel = this._gameDetector.Load(dialog.FolderName);
+                    var gameDetectModel = await this._gameDetector.LoadAsync(dialog.FolderName);
                     if (gameDetectModel is null)
                     {
                         this.SelectedGameFolder = string.Empty;
@@ -652,7 +653,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             }
             finally
             {
-                this.Reload();
+                await this.ReloadAsync();
                 this.CoreEnabled = true;
                 this.RefreshViews();
             }
@@ -661,7 +662,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
         /// <summary>
         /// 绑定卸载汉化Mod
         /// </summary>
-        public DelegateCommand UninstallChsModCommand => new(void () =>
+        public DelegateCommand UninstallChsModCommand => new(async void () =>
         {
             try
             {
@@ -692,7 +693,7 @@ namespace Xanadu.KorabliChsMod.ViewModels
             }
             finally
             {
-                this.Reload();
+                await this.ReloadAsync();
                 this.CoreEnabled = true;
                 this.RefreshViews();
             }

@@ -2,18 +2,18 @@
 	<PropertyGroup>
 		<RootNamespace>Xanadu.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net10.0-windows</TargetFramework>
 		<Authors>MFunction</Authors>
 		<Company>Xanadu</Company>
 		<Product>KorabliChsMod</Product>
 		<PackageProjectUrl>https://github.com/MFunction96/KorabliChsMod</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/MFunction96/KorabliChsMod</RepositoryUrl>
-		<Copyright>2021-2024 Xanadu</Copyright>
+		<Copyright>2021-2026 Xanadu</Copyright>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Version Condition=" '$(BIN_VER)' == '' ">0.0.1-alpha</Version>
 		<Version Condition=" '$(BIN_VER)' != '' ">$(BIN_VER)</Version>
-		<DotNetMajorVersion>[8.0,)</DotNetMajorVersion>
+		<DotNetMajorVersion>[10.0,)</DotNetMajorVersion>
 	</PropertyGroup>
 </Project>
