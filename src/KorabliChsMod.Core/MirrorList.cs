@@ -10,8 +10,8 @@
         /// </summary>
         GitHub = 0,
         /// <summary>
-        /// 阿里云
+        /// 七牛
         /// </summary>
-        AliYun = 2
+        Kodo = 3
     }
 }

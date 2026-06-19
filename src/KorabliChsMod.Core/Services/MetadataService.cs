@@ -47,7 +47,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
 
                 var releaseModel = releaseModels.FirstOrDefault(q =>
                     q.Prerelease == preRelease &&
-                    Version.Parse(MetadataService.VersionRegex.Match(q.TagName).Groups["Version"].Value) <= gameVersion);
+                    (gameVersion.Major < 26 || Version.Parse(MetadataService.VersionRegex.Match(q.TagName).Groups["Version"].Value) <= gameVersion));
                 return releaseModel ?? throw new NullReferenceException("未找到符合条件的汉化包");
             }
             catch (Exception e)
@@ -100,9 +100,23 @@ namespace Xanadu.KorabliChsMod.Core.Services
             var link = mod
                 ? KorabliConfigModel.Links[mirror].ModMetadata
                 : KorabliConfigModel.Links[mirror].UpdateMetadata;
-            using var response = await networkEngine.SendAsync(new HttpRequestMessage(HttpMethod.Get, link), 5);
+            using var request = new HttpRequestMessage(HttpMethod.Get, link);
+            if (mirror == MirrorList.Kodo)
+            {
+                request.Headers.Referrer = new Uri("https://korablichsmod-kodo.mfbrain.xyz/");
+            }
+
+            using var response = await networkEngine.SendAsync(request, 5);
             _ = response!.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<ReleaseModel[]>();
+            try
+            {
+                return await response.Content.ReadFromJsonAsync<ReleaseModel[]>();
+            }
+            catch (Exception e)
+            {
+                var rawContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"获取元信息失败，响应内容：{rawContent}", e);
+            }
         }
 
 
