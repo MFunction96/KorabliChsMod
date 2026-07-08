@@ -97,7 +97,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
                 using var request = new HttpRequestMessage(HttpMethod.Get, downloadFile);
                 if (korabliConfigService.CurrentConfig.Mirror == MirrorList.Kodo)
                 {
-                    request.Headers.Referrer = new Uri("https://korablichsmod-kodo.mfbrain.xyz/");
+                    request.Headers.Referrer = new Uri("http://korablichsmod-kodo.mfbrain.xyz/");
                 }
 
                 await networkEngine.DownloadAsync(request, exeFile, 5);

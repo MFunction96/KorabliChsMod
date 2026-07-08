@@ -73,8 +73,8 @@ namespace Xanadu.KorabliChsMod.Core.Models
                 { MirrorList.Kodo , new ResourceLinkModel
                 {
                     Mirror = MirrorList.Kodo,
-                    ModMetadata = "https://korablichsmod-kodo.mfbrain.xyz/mods/chs/metadata.json",
-                    UpdateMetadata = "https://korablichsmod-kodo.mfbrain.xyz/korablichsmod/metadata.json"
+                    ModMetadata = "http://korablichsmod-kodo.mfbrain.xyz/mods/chs/metadata.json",
+                    UpdateMetadata = "http://korablichsmod-kodo.mfbrain.xyz/korablichsmod/metadata.json"
                 }}
             };
 
