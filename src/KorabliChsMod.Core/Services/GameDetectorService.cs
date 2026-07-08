@@ -139,12 +139,12 @@ namespace Xanadu.KorabliChsMod.Core.Services
         internal async Task<string?> OnlineServerVersion(bool prerelease)
         {
             var url = korabliConfigService.CurrentConfig.Mirror == MirrorList.Kodo
-                ? prerelease ? "https://korablichsmod-kodo.mfbrain.xyz/wws/wowsrpt.xml" : "https://korablichsmod-kodo.mfbrain.xyz/wws/wowsru.xml"
+                ? prerelease ? "http://korablichsmod-kodo.mfbrain.xyz/wws/wowsrpt.xml" : "http://korablichsmod-kodo.mfbrain.xyz/wws/wowsru.xml"
                 : prerelease ? "https://csis-apex.lesta.ru/csis/wowsrpt" : "https://csis.tanki.su/csis/wowsru";
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
             if (korabliConfigService.CurrentConfig.Mirror == MirrorList.Kodo)
             {
-                request.Headers.Referrer = new Uri("https://korablichsmod-kodo.mfbrain.xyz");
+                request.Headers.Referrer = new Uri("http://korablichsmod-kodo.mfbrain.xyz");
             }
 
             using var response = await networkEngine.SendAsync(request).ConfigureAwait(false);
