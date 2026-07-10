@@ -39,7 +39,8 @@ namespace Xanadu.KorabliChsMod.Core.Services
         /// <returns>成功返回true，失败返回false</returns>
         public async Task<bool> Install(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
         {
-            return await this.PathXmlAddon(gameDetectModel, cancellationToken) && await this.CorePackInstall(gameDetectModel, cancellationToken);
+            return await this.PathXmlAddon(gameDetectModel, cancellationToken) && await this.CorePackInstall(gameDetectModel, cancellationToken)&& await this.ImeConfigInstall(gameDetectModel, cancellationToken)
+;
         }
 
         /// <summary>
@@ -53,6 +54,7 @@ namespace Xanadu.KorabliChsMod.Core.Services
             try
             {
                 IOExtension.DeleteFile(gameDetectModel.ChsModFilePath);
+                IOExtension.DeleteFile(Path.Combine(gameDetectModel.ModFolder, "gui", "flash", "ime_config.xml"));
                 return true;
             }
             catch (Exception e)
@@ -194,6 +196,38 @@ namespace Xanadu.KorabliChsMod.Core.Services
 
                 return false;
             }
+        }
+
+
+        internal Task<bool> ImeConfigInstall(GameDetectModel gameDetectModel, CancellationToken cancellationToken = default)
+        {
+            return Task.Run(() =>
+            {
+                try
+                {
+                    // 源文件：程序目录下的 Assets/ime_config.xml
+                    var source = Path.Combine(AppContext.BaseDirectory, "Assets", "ime_config.xml");
+                    if (!File.Exists(source))
+                    {
+                        // 你可以选择：当作失败 or 直接跳过。
+                        // “打包内置”的目标是必有，所以我建议：缺失就当失败，方便发现打包问题
+                        throw new FileNotFoundException("未找到内置 ime_config.xml，请检查安装包是否包含 Assets/ime_config.xml", source);
+                    }
+
+                    // 目标文件：.../res_mods/<ver>/gui/flash/ime_config.xml
+                    var target = Path.Combine(gameDetectModel.ModFolder, "gui", "flash", "ime_config.xml");
+                    var targetDir = Path.GetDirectoryName(target)!;
+                    Directory.CreateDirectory(targetDir);
+
+                    File.Copy(source, target, overwrite: true);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    this.ServiceEvent?.Invoke(this, new ServiceEventArg { Exception = e });
+                    return false;
+                }
+            }, cancellationToken);
         }
     }
 
